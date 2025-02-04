@@ -24,7 +24,7 @@ public class BuddyController : MonoBehaviour
 
     void Start()
     {
-
+        
     }
 
 
