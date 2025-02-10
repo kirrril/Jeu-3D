@@ -5,23 +5,25 @@ using UnityEngine;
 
 public class ObjectCollector : MonoBehaviour
 {
-    
     void Start()
     {
-        
+
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
-        ICollectable icollectable = other.transform.root.GetComponent<ICollectable>();
+        Debug.Log($"Collision avec {other.gameObject.name}");
 
-        if (icollectable == null) return;
+        if (other.CompareTag("Protein"))
+        {
+            Debug.Log(other.gameObject.name);
+            ICollectable proteinTub = other.GetComponent<ICollectable>(); /*transform.root.*/
 
-        if (!icollectable.isCollectable) return;
+            if (proteinTub == null) return;
 
-        icollectable.Collect();
+            if (!proteinTub.isCollectable) return;
+
+            proteinTub.Collect();
+        }
     }
-
-
 }

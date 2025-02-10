@@ -33,8 +33,9 @@ Shader "Custom/MirrorShader"
             v2f vert (appdata_t v)
             {
                 v2f o;
+                v.vertex.z = -v.vertex.z; // Retourne l'axe Z
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = float2(1.0 - v.uv.x, v.uv.y); // Retourner l'axe X
+                o.uv = float2(v.uv.x, 1.0 - v.uv.y); // Retourner l'axe V si nécessaire
                 return o;
             }
 
