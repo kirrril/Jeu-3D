@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class IHM : MonoBehaviour
 {
+    public static IHM instance;
+
     [SerializeField]
     private TMP_Text cheerPlayer;
 
@@ -20,7 +22,15 @@ public class IHM : MonoBehaviour
     [SerializeField]
     private TMP_Text lifeAmount;
 
-    public GameManager gameManager;
+    [SerializeField]
+    private TMP_Text speedAmount;
+
+    GameManager gameManager {get {return GameManager.instance;}}
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
@@ -33,12 +43,15 @@ public class IHM : MonoBehaviour
 
     }
 
-    void DisplayData()
+    public void DisplayData()
     {
+
         cheerPlayer.text = $"GO GO GO\n{gameManager.currentPlayer.playersName.ToUpper()}\n! ! !";
         waterAmount.text = gameManager.currentPlayer.water.ToString();
         proteinAmount.text = gameManager.currentPlayer.protein.ToString();
         personalGrowthAmount.text = gameManager.currentPlayer.personalGrowth.ToString();
         lifeAmount.text = gameManager.currentPlayer.life.ToString();
+        speedAmount.text = gameManager.currentPlayer.speed.ToString();
+
     }
 }

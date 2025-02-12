@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProteinTub : MonoBehaviour, ICollectable
+public class WaterBottle : MonoBehaviour, ICollectable
 {
     public GameManager gameManager;
 
     [SerializeField]
-    private int proteinContent = 5;
+    private float waterContent = 1.0f;
 
-    public bool isCollectable {get {return true;}}
+    public bool isCollectable { get { return true; } }
 
     public void Collect()
     {
-        gameManager.currentPlayer.protein += proteinContent;
+        gameManager.currentPlayer.water = waterContent;
 
         IHM.instance.DisplayData();
 

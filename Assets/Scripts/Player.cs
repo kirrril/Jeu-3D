@@ -14,6 +14,8 @@ public class Player
 
     public int personalGrowth = 1;
 
+    public int speed = 1;
+
     public Player(string playersName)
     {
         this.playersName = playersName;

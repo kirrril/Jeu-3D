@@ -4,9 +4,7 @@ using UnityEngine;
 
 public interface ICollectable
 {
-    void Collect();
+  public bool isCollectable { get; }
 
-    bool isCollectable {get;}
-
-    
+  void Collect();
 }

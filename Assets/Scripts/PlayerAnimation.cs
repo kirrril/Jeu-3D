@@ -27,19 +27,9 @@ public class PlayerAnimation : MonoBehaviour
             }
         }
 
-        if (PlayerController.isTrainig == true)
-        {
-            animator.SetBool("isWalking", false);
-            
-            if (Input.GetKey(KeyCode.KeypadEnter))
-            {
-                animator.SetBool("isJogging", true);
-            }
-            else
-            {
-                animator.SetBool("isJogging", false);
-            }
-        }
+        
+
+
     }
 
 }

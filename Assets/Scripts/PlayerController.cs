@@ -1,11 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+	public static PlayerController instance;
+
 	[SerializeField]
 	private Rigidbody rb;
+
+	[SerializeField]
+	Animator animator;
 
 	private Vector3 inputMove = Vector3.zero;
 	private float inputRotate = 0;
@@ -20,9 +26,9 @@ public class PlayerController : MonoBehaviour
 	public static bool isTrainig = false;
 
 
-	void Start()
+	void Awake()
 	{
-
+		instance = this;
 	}
 
 
@@ -68,33 +74,4 @@ public class PlayerController : MonoBehaviour
 			rb.MovePosition(transform.position + resultMove * Time.deltaTime);
 		}
 	}
-
-	void OnTriggerEnter(Collider other)
-	{
-		if (other.CompareTag("Treadmill"))
-		{
-			isTrainig = true;
-			trainingPosition = new Vector3(0, 0.27f, 0);
-		}
-
-		transform.position = other.transform.position + trainingPosition;
-		transform.rotation = other.transform.rotation;
-	}
-
-	void OnTriggerStay(Collider other)
-	{
-		if (other.CompareTag("Treadmill"))
-		{
-			if (Input.GetKeyDown(KeyCode.Keypad0))
-			{
-				transform.position = other.transform.position + new Vector3(0, -0.07f, 1f);
-			}
-		}
-	}
-
-	void OnTriggerExit(Collider other)
-	{
-		isTrainig = false;
-	}
-
 }

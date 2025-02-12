@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     public Player currentPlayer;
 
     void Awake()
     {
+        instance = this;
         LaunchGame();
     }
 
@@ -18,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     void LaunchGame()
     {
-        currentPlayer = new Player(IHM_StartGame.playersName);
+        currentPlayer = new Player("Kirill");
     }
 
 }
