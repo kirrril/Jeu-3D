@@ -4,19 +4,34 @@ using UnityEngine;
 
 public class ProteinTub : MonoBehaviour, ICollectable
 {
-    public GameManager gameManager;
+    private Spawner spawner;
 
     [SerializeField]
-    private int proteinContent = 5;
+    private GameObject proteinTub;
 
-    public bool isCollectable {get {return true;}}
+    public bool isCollectable { get { return true; } }
+
+
+    void Start()
+    {
+        spawner = FindObjectOfType<Spawner>();
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Collect();
+        }
+    }
 
     public void Collect()
     {
-        gameManager.currentPlayer.protein += proteinContent;
-
-        IHM.instance.DisplayData();
+        GameManager.instance.currentPlayer.protein += 1;
 
         Destroy(gameObject);
+
+        spawner.SpawnProtein();
     }
 }
+

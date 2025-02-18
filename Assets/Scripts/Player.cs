@@ -8,13 +8,15 @@ public class Player
 
     public int life = 5;
 
-    public int protein = 5;
+    public int protein = 0;
 
     public float water = 0.5f;
 
-    public int personalGrowth = 1;
+    public float legsTraining = 0f;
 
-    public int speed = 1;
+    public float chestTraining = 0f;
+
+    public float backTraining = 0f;
 
     public Player(string playersName)
     {

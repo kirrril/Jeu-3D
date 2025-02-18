@@ -2,30 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IHM : MonoBehaviour
 {
     public static IHM instance;
 
     [SerializeField]
-    private TMP_Text cheerPlayer;
+    public Button stopTrainingButton;
 
     [SerializeField]
-    private TMP_Text waterAmount;
+    public Image lifeImage;
 
     [SerializeField]
-    private TMP_Text proteinAmount;
+    public Image waterImage;
 
     [SerializeField]
-    private TMP_Text personalGrowthAmount;
+    public Image proteinImage;
 
     [SerializeField]
-    private TMP_Text lifeAmount;
+    public Image legsImage;
 
     [SerializeField]
-    private TMP_Text speedAmount;
+    public Image chestImage;
 
-    GameManager gameManager {get {return GameManager.instance;}}
+    [SerializeField]
+    public Image backImage;
+
+
+
+    public List<Sprite> remainingLives;
+
+    public List<Sprite> proteinCollected;
+
 
     void Awake()
     {
@@ -40,18 +49,16 @@ public class IHM : MonoBehaviour
 
     void Update()
     {
-
+        DisplayData();
     }
 
     public void DisplayData()
     {
-
-        cheerPlayer.text = $"GO GO GO\n{gameManager.currentPlayer.playersName.ToUpper()}\n! ! !";
-        waterAmount.text = gameManager.currentPlayer.water.ToString();
-        proteinAmount.text = gameManager.currentPlayer.protein.ToString();
-        personalGrowthAmount.text = gameManager.currentPlayer.personalGrowth.ToString();
-        lifeAmount.text = gameManager.currentPlayer.life.ToString();
-        speedAmount.text = gameManager.currentPlayer.speed.ToString();
-
+        waterImage.fillAmount = GameManager.instance.currentPlayer.water;
+        legsImage.fillAmount = GameManager.instance.currentPlayer.legsTraining;
+        chestImage.fillAmount = GameManager.instance.currentPlayer.chestTraining;
+        backImage.fillAmount = GameManager.instance.currentPlayer.backTraining;
+        lifeImage.sprite = remainingLives[GameManager.instance.currentPlayer.life];
+        proteinImage.sprite = proteinCollected[GameManager.instance.currentPlayer.protein];
     }
 }

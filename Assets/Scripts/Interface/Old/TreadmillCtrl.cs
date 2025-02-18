@@ -19,7 +19,7 @@ public class TreadmillCtrl : TrainingMachineBase
 
         PlayerController.instance.transform.rotation = trainingPosition.rotation;
 
-        PlayerController.isTrainig = true;
+        PlayerController.isTraining = true;
 
         // PlayerController.instance.PlayAnimation(animationName);
     }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -8,16 +9,13 @@ public class GameManager : MonoBehaviour
 
     public Player currentPlayer;
 
+
     void Awake()
     {
         instance = this;
         LaunchGame();
     }
 
-    void Start()
-    {
-        
-    }
 
     void LaunchGame()
     {

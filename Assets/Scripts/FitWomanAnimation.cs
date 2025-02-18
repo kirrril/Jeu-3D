@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class FitWomanAnimation : MonoBehaviour
 {
+    [SerializeField]
     Animator animator;
 
-    Vector3 lastPosition;
+    [SerializeField]
+    FitNavMesh fitNavMesh;
+
+    Vector3 currentPosition;
 
     void Start()
     {
-        animator = GetComponent<Animator>();
-
-        lastPosition = transform.parent.position;
+        currentPosition = transform.parent.position;
     }
 
 
@@ -20,14 +22,19 @@ public class FitWomanAnimation : MonoBehaviour
     {
         Vector3 newPosition = transform.parent.position;
 
-        if (Vector3.Distance(lastPosition, newPosition) > 0.1f)
+        if (fitNavMesh.isBusy == false)
         {
-            animator.SetBool("isJogging", true);
+            if (Vector3.Distance(currentPosition, newPosition) < 0.01f)
+            {
+                animator.SetBool("isWalking", false);
+            }
 
-            lastPosition = transform.parent.position;
-        } else
-        {
-            animator.SetBool("isJogging", false);
+            if (Vector3.Distance(currentPosition, newPosition) > 0.01f)
+            {
+                animator.SetBool("isWalking", true);
+            }
         }
+
+        currentPosition = transform.parent.position;
     }
 }

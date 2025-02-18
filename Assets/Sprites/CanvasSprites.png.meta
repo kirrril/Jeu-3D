@@ -1,0 +1,747 @@
+fileFormatVersion: 2
+guid: e4a8bb373e8393043b327d20d3ba0029
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Circle1
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 583
+        width: 82
+        height: 83
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b894d7b61e4ecec4f9139ba9eee914e7
+      internalID: -1825019365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Circle2
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 582
+        width: 83
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ca35e9b9a536644a9a2c4b4c66f1d3b
+      internalID: -1607763323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Life5
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 544
+        width: 321
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42d41b8fb33fb3b4a876d0b476b4d047
+      internalID: 7110386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protein9
+      rect:
+        serializedVersion: 2
+        x: 761
+        y: 421
+        width: 186
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1cd68e6d34799f4baef50c624003425
+      internalID: -817563898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protein8
+      rect:
+        serializedVersion: 2
+        x: 1003
+        y: 421
+        width: 185
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03c18c0ceaee9584bad4d4c25b8ee393
+      internalID: 112984124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protein7
+      rect:
+        serializedVersion: 2
+        x: 1247
+        y: 421
+        width: 185
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c218d8aa00ea9748979c921cc8082b8
+      internalID: 1454571725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protein6
+      rect:
+        serializedVersion: 2
+        x: 1504
+        y: 422
+        width: 186
+        height: 237
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 580451c7b3d8efe4ab6044ddf7a8f3f5
+      internalID: 1264240279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protein5
+      rect:
+        serializedVersion: 2
+        x: 1765
+        y: 420
+        width: 185
+        height: 237
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d6aee70b82a75c4ca1c5a4dec4b1f6e
+      internalID: -1367090020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BodyMap
+      rect:
+        serializedVersion: 2
+        x: 2090
+        y: 392
+        width: 236
+        height: 271
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a2273d4a32810743b5ff1f82d0ebc5d
+      internalID: 2146909492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StopTraining
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 398
+        width: 124
+        height: 112
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fa3927747e2cd1498efa53ac6352396
+      internalID: -214523107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Life4
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 450
+        width: 321
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f8f18e484154fc49bbb31928f31fdd5
+      internalID: -968370881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StopGame
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 436
+        width: 39
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 368509e7fe8b8e649989e0a8594c37b5
+      internalID: 553803400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Life3
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 362
+        width: 321
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35fbf31bdffd0b1458c2103ffb8735cc
+      internalID: -234147676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterBottle
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 219
+        width: 56
+        height: 138
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9952cb4b25647e45a96a314088f602a
+      internalID: -487128320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Water
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 219
+        width: 40
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2f7d43fc2e000f47abe17aa1694b29e
+      internalID: 1552965436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Life2
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 265
+        width: 321
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 212713c13966bce4d9cf562dae997e11
+      internalID: 2046641458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protein4
+      rect:
+        serializedVersion: 2
+        x: 760
+        y: 108
+        width: 186
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce34be8d1c9d19c448b1d2f2912eb7ba
+      internalID: -2067825952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protein3
+      rect:
+        serializedVersion: 2
+        x: 1003
+        y: 108
+        width: 184
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dee14ff30a418df47aa803f02423410d
+      internalID: 49908168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protein2
+      rect:
+        serializedVersion: 2
+        x: 1247
+        y: 108
+        width: 185
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a40f8f02219bd7c4d8428c3d2cc65118
+      internalID: 389185851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protein1
+      rect:
+        serializedVersion: 2
+        x: 1506
+        y: 108
+        width: 184
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c08466a38cb3bc499ff1db4689084c9
+      internalID: -1235093576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Protein0
+      rect:
+        serializedVersion: 2
+        x: 1766
+        y: 108
+        width: 185
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2812fde20ccbef74da67a24ec17b4a75
+      internalID: 741103535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Body
+      rect:
+        serializedVersion: 2
+        x: 2109
+        y: 225
+        width: 102
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c047302301e32e44ad7ebba31533360
+      internalID: -1144635083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Life1
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 175
+        width: 321
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fe6a0d6893f2fa4faa75fa74782168f
+      internalID: -1218067642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Legs
+      rect:
+        serializedVersion: 2
+        x: 2131
+        y: 65
+        width: 169
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbdca6d61c1629b498620eed026b150e
+      internalID: -2037558717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 3e754818703f2824b892b02b5791b7b1
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Body: -1144635083
+      BodyMap: 2146909492
+      CanvasSprites_10: -662267848
+      CanvasSprites_100: 282763456
+      CanvasSprites_101: 1440832899
+      CanvasSprites_102: -526498699
+      CanvasSprites_103: -1871714190
+      CanvasSprites_104: 1664216434
+      CanvasSprites_105: 1794631299
+      CanvasSprites_106: 938716011
+      CanvasSprites_107: -848293100
+      CanvasSprites_108: -904114350
+      CanvasSprites_109: 931588399
+      CanvasSprites_11: -1517485180
+      CanvasSprites_110: -1560447244
+      CanvasSprites_111: 1318134476
+      CanvasSprites_112: -1754713938
+      CanvasSprites_113: 235540320
+      CanvasSprites_115: 1417488550
+      CanvasSprites_13: -1236624352
+      CanvasSprites_14: -1616130100
+      CanvasSprites_16: 418525461
+      CanvasSprites_17: 928179262
+      CanvasSprites_20: 1700673015
+      CanvasSprites_22: -1234894487
+      CanvasSprites_23: 1067057962
+      CanvasSprites_24: -2086829896
+      CanvasSprites_25: 2014711475
+      CanvasSprites_26: -1803562376
+      CanvasSprites_27: 896522376
+      CanvasSprites_28: -2066316898
+      CanvasSprites_29: -716315467
+      CanvasSprites_30: -941076335
+      CanvasSprites_31: 547727237
+      CanvasSprites_32: -1702230329
+      CanvasSprites_33: -1058707324
+      CanvasSprites_34: -812371888
+      CanvasSprites_35: 397949217
+      CanvasSprites_36: 765878577
+      CanvasSprites_38: 2009038218
+      CanvasSprites_39: 159695647
+      CanvasSprites_4: 331549825
+      CanvasSprites_40: 139347071
+      CanvasSprites_41: -1687656561
+      CanvasSprites_42: 1363061802
+      CanvasSprites_43: 522527147
+      CanvasSprites_44: 1297340673
+      CanvasSprites_45: 1598623892
+      CanvasSprites_46: 2136667767
+      CanvasSprites_47: -468576890
+      CanvasSprites_48: 2099171246
+      CanvasSprites_49: 459173662
+      CanvasSprites_5: -836358846
+      CanvasSprites_50: -1877692454
+      CanvasSprites_51: 2129913324
+      CanvasSprites_52: 1480785120
+      CanvasSprites_53: -1807556751
+      CanvasSprites_54: 843924057
+      CanvasSprites_57: -170142910
+      CanvasSprites_59: 529167884
+      CanvasSprites_60: -283556622
+      CanvasSprites_61: 1920575303
+      CanvasSprites_64: -899585747
+      CanvasSprites_65: 2031707252
+      CanvasSprites_67: -1804450682
+      CanvasSprites_68: 717202729
+      CanvasSprites_7: 1137472314
+      CanvasSprites_70: 500900077
+      CanvasSprites_71: -136356567
+      CanvasSprites_73: 1056877057
+      CanvasSprites_74: 818151808
+      CanvasSprites_76: 1693270595
+      CanvasSprites_77: -1547103340
+      CanvasSprites_79: 1723088264
+      CanvasSprites_8: 1241508972
+      CanvasSprites_80: -1575176543
+      CanvasSprites_81: -172418000
+      CanvasSprites_82: 48014300
+      CanvasSprites_84: -413346534
+      CanvasSprites_85: -1307237443
+      CanvasSprites_86: 1856579953
+      CanvasSprites_87: -1379359694
+      CanvasSprites_88: -1533698396
+      CanvasSprites_89: 1862639019
+      CanvasSprites_90: -1918263011
+      CanvasSprites_91: 2059917850
+      CanvasSprites_92: -394717035
+      CanvasSprites_93: -521543327
+      CanvasSprites_94: 297449648
+      CanvasSprites_95: -1610669396
+      CanvasSprites_96: -1045322990
+      CanvasSprites_97: 1062258504
+      CanvasSprites_98: 1421520144
+      CanvasSprites_99: 961414156
+      Circle1: -1825019365
+      Circle2: -1607763323
+      Legs: -2037558717
+      Life1: -1218067642
+      Life2: 2046641458
+      Life3: -234147676
+      Life4: -968370881
+      Life5: 7110386
+      Protein0: 741103535
+      Protein1: -1235093576
+      Protein2: 389185851
+      Protein3: 49908168
+      Protein4: -2067825952
+      Protein5: -1367090020
+      Protein6: 1264240279
+      Protein7: 1454571725
+      Protein8: 112984124
+      Protein9: -817563898
+      StopGame: 553803400
+      StopTraining: -214523107
+      Water: 1552965436
+      WaterBottle: -487128320
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -4,8 +4,7 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    public bool isInteractable { get; }
+    public bool isInteractable { get; set; }
 
-    // void TakePlace();
-    void Interact();
+    // void Interact();
 }

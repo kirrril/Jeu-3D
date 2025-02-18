@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour
 	public static PlayerController instance;
 
 	[SerializeField]
+	Transform startPosition;
+
+	[SerializeField]
 	private Rigidbody rb;
 
 	[SerializeField]
@@ -20,10 +23,13 @@ public class PlayerController : MonoBehaviour
 	private float forwardSpeed = 2, sideSpeed = 2, rotationSpeed = 5, rotationCoeff = 100;
 
 
-	private Vector3 trainingPosition;
-	private Vector3 exitPosition;
+	public static bool isTraining;
 
-	public static bool isTrainig = false;
+	public static bool isReadyToJump;
+
+	public bool isGrounded;
+
+	private float chargeJump;
 
 
 	void Awake()
@@ -31,10 +37,16 @@ public class PlayerController : MonoBehaviour
 		instance = this;
 	}
 
+	void Start()
+	{
+		StartPosition();
+	}
 
 	void Update()
 	{
 		GetInput();
+
+		Jump();
 	}
 
 	void FixedUpdate()
@@ -52,7 +64,7 @@ public class PlayerController : MonoBehaviour
 
 	void RotatePlayer()
 	{
-		if (isTrainig == false)
+		if (isTraining == false)
 		{
 			float playerRotation = inputRotate * rotationCoeff * rotationSpeed * Time.fixedDeltaTime;
 
@@ -64,7 +76,7 @@ public class PlayerController : MonoBehaviour
 
 	void MovePlayer()
 	{
-		if (isTrainig == false)
+		if (isTraining == false && isReadyToJump == false)
 		{
 			Vector3 forwardMove = transform.forward * inputMove.y * forwardSpeed;
 			Vector3 sideMove = transform.right * inputMove.x * sideSpeed;
@@ -72,6 +84,47 @@ public class PlayerController : MonoBehaviour
 			Vector3 resultMove = forwardMove + sideMove;
 
 			rb.MovePosition(transform.position + resultMove * Time.deltaTime);
+		}
+	}
+
+	public void StartPosition()
+	{
+		transform.position = startPosition.position;
+		transform.rotation = startPosition.rotation;
+	}
+
+	void Jump()
+	{
+		if (isGrounded && isReadyToJump)
+		{
+			if (Input.GetKey(KeyCode.Space))
+			{
+				chargeJump += Time.deltaTime * 20;
+
+				chargeJump = Mathf.Clamp(chargeJump, 0, 20);
+			}
+
+			if (Input.GetKeyUp(KeyCode.Space))
+			{
+				rb.velocity = (transform.forward * chargeJump * 0.5f/* * GameManager.instance.currentPlayer.legsTraining*/) + (transform.up * chargeJump * 1.2f/* * GameManager.instance.currentPlayer.legsTraining*/);
+				IHM.instance.stopTrainingButton.gameObject.SetActive(false);
+				isGrounded = false;
+				chargeJump = 0f;
+			}
+		}
+	}
+
+	private void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject.CompareTag("Ground"))
+		{
+			isReadyToJump = false;
+
+			isGrounded = true;
+
+			Debug.Log("Touching ground");
+
+			animator.SetTrigger("Landing");
 		}
 	}
 }

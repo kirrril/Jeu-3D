@@ -1,19 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class Treadmill : MonoBehaviour, IInteractable
+public class JumpBox : MonoBehaviour
 {
-    [SerializeField]
+[SerializeField]
     FitNavMesh fitNavMesh;
 
     [SerializeField]
-    private Transform runningPosition;
+    private Transform boxJumpingPosition;
 
     [SerializeField]
-    private Transform stopRunningPosition;
+    private Transform stopBoxJumpingPosition;
 
     [SerializeField]
     private Animator playerAnimator;
@@ -49,42 +47,42 @@ public class Treadmill : MonoBehaviour, IInteractable
     {
         if (other.CompareTag("Player"))
         {
-            PlayerRunning();
+            PlayerBoxJumping();
         }
 
         if (other.CompareTag("FitWoman"))
         {
-            FitWomanRunning();
+            FitBoxJumping();
         }
 
     }
 
 
-    void PlayerRunning()
+    void PlayerBoxJumping()
     {
         if (!isInteractable) return;
 
-        PlayerController.instance.transform.position = runningPosition.position;
+        PlayerController.instance.transform.position = boxJumpingPosition.position;
 
-        PlayerController.instance.transform.rotation = runningPosition.rotation;
+        PlayerController.instance.transform.rotation = boxJumpingPosition.rotation;
 
         PlayerController.isTraining = true;
 
-        playerAnimator.Play("Running");
-
-        IHM.instance.stopTrainingButton.gameObject.SetActive(true);
+        playerAnimator.Play("BoxJumping");
 
         isInteractable = false;
+
+        IHM.instance.stopTrainingButton.gameObject.SetActive(true);
 
         IHM.instance.stopTrainingButton.onClick.AddListener(OnButtonClick);
     }
 
 
-    public void PlayerStopRunning()
+    public void PlayerStopBoxJumping()
     {
-        PlayerController.instance.transform.position = stopRunningPosition.position;
+        PlayerController.instance.transform.position = stopBoxJumpingPosition.position;
 
-        PlayerController.instance.transform.rotation = stopRunningPosition.rotation;
+        PlayerController.instance.transform.rotation = stopBoxJumpingPosition.rotation;
 
         PlayerController.isTraining = false;
 
@@ -94,17 +92,17 @@ public class Treadmill : MonoBehaviour, IInteractable
     }
 
 
-    void FitWomanRunning()
+    void FitBoxJumping()
     {
         if (!isInteractable) return;
 
-        fitWomanTransform.position = runningPosition.position;
+        fitWomanTransform.position = boxJumpingPosition.position;
 
-        fitWomanTransform.rotation = runningPosition.rotation;
+        fitWomanTransform.rotation = boxJumpingPosition.rotation;
 
         if (fitNavMesh.isBusy == true)
         {
-            fitWomanAnimator.Play("Jogging");
+            // fitWomanAnimator.Play("Jogging");
         }
 
         isInteractable = false;
@@ -113,7 +111,7 @@ public class Treadmill : MonoBehaviour, IInteractable
 
     void OnButtonClick()
     {
-        PlayerStopRunning();
+        PlayerStopBoxJumping();
     }
 
     void LegsTrainingProgress()

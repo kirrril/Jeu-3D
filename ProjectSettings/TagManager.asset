@@ -8,6 +8,9 @@ TagManager:
   - Bike
   - Mirror
   - Protein
+  - FitWoman
+  - Activity
+  - Ground
   layers:
   - Default
   - TransparentFX
