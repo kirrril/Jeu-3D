@@ -31,7 +31,7 @@ public class ProteinTub : MonoBehaviour, ICollectable
 
         Destroy(gameObject);
 
-        spawner.SpawnProtein();
+        spawner.SpawnItem("Protein");
     }
 }
 

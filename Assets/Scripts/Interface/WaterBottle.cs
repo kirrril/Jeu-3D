@@ -34,6 +34,6 @@ public class WaterBottle : MonoBehaviour, ICollectable
 
         Destroy(gameObject);
 
-        spawner.SpawnWater();
+        spawner.SpawnItem("Water");
     }
 }

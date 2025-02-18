@@ -2,17 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrainingMachineBase : MonoBehaviour//, IInteractable
+public class TrainingMachineBase : MonoBehaviour, IInteractable
 {
-    [SerializeField]
-    public Transform trainingPosition;
+    public virtual bool isInteractable { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
-    public virtual bool isInteractable => throw new System.NotImplementedException();
-
-
-
-    public virtual void Interact()
+    public enum BodyPart
     {
-        throw new System.NotImplementedException();
+        legs, chest, back
     }
+
+    public BodyPart bodyPart;
 }

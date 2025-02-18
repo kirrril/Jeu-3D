@@ -6,26 +6,39 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField]
-    private GameObject proteinTub;
-
-    [SerializeField]
-    private GameObject waterBottle;
+    List<ItemInfo> itemsList;
 
 
     void Start()
     {
-        SpawnWater();
+        SpawnItem("Protein");
 
-        SpawnProtein();
+        SpawnItem("Water");
     }
 
 
-    public void SpawnProtein()
+    public void SpawnItem(string itemName)
     {
-        StartCoroutine(SpawnProteinTub());
+        GameObject itemPrefab = GetItemByName(itemName);
+
+        StartCoroutine(SpawnItemCorout(itemPrefab));
     }
 
-    IEnumerator SpawnProteinTub()
+    GameObject GetItemByName(string itemName)
+    {
+        foreach (ItemInfo itemInfo in itemsList)
+        {
+            if (itemInfo.itemName == itemName)
+            {
+                return itemInfo.itemPrefab;
+            }
+        }
+        Debug.Log($"Aucun item {itemName} n'est trouvé");
+
+        return null;
+    }
+
+    IEnumerator SpawnItemCorout(GameObject item)
     {
         yield return new WaitForSeconds(5);
 
@@ -34,24 +47,14 @@ public class Spawner : MonoBehaviour
         int spawnPointZ = Random.Range(-10, 10);
 
         Vector3 spawnPosition = new Vector3(spawnPointX, spawnPointY, spawnPointZ);
-        Instantiate(proteinTub, spawnPosition, Quaternion.identity);
+        Instantiate(item, spawnPosition, Quaternion.identity);
 
     }
+}
+[System.Serializable]
+public class ItemInfo
+{
+    public string itemName;
 
-    public void SpawnWater()
-    {
-        StartCoroutine(SpawnWaterBottle());
-    }
-
-    IEnumerator SpawnWaterBottle()
-    {
-        yield return new WaitForSeconds(3);
-
-        int spawnPointX = Random.Range(-5, 5);
-        int spawnPointY = 2;
-        int spawnPointZ = Random.Range(-5, 5);
-
-        Vector3 spawnPosition = new Vector3(spawnPointX, spawnPointY, spawnPointZ);
-        Instantiate(waterBottle, spawnPosition, Quaternion.identity);
-    }
+    public GameObject itemPrefab;
 }

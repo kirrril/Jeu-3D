@@ -11,6 +11,7 @@ TagManager:
   - FitWoman
   - Activity
   - Ground
+  - DeadZone
   layers:
   - Default
   - TransparentFX

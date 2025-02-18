@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Treadmill : MonoBehaviour, IInteractable
+public class Treadmill : TrainingMachineBase, IInteractable
 {
     [SerializeField]
     FitNavMesh fitNavMesh;
@@ -27,7 +27,7 @@ public class Treadmill : MonoBehaviour, IInteractable
 
     private bool _isInteractable = true;
 
-    public bool isInteractable
+    public override bool isInteractable
     {
         get { return _isInteractable; }
         set { _isInteractable = value; }
