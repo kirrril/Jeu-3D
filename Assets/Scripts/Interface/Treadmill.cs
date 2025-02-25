@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,126 +7,53 @@ using UnityEngine.UI;
 
 public class Treadmill : TrainingMachineBase, IInteractable
 {
-    [SerializeField]
-    FitNavMesh fitNavMesh;
-
-    [SerializeField]
-    private Transform runningPosition;
-
-    [SerializeField]
-    private Transform stopRunningPosition;
-
-    [SerializeField]
-    private Animator playerAnimator;
-
-    [SerializeField]
-    private Animator fitWomanAnimator;
-
-    [SerializeField]
-    private Transform fitWomanTransform;
-
-
-    private bool _isInteractable = true;
-
-    public override bool isInteractable
+    protected override void Update()
     {
-        get { return _isInteractable; }
-        set { _isInteractable = value; }
+        base.Update();
+
+        TrainingProgress();
     }
 
 
-    void Update()
+    protected override void OnTriggerEnter(Collider other)
     {
-        if (PlayerController.isTraining)
-        {
-            LegsTrainingProgress();
+        base.OnTriggerEnter(other);
 
-            WaterLevel();
-        }
-    }
-
-
-    void OnTriggerEnter(Collider other)
-    {
         if (other.CompareTag("Player"))
         {
-            PlayerRunning();
+            PlayerAnimation.instance.treadmillTraining = true;
         }
 
-        if (other.CompareTag("FitWoman"))
+        if (other.CompareTag("Girl"))
         {
-            FitWomanRunning();
+            GirlAnimation.instance.treadmillTraining = true;
         }
-
     }
 
 
-    void PlayerRunning()
+    protected override void OnTriggerExit(Collider other)
     {
-        if (!isInteractable) return;
+        base.OnTriggerExit(other);
 
-        PlayerController.instance.transform.position = runningPosition.position;
-
-        PlayerController.instance.transform.rotation = runningPosition.rotation;
-
-        PlayerController.isTraining = true;
-
-        playerAnimator.Play("Running");
-
-        IHM.instance.stopTrainingButton.gameObject.SetActive(true);
-
-        isInteractable = false;
-
-        IHM.instance.stopTrainingButton.onClick.AddListener(OnButtonClick);
-    }
-
-
-    public void PlayerStopRunning()
-    {
-        PlayerController.instance.transform.position = stopRunningPosition.position;
-
-        PlayerController.instance.transform.rotation = stopRunningPosition.rotation;
-
-        PlayerController.isTraining = false;
-
-        IHM.instance.stopTrainingButton.gameObject.SetActive(false);
-
-        isInteractable = true;
-    }
-
-
-    void FitWomanRunning()
-    {
-        if (!isInteractable) return;
-
-        fitWomanTransform.position = runningPosition.position;
-
-        fitWomanTransform.rotation = runningPosition.rotation;
-
-        if (fitNavMesh.isBusy == true)
+        if (other.CompareTag("Player"))
         {
-            fitWomanAnimator.Play("Jogging");
+            PlayerAnimation.instance.treadmillTraining = false;
         }
 
-        isInteractable = false;
+        if (other.CompareTag("Girl"))
+        {
+            GirlAnimation.instance.treadmillTraining = false;
+        }
     }
 
 
-    void OnButtonClick()
+    void TrainingProgress()
     {
-        PlayerStopRunning();
-    }
+        if (PlayerController.instance.isTraining)
+        {
+            GameManager.instance.treadmillTraining += Time.deltaTime / 500;
 
-    void LegsTrainingProgress()
-    {
-        GameManager.instance.currentPlayer.legsTraining += Time.deltaTime / 100;
-
-        GameManager.instance.currentPlayer.legsTraining = Mathf.Clamp(GameManager.instance.currentPlayer.legsTraining, 0, 0.35f);
-    }
-
-    void WaterLevel()
-    {
-        float waterLoss = Time.deltaTime / 100;
-        GameManager.instance.currentPlayer.water -= waterLoss;
+            GameManager.instance.treadmillTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
+        }
     }
 }

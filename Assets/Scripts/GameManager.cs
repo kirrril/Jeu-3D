@@ -10,15 +10,21 @@ public class GameManager : MonoBehaviour
 
     public Player currentPlayer;
 
+    public float treadmillTraining;
+    public float bikeTraining;
+    public float jumpboxTraining;
 
     void Awake()
     {
         instance = this;
+
         LaunchGame();
     }
 
     void Update()
     {
+        TrainingManagement();
+
         LifeManagement();
     }
 
@@ -28,17 +34,14 @@ public class GameManager : MonoBehaviour
         currentPlayer = new Player("Kirill");
     }
 
-    void LifeManagement()
+    public void LifeManagement()
     {
-        if (currentPlayer.life >= 1)
-        {
-            if (currentPlayer.water <= 0)
-            {
-                currentPlayer.life -= 1;
-            }
-        }
-        
         if (currentPlayer.life < 1) YouLoose();
+    }
+
+    public void TrainingManagement()
+    {
+        currentPlayer.legsTraining = treadmillTraining + bikeTraining + jumpboxTraining;
     }
 
     public void YouWin()

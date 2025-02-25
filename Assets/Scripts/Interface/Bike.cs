@@ -1,83 +1,60 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Bike : MonoBehaviour, IInteractable
+public class Bike : TrainingMachineBase, IInteractable
 {
-    public GameManager gameManager;
-
-    [SerializeField]
-    private Transform cyclingPosition;
-
-    [SerializeField]
-    private Transform stopCyclingPosition;
-
-    [SerializeField]
-    private Animator playerAnimator;
-
-    [SerializeField]
-    // private int speedGain = 20;
-
-    private bool _isInteractable = true;
-
-    public bool isInteractable
+    protected override void Update()
     {
-        get { return _isInteractable; }
-        set { _isInteractable = value; }
+        base.Update();
+
+        TrainingProgress();
     }
 
 
-
-    void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
+        base.OnTriggerEnter(other);
+
         if (other.CompareTag("Player"))
         {
-            PlayerCycling();
+            PlayerAnimation.instance.bikeTraining = true;
         }
 
+        if (other.CompareTag("Girl"))
+        {
+            GirlAnimation.instance.bikeTraining = true;
+        }
     }
 
 
-    void PlayerCycling()
+    protected override void OnTriggerExit(Collider other)
     {
-        if (!isInteractable) return;
+        base.OnTriggerExit(other);
 
-        PlayerController.instance.transform.position = cyclingPosition.position;
+        if (other.CompareTag("Player"))
+        {
+            PlayerAnimation.instance.bikeTraining = false;
+        }
 
-        PlayerController.instance.transform.rotation = cyclingPosition.rotation;
-
-        PlayerController.isTraining = true;
-
-        playerAnimator.Play("Cycling");
-
-        IHM.instance.stopTrainingButton.gameObject.SetActive(true);
-
-        isInteractable = false;
-
-        IHM.instance.stopTrainingButton.onClick.AddListener(OnButtonClick);
+        if (other.CompareTag("Girl"))
+        {
+            GirlAnimation.instance.bikeTraining = false;
+        }
     }
 
 
-    public void PlayerStopCycling()
+
+    void TrainingProgress()
     {
-        // gameManager.currentPlayer.speed += speedGain;
+        if (PlayerController.instance.isTraining)
+        {
+            GameManager.instance.bikeTraining += Time.deltaTime / 500;
 
-        PlayerController.instance.transform.position = stopCyclingPosition.position;
-
-        PlayerController.instance.transform.rotation = stopCyclingPosition.rotation;
-
-        PlayerController.isTraining = false;
-
-        IHM.instance.DisplayData();
-
-        IHM.instance.stopTrainingButton.gameObject.SetActive(false);
-
-        isInteractable = true;
-    }
-
-
-    void OnButtonClick()
-    {
-        PlayerStopCycling();
+            GameManager.instance.bikeTraining = Mathf.Clamp(GameManager.instance.bikeTraining, 0, 0.35f);
+        }
     }
 }

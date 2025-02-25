@@ -13,23 +13,28 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	private Rigidbody rb;
 
-	[SerializeField]
-	Animator animator;
-
 	private Vector3 inputMove = Vector3.zero;
+	
 	private float inputRotate = 0;
 
 	[SerializeField]
 	private float forwardSpeed = 2, sideSpeed = 2, rotationSpeed = 5, rotationCoeff = 100;
 
+	public bool isMoving;
 
-	public static bool isTraining;
+	public bool isTraining;
 
-	public static bool isReadyToJump;
+	public bool isReadyToJump;
 
-	public bool isGrounded;
+	public float chargeJump;
 
-	private float chargeJump;
+	public float playerSpeed;
+
+	public bool isJumping;
+
+	public bool isLanded;
+
+	Vector3 lastPosition;
 
 
 	void Awake()
@@ -40,19 +45,21 @@ public class PlayerController : MonoBehaviour
 	void Start()
 	{
 		StartPosition();
+
+		lastPosition = transform.position;
 	}
 
 	void Update()
 	{
 		GetInput();
-
-		Jump();
 	}
 
 	void FixedUpdate()
 	{
+		CheckIfMoving();
 		RotatePlayer();
 		MovePlayer();
+		Jump();
 	}
 
 	void GetInput()
@@ -83,9 +90,22 @@ public class PlayerController : MonoBehaviour
 
 			Vector3 resultMove = forwardMove + sideMove;
 
-			rb.MovePosition(transform.position + resultMove * Time.deltaTime);
+			rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime);
+
+			playerSpeed = rb.velocity.magnitude * 1000;
 		}
 	}
+
+
+	void CheckIfMoving()
+	{
+		float distanceMoved = (transform.position - lastPosition).magnitude;
+
+		isMoving = distanceMoved > 0.01f;
+
+		lastPosition = transform.position;
+	}
+
 
 	public void StartPosition()
 	{
@@ -93,24 +113,56 @@ public class PlayerController : MonoBehaviour
 		transform.rotation = startPosition.rotation;
 	}
 
-	void Jump()
+
+	public void Jump()
 	{
-		if (isGrounded && isReadyToJump)
+		if (isReadyToJump)
 		{
 			if (Input.GetKey(KeyCode.Space))
 			{
-				chargeJump += Time.deltaTime * 20;
+				chargeJump += Time.fixedDeltaTime * 20;
 
 				chargeJump = Mathf.Clamp(chargeJump, 0, 20);
 			}
 
 			if (Input.GetKeyUp(KeyCode.Space))
 			{
+				isJumping = true;
+
 				rb.velocity = (transform.forward * chargeJump * 0.5f/* * GameManager.instance.currentPlayer.legsTraining*/) + (transform.up * chargeJump * 1.2f/* * GameManager.instance.currentPlayer.legsTraining*/);
-				IHM.instance.stopTrainingButton.gameObject.SetActive(false);
-				isGrounded = false;
+
+				isReadyToJump = false;
+
 				chargeJump = 0f;
 			}
+		}
+	}
+
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.CompareTag("Training"))
+		{
+			isTraining = true;
+
+			isMoving = false;
+		}
+
+		if (other.CompareTag("Trampoline"))
+		{
+			isReadyToJump = true;
+		}
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		if (other.CompareTag("Training"))
+		{
+			isTraining = false;
+		}
+
+		if (other.CompareTag("Trampoline"))
+		{
+			isReadyToJump = false;
 		}
 	}
 
@@ -118,13 +170,20 @@ public class PlayerController : MonoBehaviour
 	{
 		if (collision.gameObject.CompareTag("Ground"))
 		{
-			isReadyToJump = false;
+			if (isJumping)
+			{
+				isLanded = true;
+			}
 
-			isGrounded = true;
+			isJumping = false;
+		}
 
-			Debug.Log("Touching ground");
+		if (collision.gameObject.CompareTag("DeadZone"))
+		{
+			GameManager.instance.currentPlayer.life -= 1;
 
-			animator.SetTrigger("Landing");
+			StartPosition();
 		}
 	}
+
 }

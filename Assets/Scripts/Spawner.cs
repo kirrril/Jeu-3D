@@ -42,15 +42,16 @@ public class Spawner : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
 
-        int spawnPointX = Random.Range(-10, 10);
+        int spawnPointX = Random.Range(-9, 9);
         int spawnPointY = 2;
-        int spawnPointZ = Random.Range(-10, 10);
+        int spawnPointZ = Random.Range(-9, 9);
 
         Vector3 spawnPosition = new Vector3(spawnPointX, spawnPointY, spawnPointZ);
         Instantiate(item, spawnPosition, Quaternion.identity);
 
     }
 }
+
 [System.Serializable]
 public class ItemInfo
 {

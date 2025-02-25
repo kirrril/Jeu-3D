@@ -12,6 +12,12 @@ TagManager:
   - Activity
   - Ground
   - DeadZone
+  - Agent
+  - Selfie
+  - Trampoline
+  - Training
+  - Girl
+  - Man
   layers:
   - Default
   - TransparentFX
