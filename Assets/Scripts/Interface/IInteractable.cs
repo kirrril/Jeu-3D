@@ -6,5 +6,7 @@ public interface IInteractable
 {
     public bool isInteractable { get; set; }
 
-    // void Interact();
+    bool isInteracting { get; }
+
+    void Interact(GameObject user, System.Action callBack);
 }

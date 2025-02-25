@@ -1,105 +1,120 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 
 public class GirlPatrol : MonoBehaviour
 {
-    // public static GirlPatrol instance;
+    [SerializeField]
+    NavMeshAgent agent;
 
-    // public Transform[] patrolPoints;
+    public static GirlPatrol instance;
 
-    // private int targetIndex;
+    public GameObject[] actionPoints;
 
-    // private float movingSpeed = 3.0f;
+    private int targetIndex;
 
-    // private Rigidbody rb;
+    private float movingSpeed = 3.0f;
 
-    // public bool isBusy;
+    private Rigidbody rb;
 
-    // public bool isMoving;
+    public bool isBusy;
 
+    public bool isMoving;
 
-    // void Awake()
-    // {
-    //     instance = this;
-    // }
-
-    // void Start()
-    // {
-    //     rb = GetComponent<Rigidbody>();
-
-    //     StartPosition();
-
-    //     targetIndex = Random.Range(0, patrolPoints.Length);
-    // }
+    Coroutine actifCorout;
 
 
-    // void FixedUpdate()
-    // {
-    //     MoveToTarget();
-    // }
+    void Awake()
+    {
+        instance = this;
+    }
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+
+        MoveToTarget();
+    }
 
 
-    // void StartPosition()
-    // {
-    //     transform.position = new Vector3(8, 0, -2);
-    // }
+
+    void MoveToTarget()
+    {
+        actifCorout = StartCoroutine(MoveToTargetCorout());
+    
+    }
 
 
-    // void MoveToTarget()
-    // {
-    //     Vector3 targetPosition = patrolPoints[targetIndex].position;
+    IEnumerator MoveToTargetCorout()
+    {
+        int targetIndex = Random.Range(0, actionPoints.Length);
 
-    //     if (Vector3.Distance(rb.position, targetPosition) > 0.2f)
-    //     {
-    //         RotateTowards(targetPosition);
+        Vector3 targetPosition = actionPoints[targetIndex].transform.position;
 
-    //         rb.MovePosition(Vector3.MoveTowards(rb.position, targetPosition, movingSpeed * Time.fixedDeltaTime));
+        agent.SetDestination(targetPosition);
 
-    //         isMoving = true;
+        yield return new WaitForSeconds(4);
 
-    //     }
+        while (agent.remainingDistance > 1f)
+        {
+            yield return null;
+        }
 
-    //     if (Vector3.Distance(rb.position, targetPosition) < 0.2f)
-    //     {
-    //         isMoving = false;
+        StartAction(actionPoints[targetIndex]);
 
-    //         isBusy = true;
+        actifCorout = null;
+    }
 
-    //         return;
-    //     }
-    // }
+    void StartAction(GameObject actionPoint)
+    {
+        IInteractable iinteractable = actionPoint.GetComponent<IInteractable>();
 
-    // void RotateTowards(Vector3 target)
-    // {
-    //     Vector3 direction = (target - transform.position).normalized;
-
-    //     if (direction != Vector3.zero)
-    //     {
-    //         transform.rotation = Quaternion.LookRotation(direction);
-    //     }
-    // }
+        iinteractable.Interact(this.gameObject, MoveToTarget);
+    }
 
 
-    // void OnTriggerEnter(Collider other)
-    // {
-    //     if (other.CompareTag("Training"))
-    //     {
-    //         StartCoroutine(WaitWhileBusy());
-    //     }
+    void RotateTowards(Vector3 target)
+    {
+        Vector3 direction = (target - transform.position).normalized;
 
-    //     isBusy = false;
-    // }
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+    }
+
+    void StopPatrol()
+    {
+        agent.isStopped = true;
+
+        if (actifCorout != null)
+        {
+            StopCoroutine(actifCorout);
+
+            actifCorout = null;
+        }
+    }
 
 
-    // IEnumerator WaitWhileBusy()
-    // {
-    //     yield return new WaitForSeconds(10);
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            StopPatrol();
 
-    //     isBusy = false;
+        }
+    }
 
-    //     targetIndex = Random.Range(0, patrolPoints.Length);
+    IEnumerator WaitWhileBusy()
+    {
+        yield return new WaitForSeconds(10);
 
-    //     MoveToTarget();
-    // }
+        isBusy = false;
+
+        targetIndex = Random.Range(0, actionPoints.Length);
+
+        MoveToTargetCorout();
+    }
 }

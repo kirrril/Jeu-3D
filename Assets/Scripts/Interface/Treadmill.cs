@@ -56,4 +56,15 @@ public class Treadmill : TrainingMachineBase, IInteractable
             GameManager.instance.treadmillTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
         }
     }
+
+    protected override IEnumerator TrainingCorout(GameObject user, System.Action callBack)
+    {
+        user.GetComponent<AnimationController>().PlayAnimation(animationName);
+
+        yield return new WaitForSeconds(trainingDuration);
+
+        trainingPerson = null;
+
+        callBack();
+    }
 }

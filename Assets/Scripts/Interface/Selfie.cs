@@ -5,7 +5,9 @@ using UnityEngine;
 public class Selfie : MonoBehaviour, IInteractable
 {
     public virtual bool isInteractable { get; set; } = true;
-    
+
+    public bool isInteracting => throw new System.NotImplementedException();
+
     [SerializeField]
     private Transform trainingPosition;
 
@@ -31,5 +33,10 @@ public class Selfie : MonoBehaviour, IInteractable
 
             isInteractable = true;
         }
+    }
+
+    public void Interact(GameObject user, System.Action callBack)
+    {
+        throw new System.NotImplementedException();
     }
 }

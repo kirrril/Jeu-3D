@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -5,16 +6,22 @@ using UnityEngine;
 
 public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 {
-    private Transform trainingPosition;
+    protected Transform trainingPosition;
 
     protected Transform stopTrainingPosition;
 
     protected GameObject trainingPerson;
 
+    public string animationName;
+
+    [SerializeField]
+    protected float trainingDuration = 5.0f;
+
     protected float thisMachineTraining = 0;
 
-    public virtual bool isInteractable { get; set; } = true;
+    public virtual bool isInteractable { get {return trainingPerson == null;} set {} }
 
+    public bool isInteracting { get {return trainingPerson != null;} }
 
     protected void Start()
     {
@@ -31,15 +38,9 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("Girl") || other.CompareTag("Man"))
+        if (other.CompareTag("Player"))
         {
-            trainingPerson = other.gameObject;
-
-            Train(trainingPerson.transform);
-
-            isInteractable = false;
-
-            Debug.Log($"Training person : {other.gameObject}");
+            Interact(other.gameObject, null);
         }
     }
 
@@ -104,5 +105,23 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
             GameManager.instance.currentPlayer.water = 0.5f;
         }
+    }
+
+    public virtual void Interact(GameObject user, System.Action callBack)
+    {
+        trainingPerson = user;
+
+        Train(trainingPerson.transform);
+
+        isInteractable = false;
+
+        Debug.Log($"Training person : {user}");
+
+        StartCoroutine(TrainingCorout(user, callBack));
+    }
+
+    protected virtual IEnumerator TrainingCorout(GameObject user, System.Action callBack)
+    {
+        yield return null;
     }
 }
