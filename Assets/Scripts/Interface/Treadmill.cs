@@ -17,35 +17,22 @@ public class Treadmill : TrainingMachineBase, IInteractable
 
     protected override void OnTriggerEnter(Collider other)
     {
+        other.gameObject.GetComponentInChildren<Animator>().SetBool("isJogging", true);
+
         base.OnTriggerEnter(other);
-
-        if (other.CompareTag("Player"))
-        {
-            PlayerAnimation.instance.treadmillTraining = true;
-        }
-
-        if (other.CompareTag("Girl"))
-        {
-            GirlAnimation.instance.treadmillTraining = true;
-        }
     }
-
 
     protected override void OnTriggerExit(Collider other)
     {
+        other.gameObject.GetComponentInChildren<Animator>().SetBool("isJogging", false);
+
         base.OnTriggerExit(other);
-
-        if (other.CompareTag("Player"))
-        {
-            PlayerAnimation.instance.treadmillTraining = false;
-        }
-
-        if (other.CompareTag("Girl"))
-        {
-            GirlAnimation.instance.treadmillTraining = false;
-        }
     }
 
+    protected override void StopTraining()
+    {
+        base.StopTraining();
+    }
 
     void TrainingProgress()
     {
@@ -59,12 +46,12 @@ public class Treadmill : TrainingMachineBase, IInteractable
 
     protected override IEnumerator TrainingCorout(GameObject user, System.Action callBack)
     {
-        user.GetComponent<AnimationController>().PlayAnimation(animationName);
-
         yield return new WaitForSeconds(trainingDuration);
 
-        trainingPerson = null;
-
         callBack();
+
+        yield return new WaitForSeconds(0.5f);
+
+        trainingPerson = null;
     }
 }

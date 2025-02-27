@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6628390436367605536}
-  - component: {fileID: 9006795185450450681}
   m_Layer: 3
   m_Name: TrainingPad1
   m_TagString: Untagged
@@ -33,22 +32,6 @@ Transform:
   - {fileID: 4701399025286473820}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9006795185450450681
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 83802901619040932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Size: {x: 3.7, y: 3, z: 7.78}
-  m_Center: {x: 0, y: 1, z: 0}
-  m_Area: 1
-  m_AffectedAgents: 00000000
 --- !u!1001 &5094698162391355319
 PrefabInstance:
   m_ObjectHideFlags: 0

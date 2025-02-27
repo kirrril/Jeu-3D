@@ -4,18 +4,16 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public class GirlPatrol : MonoBehaviour
+public class GirlController : MonoBehaviour
 {
+    public static GirlController instance;
+
     [SerializeField]
     NavMeshAgent agent;
 
-    public static GirlPatrol instance;
-
     public GameObject[] actionPoints;
 
-    private int targetIndex;
-
-    private float movingSpeed = 3.0f;
+    // private float movingSpeed = 3.0f;
 
     private Rigidbody rb;
 
@@ -59,6 +57,7 @@ public class GirlPatrol : MonoBehaviour
 
         while (agent.remainingDistance > 1f)
         {
+            isMoving = true;
             yield return null;
         }
 
@@ -69,21 +68,11 @@ public class GirlPatrol : MonoBehaviour
 
     void StartAction(GameObject actionPoint)
     {
-        IInteractable iinteractable = actionPoint.GetComponent<IInteractable>();
+        IInteractable iInteractable = actionPoint.GetComponent<IInteractable>();
 
-        iinteractable.Interact(this.gameObject, MoveToTarget);
+        iInteractable.Interact(this.gameObject, MoveToTarget);
     }
 
-
-    void RotateTowards(Vector3 target)
-    {
-        Vector3 direction = (target - transform.position).normalized;
-
-        if (direction != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
-        }
-    }
 
     void StopPatrol()
     {
@@ -105,16 +94,5 @@ public class GirlPatrol : MonoBehaviour
             StopPatrol();
 
         }
-    }
-
-    IEnumerator WaitWhileBusy()
-    {
-        yield return new WaitForSeconds(10);
-
-        isBusy = false;
-
-        targetIndex = Random.Range(0, actionPoints.Length);
-
-        MoveToTargetCorout();
     }
 }

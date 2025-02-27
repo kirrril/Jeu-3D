@@ -6,8 +6,9 @@ using UnityEngine;
 
 public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 {
+    [SerializeField]
     protected Transform trainingPosition;
-
+    [SerializeField]
     protected Transform stopTrainingPosition;
 
     protected GameObject trainingPerson;
@@ -15,19 +16,13 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     public string animationName;
 
     [SerializeField]
-    protected float trainingDuration = 5.0f;
+    protected float trainingDuration = 1.0f;
 
     protected float thisMachineTraining = 0;
 
-    public virtual bool isInteractable { get {return trainingPerson == null;} set {} }
+    public virtual bool isInteractable { get { return trainingPerson == null; } set { } }
 
-    public bool isInteracting { get {return trainingPerson != null;} }
-
-    protected void Start()
-    {
-        trainingPosition = transform.Find("TrainingPos");
-        stopTrainingPosition = transform.Find("StopTrainingPos");
-    }
+    public bool isInteracting { get { return trainingPerson != null; } }
 
 
     protected virtual void Update()
@@ -36,55 +31,83 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     }
 
 
-    protected virtual void OnTriggerEnter(Collider other)
+    public virtual void Interact(GameObject user, System.Action callBack)
     {
-        if (other.CompareTag("Player"))
+        if (!isInteractable) return;
+
+        trainingPerson = user;
+
+        TakePlace();
+
+        if (trainingPerson.name == "Player")
         {
-            Interact(other.gameObject, null);
+            StopTrainingButtonOn();
         }
+
+        if (trainingPerson.name != "Player")
+        {
+            StartCoroutine(TrainingCorout(user, LeavePlace));
+
+            Debug.Log("Coroutine started");
+        }
+
+        isInteractable = false;
     }
 
 
+    protected virtual IEnumerator TrainingCorout(GameObject user, System.Action callBack)
+    {
+        yield return null;
+    }
+
+
+    protected virtual void OnTriggerEnter(Collider other)
+    {
+        Interact(other.gameObject, null);
+    }
+
     protected virtual void OnTriggerExit(Collider other)
     {
+        PlayerController.instance.isTraining = false;
+
         isInteractable = true;
     }
 
 
-    protected void Train(Transform trainingPerson)
+    void StopTrainingButtonOn()
     {
-        if (!isInteractable) return;
+        IHM.instance.stopTrainingButton.gameObject.SetActive(true);
 
-        trainingPerson.position = trainingPosition.position;
-
-        trainingPerson.rotation = trainingPosition.rotation;
-
-        if (trainingPerson.CompareTag("Player"))
-        {
-            IHM.instance.stopTrainingButton.gameObject.SetActive(true);
-
-            IHM.instance.stopTrainingButton.onClick.AddListener(OnButtonClick);
-        }
+        IHM.instance.stopTrainingButton.onClick.AddListener(OnButtonClick);
     }
 
-
-    protected void StopTraining()
+    protected virtual void StopTraining()
     {
-        if (trainingPerson.CompareTag("Player"))
-        {
-            IHM.instance.stopTrainingButton.gameObject.SetActive(false);
+        IHM.instance.stopTrainingButton.gameObject.SetActive(false);
 
-            trainingPerson.transform.position = stopTrainingPosition.position;
-
-            trainingPerson.transform.rotation = stopTrainingPosition.rotation;
-        }
+        // PlayerController.instance.isTraining = false;
     }
 
+    void TakePlace()
+    {
+        trainingPerson.transform.position = trainingPosition.position;
+        trainingPerson.transform.rotation = trainingPosition.rotation;
+    }
+
+    protected void LeavePlace()
+    {
+        trainingPerson.transform.position = stopTrainingPosition.position;
+        trainingPerson.transform.rotation = stopTrainingPosition.rotation;
+    }
 
     protected void OnButtonClick()
     {
+        LeavePlace();
         StopTraining();
     }
+
+
+
 
     protected void WaterManagement()
     {
@@ -107,21 +130,5 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         }
     }
 
-    public virtual void Interact(GameObject user, System.Action callBack)
-    {
-        trainingPerson = user;
 
-        Train(trainingPerson.transform);
-
-        isInteractable = false;
-
-        Debug.Log($"Training person : {user}");
-
-        StartCoroutine(TrainingCorout(user, callBack));
-    }
-
-    protected virtual IEnumerator TrainingCorout(GameObject user, System.Action callBack)
-    {
-        yield return null;
-    }
 }

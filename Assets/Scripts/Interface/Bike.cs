@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Bike : TrainingMachineBase, IInteractable
 {
-    protected override void Update()
+   protected override void Update()
     {
         base.Update();
 
@@ -19,34 +19,23 @@ public class Bike : TrainingMachineBase, IInteractable
     {
         base.OnTriggerEnter(other);
 
-        if (other.CompareTag("Player"))
-        {
-            PlayerAnimation.instance.bikeTraining = true;
-        }
+        other.gameObject.GetComponentInChildren<Animator>().SetBool("isCycling", true);
 
-        if (other.CompareTag("Girl"))
-        {
-            GirlAnimation.instance.bikeTraining = true;
-        }
+        Debug.Log($"other.gameObject.name {other.gameObject.name}");
+
     }
-
 
     protected override void OnTriggerExit(Collider other)
     {
         base.OnTriggerExit(other);
 
-        if (other.CompareTag("Player"))
-        {
-            PlayerAnimation.instance.bikeTraining = false;
-        }
-
-        if (other.CompareTag("Girl"))
-        {
-            GirlAnimation.instance.bikeTraining = false;
-        }
+        other.gameObject.GetComponentInChildren<Animator>().SetBool("isCycling", false);
     }
 
-
+    protected override void StopTraining()
+    {
+        base.StopTraining();
+    }
 
     void TrainingProgress()
     {
@@ -54,7 +43,16 @@ public class Bike : TrainingMachineBase, IInteractable
         {
             GameManager.instance.bikeTraining += Time.deltaTime / 500;
 
-            GameManager.instance.bikeTraining = Mathf.Clamp(GameManager.instance.bikeTraining, 0, 0.35f);
+            GameManager.instance.bikeTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
         }
+    }
+
+    protected override IEnumerator TrainingCorout(GameObject user, System.Action callBack)
+    {
+        yield return new WaitForSeconds(trainingDuration);
+
+        callBack();
+
+        trainingPerson = null;
     }
 }

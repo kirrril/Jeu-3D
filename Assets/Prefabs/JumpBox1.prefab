@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5551912539898973133}
   m_Layer: 0
   m_Name: JumpBox1
-  m_TagString: Activity
+  m_TagString: Training
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -69,6 +69,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6db5b2c5c904109499823c873d972bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trainingPosition: {fileID: 5614351546705416746}
+  stopTrainingPosition: {fileID: 1853387876010972331}
+  animationName: BoxJumping
+  trainingDuration: 5
 --- !u!1 &6943025859234808774
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,7 +98,7 @@ Transform:
   m_GameObject: {fileID: 6943025859234808774}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.737, y: 0, z: 0}
+  m_LocalPosition: {x: 0.002, y: 0, z: -0.779}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -125,7 +129,7 @@ Transform:
   m_GameObject: {fileID: 7299532822874279409}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.096, y: 0, z: 0}
+  m_LocalPosition: {x: 0.016, y: 0, z: -0.967}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -186,10 +190,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bd32d7d1761fe2441aa75033445da358, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 388558439331624270}
   m_SourcePrefab: {fileID: 100100000, guid: bd32d7d1761fe2441aa75033445da358, type: 3}
 --- !u!4 &1684027819513123161 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bd32d7d1761fe2441aa75033445da358, type: 3}
   m_PrefabInstance: {fileID: 1212707571157825202}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2023539884412947427 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: bd32d7d1761fe2441aa75033445da358, type: 3}
+  m_PrefabInstance: {fileID: 1212707571157825202}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &388558439331624270
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023539884412947427}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0069999998, y: 0.0069999998, z: 0.007}
+  m_Center: {x: 0, y: 0.0034999999, z: -1.1641532e-10}

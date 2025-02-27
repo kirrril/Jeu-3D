@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
 	private Rigidbody rb;
 
 	private Vector3 inputMove = Vector3.zero;
-	
+
 	private float inputRotate = 0;
 
 	[SerializeField]
@@ -26,13 +26,15 @@ public class PlayerController : MonoBehaviour
 
 	public bool isReadyToJump;
 
-	public float chargeJump;
-
-	public float playerSpeed;
+	public bool isChargingJump;
 
 	public bool isJumping;
 
 	public bool isLanded;
+
+	public float chargeJump;
+
+	public float playerSpeed;
 
 	Vector3 lastPosition;
 
@@ -99,16 +101,24 @@ public class PlayerController : MonoBehaviour
 
 	void CheckIfMoving()
 	{
-		float distanceMoved = (transform.position - lastPosition).magnitude;
+		if (isTraining == false && isReadyToJump == false)
+		{
+			if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+			{
+				isMoving = true;
+			}
+			else
+			{
+				isMoving = false;
+			}
+		}
 
-		isMoving = distanceMoved > 0.01f;
-
-		lastPosition = transform.position;
 	}
 
 
 	public void StartPosition()
 	{
+		isReadyToJump = false;
 		transform.position = startPosition.position;
 		transform.rotation = startPosition.rotation;
 	}
@@ -123,15 +133,17 @@ public class PlayerController : MonoBehaviour
 				chargeJump += Time.fixedDeltaTime * 20;
 
 				chargeJump = Mathf.Clamp(chargeJump, 0, 20);
+
+				isChargingJump = true;
 			}
 
 			if (Input.GetKeyUp(KeyCode.Space))
 			{
-				isJumping = true;
-
 				rb.velocity = (transform.forward * chargeJump * 0.5f/* * GameManager.instance.currentPlayer.legsTraining*/) + (transform.up * chargeJump * 1.2f/* * GameManager.instance.currentPlayer.legsTraining*/);
 
-				isReadyToJump = false;
+				isChargingJump = false;
+
+				isJumping = true;
 
 				chargeJump = 0f;
 			}
@@ -145,11 +157,19 @@ public class PlayerController : MonoBehaviour
 			isTraining = true;
 
 			isMoving = false;
+
+			isReadyToJump = false;
 		}
 
 		if (other.CompareTag("Trampoline"))
 		{
 			isReadyToJump = true;
+
+			isTraining = false;
+
+			isMoving = false;
+
+			Debug.Log($"isReadyToJump {isReadyToJump}");
 		}
 	}
 
@@ -158,10 +178,9 @@ public class PlayerController : MonoBehaviour
 		if (other.CompareTag("Training"))
 		{
 			isTraining = false;
-		}
 
-		if (other.CompareTag("Trampoline"))
-		{
+			isMoving = false;
+
 			isReadyToJump = false;
 		}
 	}
@@ -172,18 +191,38 @@ public class PlayerController : MonoBehaviour
 		{
 			if (isJumping)
 			{
-				isLanded = true;
+				StartCoroutine(Landing());
 			}
-
-			isJumping = false;
 		}
 
 		if (collision.gameObject.CompareTag("DeadZone"))
 		{
 			GameManager.instance.currentPlayer.life -= 1;
 
+			isTraining = false;
+
+			isMoving = false;
+
+			isReadyToJump = false;
+
 			StartPosition();
 		}
 	}
 
+	IEnumerator Landing()
+	{
+		isLanded = true;
+
+		yield return new WaitForSeconds(0.5f);
+
+		isLanded = false;
+
+		isJumping = false;
+
+		isTraining = false;
+
+		isMoving = false;
+
+		isReadyToJump = false;
+	}
 }

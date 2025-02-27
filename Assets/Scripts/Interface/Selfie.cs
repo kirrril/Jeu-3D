@@ -8,32 +8,32 @@ public class Selfie : MonoBehaviour, IInteractable
 
     public bool isInteracting => throw new System.NotImplementedException();
 
-    [SerializeField]
-    private Transform trainingPosition;
+    // [SerializeField]
+    // private Transform trainingPosition;
 
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Girl"))
-        {
-            other.transform.position = trainingPosition.position;
+    // void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.CompareTag("Girl"))
+    //     {
+    //         other.transform.position = trainingPosition.position;
 
-            GirlAnimation.instance.makingSelfie = true;
+    //         GirlAnimation.instance.makingSelfie = true;
 
-            isInteractable = false;
-        }
-    }
+    //         isInteractable = false;
+    //     }
+    // }
 
 
-    void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Girl"))
-        {
-            GirlAnimation.instance.makingSelfie = false;
+    // void OnTriggerExit(Collider other)
+    // {
+    //     if (other.CompareTag("Girl"))
+    //     {
+    //         GirlAnimation.instance.makingSelfie = false;
 
-            isInteractable = true;
-        }
-    }
+    //         isInteractable = true;
+    //     }
+    // }
 
     public void Interact(GameObject user, System.Action callBack)
     {

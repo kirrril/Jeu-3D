@@ -60,5 +60,7 @@ public class IHM : MonoBehaviour
         backImage.fillAmount = GameManager.instance.currentPlayer.backTraining;
         lifeImage.sprite = remainingLives[GameManager.instance.currentPlayer.life];
         proteinImage.sprite = proteinCollected[GameManager.instance.currentPlayer.protein];
+
+
     }
 }
