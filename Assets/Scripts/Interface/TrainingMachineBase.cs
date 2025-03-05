@@ -50,7 +50,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
         TakePlace();
 
-        if (trainingPerson.name == "Player")
+        if (trainingPerson.CompareTag("Player"))
         {
             user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
 
@@ -98,7 +98,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.name == "Player")
+        if (trainingPerson.CompareTag("Player"))
         {
             PlayerController.instance.isTraining = false;
             other.gameObject.GetComponentInChildren<Animator>().SetBool(animationBool, false);
