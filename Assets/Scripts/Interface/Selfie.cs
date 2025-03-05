@@ -35,7 +35,8 @@ public class Selfie : MonoBehaviour, IInteractable
     //     }
     // }
 
-    public void Interact(GameObject user, System.Action callBack)
+
+    public void Interact(GameObject user)
     {
         throw new System.NotImplementedException();
     }

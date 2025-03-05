@@ -18,6 +18,7 @@ TagManager:
   - Training
   - Girl
   - Man
+  - Interactor
   layers:
   - Default
   - TransparentFX

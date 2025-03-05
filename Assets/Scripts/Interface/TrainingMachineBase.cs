@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 {
@@ -13,16 +14,16 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     protected GameObject trainingPerson;
 
-    public string animationName;
-
-    [SerializeField]
-    protected float trainingDuration = 1.0f;
+    protected float trainingDuration = 5.0f;
 
     protected float thisMachineTraining = 0;
+
+    protected string animationBool;
 
     public virtual bool isInteractable { get { return trainingPerson == null; } set { } }
 
     public bool isInteracting { get { return trainingPerson != null; } }
+
 
 
     protected virtual void Update()
@@ -31,9 +32,19 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     }
 
 
-    public virtual void Interact(GameObject user, System.Action callBack)
+    public virtual void Interact(GameObject user)
     {
         if (!isInteractable) return;
+
+        if (user.CompareTag("Agent"))
+        {
+            AgentController controller = user.GetComponent<AgentController>();
+            StopCoroutine(controller.MoveToTarget());
+
+            NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
+            agent.isStopped = true;
+            agent.enabled = false;
+        }
 
         trainingPerson = user;
 
@@ -41,38 +52,71 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
         if (trainingPerson.name == "Player")
         {
+            user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
+
             StopTrainingButtonOn();
         }
 
-        if (trainingPerson.name != "Player")
+        if (trainingPerson.CompareTag("Agent"))
         {
             StartCoroutine(TrainingCorout(user, LeavePlace));
-
-            Debug.Log("Coroutine started");
         }
 
-        isInteractable = false;
+        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        obstacle.enabled = true;
     }
 
 
-    protected virtual IEnumerator TrainingCorout(GameObject user, System.Action callBack)
+    IEnumerator TrainingCorout(GameObject user, System.Action callBack)
     {
-        yield return null;
+        user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
+
+        yield return new WaitForSeconds(trainingDuration);
+
+        user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
+
+        yield return new WaitForSeconds(0.2f);
+
+        user.GetComponentInChildren<Animator>().SetFloat("MovementSpeed", 0.2f);
+
+
+        yield return new WaitForSeconds(0.2f);
+
+        NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
+        agent.enabled = true;
+        agent.isStopped = false;
+
+        callBack();
     }
 
 
-    protected virtual void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        Interact(other.gameObject, null);
+        Interact(other.gameObject);
     }
 
-    protected virtual void OnTriggerExit(Collider other)
+
+    void OnTriggerExit(Collider other)
     {
-        PlayerController.instance.isTraining = false;
+        if (other.gameObject.name == "Player")
+        {
+            PlayerController.instance.isTraining = false;
+            other.gameObject.GetComponentInChildren<Animator>().SetBool(animationBool, false);
+        }
 
-        isInteractable = true;
+        if (other.gameObject.CompareTag("Agent"))
+        {
+            AgentController controller = other.gameObject.GetComponent<AgentController>();
+            StartCoroutine(controller.MoveToTarget());
+        }
+
+        trainingPerson = null;
+
+        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        obstacle.enabled = false;
+
+        Debug.Log($"obstacle.enabled: {obstacle.enabled}");
     }
-
 
     void StopTrainingButtonOn()
     {
@@ -81,11 +125,9 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         IHM.instance.stopTrainingButton.onClick.AddListener(OnButtonClick);
     }
 
-    protected virtual void StopTraining()
+    void StopTrainingButtonOff()
     {
         IHM.instance.stopTrainingButton.gameObject.SetActive(false);
-
-        // PlayerController.instance.isTraining = false;
     }
 
     void TakePlace()
@@ -100,13 +142,20 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         trainingPerson.transform.rotation = stopTrainingPosition.rotation;
     }
 
-    protected void OnButtonClick()
+
+    protected void PlayerLeavePlace()
     {
-        LeavePlace();
-        StopTraining();
+        GameObject player = GameObject.Find("Player");
+        player.transform.position = stopTrainingPosition.position;
+        player.transform.rotation = stopTrainingPosition.rotation;
     }
 
 
+    void OnButtonClick()
+    {
+        PlayerLeavePlace();
+        StopTrainingButtonOff();
+    }
 
 
     protected void WaterManagement()
@@ -129,6 +178,4 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
             GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
-
-
 }

@@ -8,5 +8,5 @@ public interface IInteractable
 
     bool isInteracting { get; }
 
-    void Interact(GameObject user, System.Action callBack);
+    void Interact(GameObject user);
 }
