@@ -6,12 +6,18 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
+    public static Timer instance;
+
     [SerializeField] TMP_Text timerText;
 
-    [SerializeField] float time;
+    [SerializeField] public float time;
 
     TimeSpan timeSpan;
 
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Update()
     {

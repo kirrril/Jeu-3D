@@ -26,6 +26,11 @@ public class GameManager : MonoBehaviour
         TrainingManagement();
 
         LifeManagement();
+
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            YouWin();
+        }
     }
 
 
@@ -46,6 +51,8 @@ public class GameManager : MonoBehaviour
 
     public void YouWin()
     {
+        PersistantData.instance.GetData();
+
         SceneManager.LoadScene("GameOver");
     }
 
