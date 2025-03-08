@@ -7,8 +7,6 @@ using UnityEngine.AI;
 
 public class AgentController : MonoBehaviour
 {
-    public static AgentController instance;
-
     protected NavMeshAgent agent;
 
     protected Transform player;
@@ -17,17 +15,20 @@ public class AgentController : MonoBehaviour
 
     public GameObject[] actionPoints;
 
+    public Coroutine currentCoroutine;
+    public string currentCoroutineName;
+
     int lastIndex = -1;
 
     float distance;
+
+    public bool isBusy;
 
     bool playerIsHere;
 
 
     void Awake()
     {
-        instance = this;
-
         agent = GetComponent<NavMeshAgent>();
 
         player = GameObject.Find("Player").transform;
@@ -35,36 +36,52 @@ public class AgentController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
     }
 
+    void Start()
+    {
+        currentCoroutine = StartCoroutine(MoveToTarget());
+        currentCoroutineName = "MoveToTarget";
+    }
 
     void Update()
     {
-        CheckPlayer();
+        UpdateAgentBehaviour();
     }
 
 
-    void CheckPlayer()
+    void UpdateAgentBehaviour()
     {
         distance = Vector3.Distance(player.position, transform.position);
 
-        if (distance < 4f)
-        {
-            playerIsHere = true;
-        }
+        playerIsHere = distance < 5f;
 
-        if (distance > 4f)
+        if (!isBusy)
         {
-            playerIsHere = false;
-        }
+            if (!PlayerController.instance.isTraining && !PlayerController.instance.isReadyToJump && playerIsHere)
+            {
+                if (currentCoroutineName != "ChaseFleePlayer")
+                {
+                    if (currentCoroutine != null)
+                    {
+                        StopCoroutine(currentCoroutine);
+                    }
 
+                    currentCoroutine = StartCoroutine(ChaseFleePlayer());
+                    currentCoroutineName = "ChaseFleePlayer";
+                }
+            }
+            else
+            {
+                if (currentCoroutineName != "MoveToTarget" || currentCoroutine == null)
+                {
+                    if (currentCoroutine != null)
+                    {
+                        StopCoroutine(currentCoroutine);
+                    }
 
-        if (!PlayerController.instance.isTraining && !PlayerController.instance.isReadyToJump && playerIsHere)
-        {
-            StartCoroutine(ChaseFleePlayer());
-        }
-
-        if (PlayerController.instance.isTraining || PlayerController.instance.isReadyToJump || !playerIsHere)
-        {
-            StartCoroutine(MoveToTarget());
+                    currentCoroutine = StartCoroutine(MoveToTarget());
+                    currentCoroutineName = "MoveToTarget";
+                }
+            }
         }
     }
 
@@ -93,27 +110,17 @@ public class AgentController : MonoBehaviour
 
         animator.SetFloat("MovementSpeed", 1.9f);
 
+        Debug.Log($"{gameObject.name} setting destination to {targetPosition}");
+
         agent.SetDestination(targetPosition);
-    }
-
-
-    void InteractWithPlayer()
-    {
-        AttackPlayer();
-
-        Debug.Log("InteractWithPlayer called!");
-    }
-
-
-    void AgentsChatting()
-    {
-        Debug.Log("Blah Blah Blah Blah");
+        yield return null; // Ajoute un frame pour voir si le déplacement commence
+        Debug.Log($"{gameObject.name} after SetDestination, remaining distance: {agent.remainingDistance}");
     }
 
 
     protected virtual void AttackPlayer()
     {
-        Debug.Log("AttackPlayer called!");
+
     }
 
 
@@ -121,17 +128,12 @@ public class AgentController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            InteractWithPlayer();
+            AttackPlayer();
 
-            Debug.Log("Collision detected!");
-        }
+            StopCoroutine(currentCoroutine);
 
-
-        if (collision.gameObject.CompareTag("Agent"))
-        {
-            AgentsChatting();
-
-            Debug.Log("Agents are chatting!");
+            currentCoroutine = StartCoroutine(MoveToTarget());
+            currentCoroutineName = "MoveToTarget";
         }
     }
 }

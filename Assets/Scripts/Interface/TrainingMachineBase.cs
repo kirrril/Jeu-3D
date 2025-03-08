@@ -20,6 +20,8 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     protected string animationBool;
 
+    protected Coroutine trainingCoroutine;
+
     public virtual bool isInteractable { get { return trainingPerson == null; } set { } }
 
     public bool isInteracting { get { return trainingPerson != null; } }
@@ -39,7 +41,13 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         if (user.CompareTag("Agent"))
         {
             AgentController controller = user.GetComponent<AgentController>();
-            StopCoroutine(controller.MoveToTarget());
+
+            if (controller.currentCoroutine != null)
+            {
+                StopCoroutine(controller.currentCoroutine);
+            }
+
+            controller.isBusy = true;
 
             NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
             agent.isStopped = true;
@@ -59,7 +67,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
         if (trainingPerson.CompareTag("Agent"))
         {
-            StartCoroutine(TrainingCorout(user, LeavePlace));
+            trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
         }
 
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
@@ -70,23 +78,25 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     IEnumerator TrainingCorout(GameObject user, System.Action callBack)
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
-
         yield return new WaitForSeconds(trainingDuration);
-
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
-
         yield return new WaitForSeconds(0.2f);
-
         user.GetComponentInChildren<Animator>().SetFloat("MovementSpeed", 0.2f);
-
-
         yield return new WaitForSeconds(0.2f);
 
         NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
         agent.enabled = true;
-        agent.isStopped = false;
-
         callBack();
+        agent.Warp(stopTrainingPosition.position);
+        yield return null;
+        agent.isStopped = false;
+        Debug.Log($"{trainingPerson.name} leaving machine, position: {trainingPerson.transform.position}, agent enabled: {agent.enabled}");
+
+        yield return new WaitForSeconds(1f);
+        AgentController controller = user.GetComponent<AgentController>();
+        controller.isBusy = false;
+        controller.currentCoroutine = StartCoroutine(controller.MoveToTarget());
+        controller.currentCoroutineName = "MoveToTarget";
     }
 
 
@@ -106,17 +116,26 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
         if (other.gameObject.CompareTag("Agent"))
         {
+            if (trainingCoroutine != null)
+            {
+                StopCoroutine(trainingCoroutine);
+                trainingCoroutine = null;
+            }
+
             AgentController controller = other.gameObject.GetComponent<AgentController>();
-            StartCoroutine(controller.MoveToTarget());
+
+            if (controller is ManController manController)
+            {
+                manController.playerWasAttacked = false;
+            }
         }
 
         trainingPerson = null;
 
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = false;
-
-        Debug.Log($"obstacle.enabled: {obstacle.enabled}");
     }
+
 
     void StopTrainingButtonOn()
     {

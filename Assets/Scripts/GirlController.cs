@@ -18,7 +18,6 @@ public class GirlController : AgentController
 
         Vector3 fleePosition = transform.position + fleeDirection;
 
-
         agent.SetDestination(fleePosition);
     }
 

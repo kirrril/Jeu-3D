@@ -5,13 +5,15 @@ using UnityEngine.AI;
 
 public class ManController : AgentController
 {
+    public bool playerWasAttacked;
+
     protected override IEnumerator ChaseFleePlayer()
     {
-        yield return new WaitForSeconds(0.5f);
-
-        agent.SetDestination(player.position);
-
-        yield return new WaitForSeconds(0.5f);
+        while (Vector3.Distance(transform.position, player.position) > 1f && !playerWasAttacked)
+        {
+            agent.SetDestination(player.position);
+            yield return null;
+        }
     }
 
     protected override void AttackPlayer()
@@ -25,6 +27,8 @@ public class ManController : AgentController
         PlayerController.instance.isReadyToJump = false;
 
         PlayerController.instance.StartPosition();
+
+        playerWasAttacked = true;
 
         Debug.Log("Player attacked!");
     }
