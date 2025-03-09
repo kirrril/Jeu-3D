@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
 	void Update()
 	{
 		GetInput();
+		LoseLife();
 	}
 
 	void FixedUpdate()
@@ -150,6 +151,24 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+	public void LoseLife()
+	{
+		if (transform.position.y < -8f)
+		{
+			GameManager.instance.currentPlayer.life -= 1;
+
+			isTraining = false;
+
+			isMoving = false;
+
+			isReadyToJump = false;
+
+			StartPosition();
+		}
+	}
+
+
+
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.CompareTag("Training"))
@@ -193,18 +212,18 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-		if (collision.gameObject.CompareTag("DeadZone"))
-		{
-			GameManager.instance.currentPlayer.life -= 1;
+		// if (collision.gameObject.CompareTag("DeadZone"))
+		// {
+		// 	GameManager.instance.currentPlayer.life -= 1;
 
-			isTraining = false;
+		// 	isTraining = false;
 
-			isMoving = false;
+		// 	isMoving = false;
 
-			isReadyToJump = false;
+		// 	isReadyToJump = false;
 
-			StartPosition();
-		}
+		// 	StartPosition();
+		// }
 	}
 
 	IEnumerator Landing()
