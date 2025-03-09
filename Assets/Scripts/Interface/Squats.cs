@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Selfie : TrainingMachineBase, IInteractable
+public class Squatting : TrainingMachineBase, IInteractable
 {
     protected override void Start()
     {
@@ -10,6 +10,6 @@ public class Selfie : TrainingMachineBase, IInteractable
 
         trainingDuration = 10.0f;
 
-        animationBool = "isMakingSelfie";
+        animationBool = "isSquatting";
     }
 }

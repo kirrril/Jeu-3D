@@ -8,8 +8,10 @@ using UnityEngine.AI;
 
 public class JumpBox : TrainingMachineBase, IInteractable
 {
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+        
         trainingDuration = 10.0f;
 
         animationBool = "isBoxJumping";

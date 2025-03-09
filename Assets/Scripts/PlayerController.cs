@@ -168,8 +168,6 @@ public class PlayerController : MonoBehaviour
 			isTraining = false;
 
 			isMoving = false;
-
-			Debug.Log($"isReadyToJump {isReadyToJump}");
 		}
 	}
 
@@ -207,13 +205,6 @@ public class PlayerController : MonoBehaviour
 
 			StartPosition();
 		}
-
-		// if (collision.gameObject.CompareTag("Agent"))
-		// {
-		// 	AgentController.instance.InteractWithPlayer();
-
-		// 	Debug.Log("Collision detected!");
-		// }
 	}
 
 	IEnumerator Landing()

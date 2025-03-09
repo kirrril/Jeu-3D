@@ -27,6 +27,12 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     public bool isInteracting { get { return trainingPerson != null; } }
 
 
+    protected virtual void Start()
+    {
+        GameObject wall = transform.Find("Wall").gameObject;
+        wall.SetActive(false);
+    }
+
 
     protected virtual void Update()
     {
@@ -36,78 +42,100 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     public virtual void Interact(GameObject user)
     {
-        if (!isInteractable) return;
+        Debug.Log(user.name + "is interacting");
 
-        if (user.CompareTag("Agent"))
+        AgentController controller = user.GetComponent<AgentController>();
+
+        if (!isInteractable && user.CompareTag("Agent"))
         {
-            AgentController controller = user.GetComponent<AgentController>();
-
             if (controller.currentCoroutine != null)
             {
                 StopCoroutine(controller.currentCoroutine);
+                controller.currentCoroutine = null;
+                controller.currentCoroutineName = "null";
             }
+            controller.isBusy = false;
+        }
 
+        if (isInteractable && user.CompareTag("Agent"))
+        {
+            if (controller.currentCoroutine != null)
+            {
+                StopCoroutine(controller.currentCoroutine);
+                controller.currentCoroutine = null;
+                controller.currentCoroutineName = "null";
+            }
             controller.isBusy = true;
 
             NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
             agent.isStopped = true;
             agent.enabled = false;
+
+            trainingPerson = user;
+
+            TakePlace();
+
+            trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
         }
 
-        trainingPerson = user;
 
-        TakePlace();
-
-        if (trainingPerson.CompareTag("Player"))
+        if (!isInteractable && user.CompareTag("Player"))
         {
+            return;
+        }
+
+        if (isInteractable && user.CompareTag("Player"))
+        {
+            trainingPerson = user;
+
+            TakePlace();
+
             user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
 
             StopTrainingButtonOn();
         }
-
-        if (trainingPerson.CompareTag("Agent"))
-        {
-            trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
-        }
-
-        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
-        obstacle.enabled = true;
     }
 
 
     IEnumerator TrainingCorout(GameObject user, System.Action callBack)
     {
+        Debug.Log("Training started");
+        Debug.Log("Training person:" + user.name);
+        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        obstacle.enabled = true;
+        GameObject wall = transform.Find("Wall").gameObject;
+        wall.SetActive(true);
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
         yield return new WaitForSeconds(trainingDuration);
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
         yield return new WaitForSeconds(0.2f);
         user.GetComponentInChildren<Animator>().SetFloat("MovementSpeed", 0.2f);
         yield return new WaitForSeconds(0.2f);
-
+        wall.SetActive(false);
+        yield return new WaitForSeconds(0.2f);
         NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
         agent.enabled = true;
-        callBack();
-        agent.Warp(stopTrainingPosition.position);
         yield return null;
         agent.isStopped = false;
-        Debug.Log($"{trainingPerson.name} leaving machine, position: {trainingPerson.transform.position}, agent enabled: {agent.enabled}");
-
-        yield return new WaitForSeconds(1f);
-        AgentController controller = user.GetComponent<AgentController>();
-        controller.isBusy = false;
-        controller.currentCoroutine = StartCoroutine(controller.MoveToTarget());
-        controller.currentCoroutineName = "MoveToTarget";
+        callBack();
     }
+
+
 
 
     void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Trigger enter");
+
         Interact(other.gameObject);
     }
 
 
     void OnTriggerExit(Collider other)
     {
+        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        obstacle.enabled = false;
+
         if (trainingPerson.CompareTag("Player"))
         {
             PlayerController.instance.isTraining = false;
@@ -121,19 +149,9 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
                 StopCoroutine(trainingCoroutine);
                 trainingCoroutine = null;
             }
-
-            AgentController controller = other.gameObject.GetComponent<AgentController>();
-
-            if (controller is ManController manController)
-            {
-                manController.playerWasAttacked = false;
-            }
         }
 
         trainingPerson = null;
-
-        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
-        obstacle.enabled = false;
     }
 
 
@@ -157,8 +175,12 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     protected void LeavePlace()
     {
+        Debug.Log("LeavePlace called!");
         trainingPerson.transform.position = stopTrainingPosition.position;
         trainingPerson.transform.rotation = stopTrainingPosition.rotation;
+
+        AgentController controller = trainingPerson.GetComponent<AgentController>();
+        controller.isBusy = false;
     }
 
 

@@ -45,6 +45,22 @@ public class AgentController : MonoBehaviour
     void Update()
     {
         UpdateAgentBehaviour();
+        UpdateSpeed();
+    }
+
+
+    void UpdateSpeed()
+    {
+        float speed = new Vector3(agent.velocity.x, 0, agent.velocity.z).magnitude;
+
+        if (speed > 0.1f)
+        {
+            animator.SetFloat("MovementSpeed", 1.9f);
+        }
+        else
+        {
+            animator.SetFloat("MovementSpeed", 0f);
+        }
     }
 
 
@@ -52,7 +68,7 @@ public class AgentController : MonoBehaviour
     {
         distance = Vector3.Distance(player.position, transform.position);
 
-        playerIsHere = distance < 5f;
+        playerIsHere = distance < 3f;
 
         if (!isBusy)
         {
@@ -71,16 +87,20 @@ public class AgentController : MonoBehaviour
             }
             else
             {
-                if (currentCoroutineName != "MoveToTarget" || currentCoroutine == null)
+                if (currentCoroutineName != "MoveToTarget" && currentCoroutine != null)
                 {
-                    if (currentCoroutine != null)
-                    {
-                        StopCoroutine(currentCoroutine);
-                    }
+                    currentCoroutine = null;
 
                     currentCoroutine = StartCoroutine(MoveToTarget());
                     currentCoroutineName = "MoveToTarget";
                 }
+
+                if (currentCoroutine == null)
+                {
+                    currentCoroutine = StartCoroutine(MoveToTarget());
+                    currentCoroutineName = "MoveToTarget";
+                }
+
             }
         }
     }
@@ -108,13 +128,11 @@ public class AgentController : MonoBehaviour
 
         Vector3 targetPosition = actionPoints[targetIndex].transform.position;
 
-        animator.SetFloat("MovementSpeed", 1.9f);
-
-        Debug.Log($"{gameObject.name} setting destination to {targetPosition}");
+        // animator.SetFloat("MovementSpeed", 1.9f);
 
         agent.SetDestination(targetPosition);
-        yield return null; // Ajoute un frame pour voir si le déplacement commence
-        Debug.Log($"{gameObject.name} after SetDestination, remaining distance: {agent.remainingDistance}");
+
+        yield return null;
     }
 
 
@@ -128,12 +146,9 @@ public class AgentController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            AttackPlayer();
-
             StopCoroutine(currentCoroutine);
 
-            currentCoroutine = StartCoroutine(MoveToTarget());
-            currentCoroutineName = "MoveToTarget";
+            AttackPlayer();
         }
     }
 }
