@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2f07877b884de014a8120d2bf240a3c0
+guid: 8094b16778b9b8d47b32c40dbecc04f4
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -37,7 +37,7 @@ ModelImporter:
       takeName: Armature|BoxJumping
       internalID: -8526911400461002891
       firstFrame: 0
-      lastFrame: 9
+      lastFrame: 34
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -62,18 +62,18 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Catch
-      takeName: Armature|Catch
-      internalID: 6176237042287245821
+      name: ChestMachine
+      takeName: Armature|ChestMachine
+      internalID: 2839993118442559493
       firstFrame: 0
-      lastFrame: 0
+      lastFrame: 79
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -95,36 +95,7 @@ ModelImporter:
       takeName: Armature|Cycling
       internalID: -2247504509490492700
       firstFrame: 0
-      lastFrame: 29
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: DumbbellSquats
-      takeName: Armature|DumbbellSquats
-      internalID: -3305146468943923562
-      firstFrame: 0
-      lastFrame: 0
+      lastFrame: 79
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -153,7 +124,7 @@ ModelImporter:
       takeName: Armature|Idle
       internalID: -8945691123924629249
       firstFrame: 0
-      lastFrame: 9
+      lastFrame: 39
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -178,11 +149,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Running
-      takeName: Armature|Running
-      internalID: -3828583913261678786
+      name: Jogging
+      takeName: Armature|Jogging
+      internalID: 6638386485966200141
       firstFrame: 0
-      lastFrame: 9
+      lastFrame: 79
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -207,11 +178,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: ShowMuscles
-      takeName: Armature|ShowMuscles
-      internalID: -5701006347945411015
+      name: Selfie
+      takeName: Armature|Selfie
+      internalID: 1197172014802083005
       firstFrame: 0
-      lastFrame: 0
+      lastFrame: 119
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -240,7 +211,65 @@ ModelImporter:
       takeName: Armature|Squats
       internalID: 3269118872031765148
       firstFrame: 0
-      lastFrame: 9
+      lastFrame: 19
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Step
+      takeName: Armature|Step
+      internalID: -2248545528610919299
+      firstFrame: 0
+      lastFrame: 119
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Stretch
+      takeName: Armature|Stretch
+      internalID: -6132235677410708637
+      firstFrame: 0
+      lastFrame: 19
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

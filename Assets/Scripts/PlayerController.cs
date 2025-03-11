@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
 
 	public bool isTraining;
 
+	public bool isGaming;
+
 	public bool isReadyToJump;
 
 	public bool isChargingJump;
@@ -74,7 +76,7 @@ public class PlayerController : MonoBehaviour
 
 	void RotatePlayer()
 	{
-		if (isTraining == false)
+		if (isTraining == false && isGaming == false)
 		{
 			float playerRotation = inputRotate * rotationCoeff * rotationSpeed * Time.fixedDeltaTime;
 
@@ -188,6 +190,17 @@ public class PlayerController : MonoBehaviour
 
 			isMoving = false;
 		}
+
+		if (other.CompareTag("Desk"))
+		{
+			isReadyToJump = false;
+
+			isTraining = false;
+
+			isMoving = false;
+
+			isGaming = true;
+		}
 	}
 
 	private void OnTriggerExit(Collider other)
@@ -211,19 +224,6 @@ public class PlayerController : MonoBehaviour
 				StartCoroutine(Landing());
 			}
 		}
-
-		// if (collision.gameObject.CompareTag("DeadZone"))
-		// {
-		// 	GameManager.instance.currentPlayer.life -= 1;
-
-		// 	isTraining = false;
-
-		// 	isMoving = false;
-
-		// 	isReadyToJump = false;
-
-		// 	StartPosition();
-		// }
 	}
 
 	IEnumerator Landing()

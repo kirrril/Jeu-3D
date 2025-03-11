@@ -128,8 +128,6 @@ public class AgentController : MonoBehaviour
 
         Vector3 targetPosition = actionPoints[targetIndex].transform.position;
 
-        // animator.SetFloat("MovementSpeed", 1.9f);
-
         agent.SetDestination(targetPosition);
 
         yield return null;

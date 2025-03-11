@@ -19,6 +19,7 @@ TagManager:
   - Girl
   - Man
   - Interactor
+  - Desk
   layers:
   - Default
   - TransparentFX
