@@ -25,7 +25,7 @@ public class ChestMachine : TrainingMachineBase, IInteractable
     {
         base.OnTriggerEnter(other);
 
-        Animator animator = other.GetComponentInChildren<Animator>();
+        Animator animator = GetComponentInChildren<Animator>();
         animator.SetBool("chestMachineIsMoving", true);
     }
 
@@ -34,7 +34,7 @@ public class ChestMachine : TrainingMachineBase, IInteractable
     {
         base.OnTriggerExit(other);
 
-        Animator animator = other.GetComponentInChildren<Animator>();
+        Animator animator = GetComponentInChildren<Animator>();
         animator.SetBool("chestMachineIsMoving", false);
     }
 

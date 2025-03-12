@@ -31,6 +31,9 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     {
         GameObject wall = transform.Find("Wall").gameObject;
         wall.SetActive(false);
+
+        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        obstacle.enabled = false;
     }
 
 
@@ -42,8 +45,6 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     public virtual void Interact(GameObject user)
     {
-        Debug.Log(user.name + "is interacting");
-
         AgentController controller = user.GetComponent<AgentController>();
 
         if (!isInteractable && user.CompareTag("Agent"))
