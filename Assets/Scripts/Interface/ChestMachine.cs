@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Barbell : TrainingMachineBase, IInteractable
+public class ChestMachine : TrainingMachineBase, IInteractable
 {
     protected override void Start()
     {
@@ -10,7 +10,7 @@ public class Barbell : TrainingMachineBase, IInteractable
 
         trainingDuration = 10.0f;
 
-        animationBool = "isPushingBarbell";
+        animationBool = "isTrainingChest_1";
     }
 
     protected override void Update()
@@ -25,8 +25,8 @@ public class Barbell : TrainingMachineBase, IInteractable
     {
         base.OnTriggerEnter(other);
 
-        Animator animator = GetComponentInChildren<Animator>();
-        animator.SetBool("barbellIsMoving", true);
+        Animator animator = other.GetComponentInChildren<Animator>();
+        animator.SetBool("chestMachineIsMoving", true);
     }
 
 
@@ -34,8 +34,8 @@ public class Barbell : TrainingMachineBase, IInteractable
     {
         base.OnTriggerExit(other);
 
-        Animator animator = GetComponentInChildren<Animator>();
-        animator.SetBool("barbellIsMoving", false);
+        Animator animator = other.GetComponentInChildren<Animator>();
+        animator.SetBool("chestMachineIsMoving", false);
     }
 
 

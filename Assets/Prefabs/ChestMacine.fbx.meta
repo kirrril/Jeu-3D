@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 75134012fa7a07f4bba2151ee936d999
+guid: 662828d6d9d7fd348a9e25a343f1db31
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: MovingBarbell
-      takeName: Armature_barbell|MovingBarbell
-      internalID: 1089418270210314629
+      name: MovingChestMachine
+      takeName: Armature.001|MovingChestMachine
+      internalID: 1931070155990174440
       firstFrame: 0
-      lastFrame: 19
+      lastFrame: 79
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

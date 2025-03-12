@@ -99,8 +99,6 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     IEnumerator TrainingCorout(GameObject user, System.Action callBack)
     {
-        Debug.Log("Training started");
-        Debug.Log("Training person:" + user.name);
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = true;
         GameObject wall = transform.Find("Wall").gameObject;
@@ -109,8 +107,8 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         yield return new WaitForSeconds(trainingDuration);
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
         yield return new WaitForSeconds(0.2f);
-        user.GetComponentInChildren<Animator>().SetFloat("MovementSpeed", 0.2f);
-        yield return new WaitForSeconds(0.2f);
+        // user.GetComponentInChildren<Animator>().SetFloat("MovementSpeed", 0.2f);
+        // yield return new WaitForSeconds(0.2f);
         wall.SetActive(false);
         yield return new WaitForSeconds(0.2f);
         NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
@@ -123,15 +121,13 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
 
 
-    void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Trigger enter");
-
         Interact(other.gameObject);
     }
 
 
-    void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other)
     {
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = false;
