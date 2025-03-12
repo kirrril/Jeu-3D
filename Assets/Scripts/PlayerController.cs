@@ -191,6 +191,17 @@ public class PlayerController : MonoBehaviour
 			isMoving = false;
 		}
 
+		// if (other.CompareTag("Door"))
+		// {
+		// 	isReadyToJump = false;
+
+		// 	isTraining = false;
+
+		// 	isMoving = true;
+
+		// 	isGaming = false;
+		// }
+
 		if (other.CompareTag("Desk"))
 		{
 			isReadyToJump = false;
@@ -213,6 +224,17 @@ public class PlayerController : MonoBehaviour
 
 			isReadyToJump = false;
 		}
+
+		// if (other.CompareTag("Door"))
+		// {
+		// 	isReadyToJump = false;
+
+		// 	isTraining = false;
+
+		// 	isMoving = true;
+
+		// 	isGaming = false;
+		// }
 	}
 
 	private void OnCollisionEnter(Collision collision)
