@@ -65,6 +65,8 @@ public class PlayerController : MonoBehaviour
 		RotatePlayer();
 		MovePlayer();
 		Jump();
+
+		rb.angularVelocity = Vector3.zero; // ????
 	}
 
 	void GetInput()

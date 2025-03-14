@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class IHM_StartGame : MonoBehaviour
 {
-    public static string playersName;
 
     [SerializeField]
     private TMP_InputField nameInputField;
@@ -29,13 +28,11 @@ public class IHM_StartGame : MonoBehaviour
 
     public void GetInput()
     {
-        playersName = nameInputField.text;
-
-        Debug.Log($"{playersName}");
+        UserHolder.instance.userProfile.userName = nameInputField.text;
     }
 
     public void StartGame()
     {
-        SceneManager.LoadScene("Levels");
+        SceneManager.LoadScene("GameScene");
     }
 }
