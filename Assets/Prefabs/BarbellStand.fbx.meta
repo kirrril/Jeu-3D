@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 09ca158c21cd3fb49b824867f17cfd80
+guid: 78d0a13fda6e19f4db118570f94a2a29
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Idle
-      takeName: Armature_barbell|Idle
-      internalID: 639062943528862107
+      name: BarbellStandMoving
+      takeName: Armature|BarbellStandMoving
+      internalID: 914142095556247803
       firstFrame: 0
-      lastFrame: 19
+      lastFrame: 39
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -62,11 +62,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: MovingBarbell
-      takeName: Armature_barbell|MovingBarbell
-      internalID: 1089418270210314629
+      name: Idle
+      takeName: Armature|Idle
+      internalID: -8945691123924629249
       firstFrame: 0
-      lastFrame: 39
+      lastFrame: 19
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

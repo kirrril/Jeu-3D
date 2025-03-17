@@ -98,7 +98,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     }
 
 
-    IEnumerator TrainingCorout(GameObject user, System.Action callBack)
+    protected IEnumerator TrainingCorout(GameObject user, System.Action callBack)
     {
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = true;
@@ -164,7 +164,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         IHM.instance.stopTrainingButton.gameObject.SetActive(false);
     }
 
-    void TakePlace()
+    protected void TakePlace()
     {
         trainingPerson.transform.position = trainingPosition.position;
         trainingPerson.transform.rotation = trainingPosition.rotation;
@@ -172,7 +172,6 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     protected void LeavePlace()
     {
-        Debug.Log("LeavePlace called!");
         trainingPerson.transform.position = stopTrainingPosition.position;
         trainingPerson.transform.rotation = stopTrainingPosition.rotation;
 

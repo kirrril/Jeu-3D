@@ -41,7 +41,7 @@ public class PlayerAnimation : MonoBehaviour
 
             if (PlayerController.instance.isLanded)
             {
-                animator.SetFloat("JumpState", 3.8f);
+                animator.SetFloat("JumpState", 4.0f);
             }
         }
 

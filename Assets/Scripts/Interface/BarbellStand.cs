@@ -1,45 +1,41 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Selfie : TrainingMachineBase, IInteractable
+public class BarbellStand : TrainingMachineBase, IInteractable
 {
     protected override void Start()
     {
         base.Start();
 
-        trainingDuration = 3.0f;
+        trainingDuration = 8.0f;
 
-        animationBool = "isShowingOff";
+        animationBool = "isBarbellSquatting";
     }
 
     protected override void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Agent"))
+        if (other.CompareTag("Man"))
         {
             Interact(other.gameObject);
-        }
 
-        if (other.CompareTag("Player"))
+            Animator animator = GetComponentInChildren<Animator>();
+            animator.SetBool("barbellStandIsMoving", true);
+        }
+        else
         {
-            return;
+            GameObject wall = transform.Find("Wall").gameObject;
+            wall.SetActive(true);
         }
     }
 
 
     protected override void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Man"))
         {
-            return;
-        }
-
-        if (other.gameObject.CompareTag("Agent"))
-        {
-            NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+            NavMeshObstacle obstacle = GetComponentInParent<NavMeshObstacle>();
             obstacle.enabled = false;
 
             if (trainingCoroutine != null)
@@ -48,23 +44,26 @@ public class Selfie : TrainingMachineBase, IInteractable
                 trainingCoroutine = null;
             }
 
+            Animator animator = GetComponentInChildren<Animator>();
+            animator.SetBool("barbellStandIsMoving", false);
+
             trainingPerson = null;
+        }
+        else
+        {
+            GameObject wall = transform.Find("Wall").gameObject;
+            wall.SetActive(false);
         }
     }
 
 
     public override void Interact(GameObject user)
     {
-        if (user.CompareTag("Player"))
+        if (user.CompareTag("Man"))
         {
-            return;
-        }
+            AgentController controller = user.transform.parent.GetComponent<AgentController>();
 
-        if (user.CompareTag("Agent"))
-        {
-            AgentController controller = user.GetComponent<AgentController>();
-
-            if (!isInteractable && user.CompareTag("Agent"))
+            if (!isInteractable)
             {
                 if (controller.currentCoroutine != null)
                 {
@@ -75,7 +74,7 @@ public class Selfie : TrainingMachineBase, IInteractable
                 controller.isBusy = false;
             }
 
-            if (isInteractable && user.CompareTag("Agent"))
+            if (isInteractable)
             {
                 if (controller.currentCoroutine != null)
                 {
@@ -85,16 +84,20 @@ public class Selfie : TrainingMachineBase, IInteractable
                 }
                 controller.isBusy = true;
 
-                NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
+                NavMeshAgent agent = user.transform.parent.GetComponent<NavMeshAgent>();
                 agent.isStopped = true;
                 agent.enabled = false;
 
-                trainingPerson = user;
+                trainingPerson = user.transform.parent.gameObject;
 
                 TakePlace();
 
-                trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
+                trainingCoroutine = StartCoroutine(TrainingCorout(user.transform.parent.gameObject, LeavePlace));
             }
+        }
+        else
+        {
+            return;
         }
     }
 

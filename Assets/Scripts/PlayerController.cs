@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour
 	{
 		GetInput();
 		LoseLife();
+		Jump();
 	}
 
 	void FixedUpdate()
@@ -64,7 +65,7 @@ public class PlayerController : MonoBehaviour
 		CheckIfMoving();
 		RotatePlayer();
 		MovePlayer();
-		Jump();
+
 
 		rb.angularVelocity = Vector3.zero; // ????
 	}
@@ -135,7 +136,7 @@ public class PlayerController : MonoBehaviour
 		{
 			if (Input.GetKey(KeyCode.Space))
 			{
-				chargeJump += Time.fixedDeltaTime * 20;
+				chargeJump += Time.deltaTime * 20;
 
 				chargeJump = Mathf.Clamp(chargeJump, 0, 20);
 
@@ -254,7 +255,7 @@ public class PlayerController : MonoBehaviour
 	{
 		isLanded = true;
 
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(1.2f);
 
 		isLanded = false;
 
