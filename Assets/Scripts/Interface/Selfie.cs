@@ -18,7 +18,7 @@ public class Selfie : TrainingMachineBase, IInteractable
 
     protected override void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Agent"))
+        if (other.CompareTag("Man") || other.CompareTag("Girl"))
         {
             Interact(other.gameObject);
         }
@@ -37,7 +37,7 @@ public class Selfie : TrainingMachineBase, IInteractable
             return;
         }
 
-        if (other.gameObject.CompareTag("Agent"))
+        if (other.CompareTag("Man") || other.CompareTag("Girl"))
         {
             NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
             obstacle.enabled = false;
@@ -60,41 +60,45 @@ public class Selfie : TrainingMachineBase, IInteractable
             return;
         }
 
-        if (user.CompareTag("Agent"))
+        if (user.CompareTag("Man") || user.CompareTag("Girl"))
         {
             AgentController controller = user.GetComponent<AgentController>();
 
-            if (!isInteractable && user.CompareTag("Agent"))
+            if (user.CompareTag("Man") || user.CompareTag("Girl"))
             {
-                if (controller.currentCoroutine != null)
+                if (!isInteractable)
                 {
-                    StopCoroutine(controller.currentCoroutine);
-                    controller.currentCoroutine = null;
-                    controller.currentCoroutineName = "null";
+                    if (controller.currentCoroutine != null)
+                    {
+                        StopCoroutine(controller.currentCoroutine);
+                        controller.currentCoroutine = null;
+                        controller.currentCoroutineName = "null";
+                    }
+                    controller.isBusy = false;
                 }
-                controller.isBusy = false;
+
+                if (isInteractable)
+                {
+                    if (controller.currentCoroutine != null)
+                    {
+                        StopCoroutine(controller.currentCoroutine);
+                        controller.currentCoroutine = null;
+                        controller.currentCoroutineName = "null";
+                    }
+                    controller.isBusy = true;
+
+                    NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
+                    agent.isStopped = true;
+                    agent.enabled = false;
+
+                    trainingPerson = user;
+
+                    TakePlace();
+
+                    trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
+                }
             }
 
-            if (isInteractable && user.CompareTag("Agent"))
-            {
-                if (controller.currentCoroutine != null)
-                {
-                    StopCoroutine(controller.currentCoroutine);
-                    controller.currentCoroutine = null;
-                    controller.currentCoroutineName = "null";
-                }
-                controller.isBusy = true;
-
-                NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
-                agent.isStopped = true;
-                agent.enabled = false;
-
-                trainingPerson = user;
-
-                TakePlace();
-
-                trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
-            }
         }
     }
 

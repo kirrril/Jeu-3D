@@ -47,7 +47,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     {
         AgentController controller = user.GetComponent<AgentController>();
 
-        if (!isInteractable && user.CompareTag("Agent"))
+        if (!isInteractable && user.CompareTag("Man") || !isInteractable && user.CompareTag("Girl"))
         {
             if (controller.currentCoroutine != null)
             {
@@ -58,7 +58,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
             controller.isBusy = false;
         }
 
-        if (isInteractable && user.CompareTag("Agent"))
+        if (isInteractable && user.CompareTag("Man") || isInteractable && user.CompareTag("Girl"))
         {
             if (controller.currentCoroutine != null)
             {
@@ -69,7 +69,6 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
             controller.isBusy = true;
 
             NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
-            agent.isStopped = true;
             agent.enabled = false;
 
             trainingPerson = user;
@@ -139,7 +138,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
             other.gameObject.GetComponentInChildren<Animator>().SetBool(animationBool, false);
         }
 
-        if (other.gameObject.CompareTag("Agent"))
+        if (other.gameObject.CompareTag("Man") || other.gameObject.CompareTag("Girl"))
         {
             if (trainingCoroutine != null)
             {

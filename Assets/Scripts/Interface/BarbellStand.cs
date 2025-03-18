@@ -35,7 +35,7 @@ public class BarbellStand : TrainingMachineBase, IInteractable
     {
         if (other.gameObject.CompareTag("Man"))
         {
-            NavMeshObstacle obstacle = GetComponentInParent<NavMeshObstacle>();
+            NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
             obstacle.enabled = false;
 
             if (trainingCoroutine != null)
@@ -61,7 +61,7 @@ public class BarbellStand : TrainingMachineBase, IInteractable
     {
         if (user.CompareTag("Man"))
         {
-            AgentController controller = user.transform.parent.GetComponent<AgentController>();
+            AgentController controller = user.GetComponent<AgentController>();
 
             if (!isInteractable)
             {
@@ -84,15 +84,15 @@ public class BarbellStand : TrainingMachineBase, IInteractable
                 }
                 controller.isBusy = true;
 
-                NavMeshAgent agent = user.transform.parent.GetComponent<NavMeshAgent>();
+                NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
                 agent.isStopped = true;
                 agent.enabled = false;
 
-                trainingPerson = user.transform.parent.gameObject;
+                trainingPerson = user;
 
                 TakePlace();
 
-                trainingCoroutine = StartCoroutine(TrainingCorout(user.transform.parent.gameObject, LeavePlace));
+                trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
             }
         }
         else
