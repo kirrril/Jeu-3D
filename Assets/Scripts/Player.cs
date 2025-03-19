@@ -18,6 +18,8 @@ public class Player
 
     public float backTraining = 0f;
 
+    public int level = 1;
+
     public Player(string playersName)
     {
         this.playersName = playersName;

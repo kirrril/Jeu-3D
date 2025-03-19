@@ -107,8 +107,6 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         yield return new WaitForSeconds(trainingDuration);
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
         yield return new WaitForSeconds(0.2f);
-        // user.GetComponentInChildren<Animator>().SetFloat("MovementSpeed", 0.2f);
-        // yield return new WaitForSeconds(0.2f);
         wall.SetActive(false);
         yield return new WaitForSeconds(0.2f);
         NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
@@ -132,19 +130,19 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = false;
 
-        if (trainingPerson.CompareTag("Player"))
-        {
-            PlayerController.instance.isTraining = false;
-            other.gameObject.GetComponentInChildren<Animator>().SetBool(animationBool, false);
-        }
-
-        if (other.gameObject.CompareTag("Man") || other.gameObject.CompareTag("Girl"))
+        if (other.CompareTag("Man") || other.CompareTag("Girl"))
         {
             if (trainingCoroutine != null)
             {
                 StopCoroutine(trainingCoroutine);
                 trainingCoroutine = null;
             }
+        }
+
+        if (other.CompareTag("Player"))
+        {
+            PlayerController.instance.isTraining = false;
+            other.gameObject.GetComponentInChildren<Animator>().SetBool(animationBool, false);
         }
 
         trainingPerson = null;
@@ -205,13 +203,15 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
         if (GameManager.instance.currentPlayer.water <= 0)
         {
-            PlayerController.instance.StartPosition();
+            // PlayerController.instance.StartPosition();
 
-            IHM.instance.stopTrainingButton.gameObject.SetActive(false);
+            // IHM.instance.stopTrainingButton.gameObject.SetActive(false);
 
-            GameManager.instance.currentPlayer.life--;
+            // GameManager.instance.currentPlayer.life--;
 
-            GameManager.instance.currentPlayer.water = 0.5f;
+            // GameManager.instance.currentPlayer.water = 0.5f;
+
+            PlayerController.instance.isDehydrated = true;
         }
     }
 }

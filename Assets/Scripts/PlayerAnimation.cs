@@ -49,5 +49,15 @@ public class PlayerAnimation : MonoBehaviour
         {
             animator.SetBool("isJumping", false);
         }
+
+        if (PlayerController.instance.isSubmissed)
+        {
+            animator.SetBool("isSubmissed", true);
+        }
+
+        if (PlayerController.instance.isSubmissed == false)
+        {
+            animator.SetBool("isSubmissed", false);
+        }
     }
 }

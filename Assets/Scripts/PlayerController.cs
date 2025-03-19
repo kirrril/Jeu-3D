@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -12,6 +13,18 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField]
 	private Rigidbody rb;
+
+	[SerializeField]
+	private GameObject lights;
+
+	[SerializeField]
+	private Light directionalLight;
+
+	[SerializeField]
+	private ParticleSystem starParticles;
+
+	[SerializeField]
+	private Transform koFocus;
 
 	private Vector3 inputMove = Vector3.zero;
 
@@ -38,6 +51,14 @@ public class PlayerController : MonoBehaviour
 
 	public float playerSpeed;
 
+	public bool lostLife;
+
+	public bool isSubmissed;
+
+	public bool isDehydrated;
+
+
+
 	Vector3 lastPosition;
 
 
@@ -56,7 +77,7 @@ public class PlayerController : MonoBehaviour
 	void Update()
 	{
 		GetInput();
-		LoseLife();
+		// LifeManagement();
 		Jump();
 	}
 
@@ -124,6 +145,7 @@ public class PlayerController : MonoBehaviour
 
 	public void StartPosition()
 	{
+		isSubmissed = false;
 		isReadyToJump = false;
 		transform.position = startPosition.position;
 		transform.rotation = startPosition.rotation;
@@ -156,20 +178,97 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	public void LoseLife()
+	// public IEnumerator LoseLife()
+	// {
+	// 	isTraining = false;
+
+	// 	isMoving = true;
+
+	// 	isReadyToJump = false;
+
+	// 	lostLife = false;
+
+	// 	isSubmissed = false;
+
+	// 	isDehydrated = false;
+
+	// 	yield return new WaitForSeconds(10.0f);
+
+	// 	GameManager.instance.currentPlayer.life -= 1;
+
+	// 	StartPosition();
+
+	// 	StopAllCoroutines();
+	// }
+
+
+	public IEnumerator SufferSubmission(GameObject communicator)
 	{
-		if (transform.position.y < -8f)
-		{
-			GameManager.instance.currentPlayer.life -= 1;
+		yield return new WaitForSeconds(1.0f);
 
-			isTraining = false;
+		isSubmissed = true;
 
-			isMoving = false;
+		yield return new WaitForSeconds(0.3f);
 
-			isReadyToJump = false;
+		lights.SetActive(false);
 
-			StartPosition();
-		}
+		starParticles.transform.position = koFocus.transform.position;
+		starParticles.Play();
+
+
+		yield return new WaitForSeconds(0.3f);
+
+		Transform agentTransform = communicator.gameObject.transform.parent;
+		Animator manAnimator = agentTransform.GetComponentInChildren<Animator>();
+		manAnimator.SetBool("isAttacking", false);
+
+		yield return new WaitForSeconds(1.5f);
+
+		isSubmissed = false;
+
+		yield return new WaitForSeconds(0.1f);
+
+		GameManager.instance.currentPlayer.life -= 1;
+
+		isTraining = false;
+
+		isMoving = true;
+
+		isReadyToJump = false;
+
+		lostLife = false;
+
+		isDehydrated = false;
+
+		lights.SetActive(true);
+
+		StartPosition();
+	}
+
+
+	// public void LifeManagement()
+	// {
+	// 	if (transform.position.y < -4f)
+	// 	{
+	// 		lostLife = true;
+	// 		StartCoroutine(LoseLife());
+	// 	}
+
+	// 	if (isSubmissed)
+	// 	{
+	// 		StartCoroutine(LoseLife());
+	// 	}
+
+	// 	if (isDehydrated)
+	// 	{
+	// 		StartCoroutine(LoseLife());
+	// 	}
+	// }
+
+
+	public void MakeHugs()
+	{
+
 	}
 
 
@@ -194,16 +293,21 @@ public class PlayerController : MonoBehaviour
 			isMoving = false;
 		}
 
-		// if (other.CompareTag("Door"))
-		// {
-		// 	isReadyToJump = false;
+		if (other.gameObject.name == "Communicator")
+		{
+			if (GameManager.instance.currentPlayer.level == 4)
+			{
+				MakeHugs();
+			}
+			else
+			{
+				Transform agentTransform = other.gameObject.transform.parent;
+				Animator manAnimator = agentTransform.GetComponentInChildren<Animator>();
+				manAnimator.SetBool("isAttacking", true);
 
-		// 	isTraining = false;
-
-		// 	isMoving = true;
-
-		// 	isGaming = false;
-		// }
+				StartCoroutine(SufferSubmission(other.gameObject));
+			}
+		}
 
 		if (other.CompareTag("Desk"))
 		{
@@ -227,17 +331,6 @@ public class PlayerController : MonoBehaviour
 
 			isReadyToJump = false;
 		}
-
-		// if (other.CompareTag("Door"))
-		// {
-		// 	isReadyToJump = false;
-
-		// 	isTraining = false;
-
-		// 	isMoving = true;
-
-		// 	isGaming = false;
-		// }
 	}
 
 	private void OnCollisionEnter(Collision collision)

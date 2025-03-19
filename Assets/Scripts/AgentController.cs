@@ -132,21 +132,4 @@ public class AgentController : MonoBehaviour
 
         yield return null;
     }
-
-
-    protected virtual void AttackPlayer()
-    {
-
-    }
-
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            StopCoroutine(currentCoroutine);
-
-            AttackPlayer();
-        }
-    }
 }

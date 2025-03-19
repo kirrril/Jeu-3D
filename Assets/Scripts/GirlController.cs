@@ -20,15 +20,4 @@ public class GirlController : AgentController
 
         agent.SetDestination(fleePosition);
     }
-
-
-    protected override void AttackPlayer()
-    {
-        SayStopHarrasingMe();
-    }
-
-    void SayStopHarrasingMe()
-    {
-        Debug.Log("Stop Harrasing Me! Help!!");
-    }
 }

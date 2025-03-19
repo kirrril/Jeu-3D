@@ -15,21 +15,4 @@ public class ManController : AgentController
             yield return null;
         }
     }
-
-    protected override void AttackPlayer()
-    {
-        GameManager.instance.currentPlayer.life -= 1;
-
-        PlayerController.instance.isTraining = false;
-
-        PlayerController.instance.isMoving = false;
-
-        PlayerController.instance.isReadyToJump = false;
-
-        PlayerController.instance.StartPosition();
-
-        playerWasAttacked = true;
-
-        Debug.Log("Player attacked!");
-    }
 }
