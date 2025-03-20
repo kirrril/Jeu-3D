@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Unity.VisualStudio.Editor;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -24,7 +25,16 @@ public class PlayerController : MonoBehaviour
 	private ParticleSystem starParticles;
 
 	[SerializeField]
+	private ParticleSystem tunnelParticles;
+
+	[SerializeField]
 	private Transform koFocus;
+
+	[SerializeField]
+	private Transform tunnelOrigin;
+
+	[SerializeField]
+	private Image tunnelUI;
 
 	private Vector3 inputMove = Vector3.zero;
 
@@ -47,6 +57,8 @@ public class PlayerController : MonoBehaviour
 
 	public bool isLanded;
 
+	public bool isFalling;
+
 	public float chargeJump;
 
 	public float playerSpeed;
@@ -56,7 +68,7 @@ public class PlayerController : MonoBehaviour
 	public bool isSubmissed;
 
 	public bool isDehydrated;
-
+	Coroutine tunnelCoroutine;
 
 
 	Vector3 lastPosition;
@@ -79,6 +91,7 @@ public class PlayerController : MonoBehaviour
 		GetInput();
 		// LifeManagement();
 		Jump();
+		GroundControl();
 	}
 
 	void FixedUpdate()
@@ -141,8 +154,6 @@ public class PlayerController : MonoBehaviour
 		}
 
 	}
-
-
 	public void StartPosition()
 	{
 		isSubmissed = false;
@@ -200,6 +211,41 @@ public class PlayerController : MonoBehaviour
 
 	// 	StopAllCoroutines();
 	// }
+
+
+	void GroundControl()
+	{
+		if (transform.position.y < -1f && tunnelCoroutine == null)
+		{
+			tunnelCoroutine = StartCoroutine(EnterTheVoid());
+		}
+
+		else if (transform.position.y >= -1f && tunnelCoroutine != null)
+		{
+			StopCoroutine(tunnelCoroutine);
+			tunnelCoroutine = null;
+		}
+	}
+
+
+	IEnumerator EnterTheVoid()
+	{
+		yield return new WaitForSeconds(0.5f);
+
+		
+
+		yield return new WaitForSeconds(5.0f);
+
+		GameManager.instance.currentPlayer.life -= 1;
+
+		isTraining = false;
+
+		isMoving = true;
+
+		isReadyToJump = false;
+
+		StartPosition();
+	}
 
 
 	public IEnumerator SufferSubmission(GameObject communicator)
