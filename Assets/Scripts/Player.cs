@@ -20,6 +20,8 @@ public class Player
 
     public int level = 1;
 
+    public int defeatedEnemies;
+
     public Player(string playersName)
     {
         this.playersName = playersName;

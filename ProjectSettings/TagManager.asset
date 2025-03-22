@@ -21,6 +21,7 @@ TagManager:
   - Interactor
   - Desk
   - Door
+  - Test
   layers:
   - Default
   - TransparentFX

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Unity.VisualStudio.Editor;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -40,6 +39,12 @@ public class PlayerController : MonoBehaviour
 
 	private float inputRotate = 0;
 
+	private Coroutine fightCoroutine;
+
+	private Transform attackingAgent;
+
+	private float attackAngle = 20f;
+
 	[SerializeField]
 	private float forwardSpeed = 2, sideSpeed = 2, rotationSpeed = 5, rotationCoeff = 100;
 
@@ -56,6 +61,12 @@ public class PlayerController : MonoBehaviour
 	public bool isJumping;
 
 	public bool isLanded;
+
+	public bool isReadyToAttack;
+
+	public bool playerWasAttacked;
+
+	public bool playerHasAttacked;
 
 	public bool isFalling;
 
@@ -84,12 +95,14 @@ public class PlayerController : MonoBehaviour
 		StartPosition();
 
 		lastPosition = transform.position;
+
+		GameManager.instance.currentPlayer.chestTraining = 0.6f; ///////////////////////////
+		GameManager.instance.currentPlayer.level = 2; ////////////////////////
 	}
 
 	void Update()
 	{
 		GetInput();
-		// LifeManagement();
 		Jump();
 		GroundControl();
 	}
@@ -101,7 +114,7 @@ public class PlayerController : MonoBehaviour
 		MovePlayer();
 
 
-		rb.angularVelocity = Vector3.zero; // ????
+		rb.angularVelocity = Vector3.zero;
 	}
 
 	void GetInput()
@@ -189,6 +202,10 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+
+
+
+
 	// public IEnumerator LoseLife()
 	// {
 	// 	isTraining = false;
@@ -232,7 +249,7 @@ public class PlayerController : MonoBehaviour
 	{
 		yield return new WaitForSeconds(0.5f);
 
-		
+
 
 		yield return new WaitForSeconds(5.0f);
 
@@ -245,11 +262,79 @@ public class PlayerController : MonoBehaviour
 		isReadyToJump = false;
 
 		StartPosition();
+
+		tunnelCoroutine = null;
 	}
 
 
+	IEnumerator Fight(GameObject communicator)
+	{
+		Debug.Log("Fight called!");
+
+		float elapsedTime = 0f;
+
+		while (elapsedTime < 1f)
+		{
+			if (IsFacingAgent() && Input.GetKeyDown(KeyCode.Space))
+			{
+				playerHasAttacked = true;
+
+				StartCoroutine(DefeatEnemy(communicator));
+				fightCoroutine = null;
+
+				yield break;
+			}
+
+			elapsedTime += Time.deltaTime;
+
+			yield return null;
+		}
+
+		StartCoroutine(SufferSubmission(communicator));
+
+		fightCoroutine = null;
+	}
+
+
+	bool IsFacingAgent()
+	{
+		if (attackingAgent == null) return false;
+
+		Vector3 directionToAgent = (attackingAgent.position - transform.position).normalized;
+		float angle = Vector3.Angle(transform.forward, directionToAgent);
+		return angle <= attackAngle;
+	}
+
+
+	IEnumerator DefeatEnemy(GameObject communicator)
+	{
+		GameManager.instance.currentPlayer.defeatedEnemies += 1;
+
+		yield return null;
+
+		Transform agentTransform = communicator.gameObject.transform.parent;
+		Animator manAnimator = agentTransform.GetComponentInChildren<Animator>();
+		manAnimator.SetBool("isSubmissed", true);
+
+		playerHasAttacked = false;
+
+		yield return new WaitForSeconds(3.5f);
+
+		manAnimator.SetBool("isSubmissed", false);
+
+		
+	}
+
 	public IEnumerator SufferSubmission(GameObject communicator)
 	{
+		yield return new WaitForSeconds(0.2f);
+
+		playerWasAttacked = true;
+
+		Transform agentTransform = communicator.gameObject.transform.parent;
+		Animator manAnimator = agentTransform.GetComponentInChildren<Animator>();
+		manAnimator.SetBool("isAttacking", true);
+
 		yield return new WaitForSeconds(1.0f);
 
 		isSubmissed = true;
@@ -261,11 +346,8 @@ public class PlayerController : MonoBehaviour
 		starParticles.transform.position = koFocus.transform.position;
 		starParticles.Play();
 
-
 		yield return new WaitForSeconds(0.3f);
 
-		Transform agentTransform = communicator.gameObject.transform.parent;
-		Animator manAnimator = agentTransform.GetComponentInChildren<Animator>();
 		manAnimator.SetBool("isAttacking", false);
 
 		yield return new WaitForSeconds(1.5f);
@@ -289,6 +371,9 @@ public class PlayerController : MonoBehaviour
 		lights.SetActive(true);
 
 		StartPosition();
+
+		playerWasAttacked = false;
+		playerHasAttacked = false;
 	}
 
 
@@ -341,19 +426,24 @@ public class PlayerController : MonoBehaviour
 
 		if (other.gameObject.name == "Communicator")
 		{
+			attackingAgent = other.gameObject.transform.parent;
+
 			if (GameManager.instance.currentPlayer.level == 4)
 			{
 				MakeHugs();
 			}
+			else if (GameManager.instance.currentPlayer.level == 3 && GameManager.instance.currentPlayer.chestTraining >= 0.5f || GameManager.instance.currentPlayer.level == 2 && GameManager.instance.currentPlayer.chestTraining >= 0.5f)
+			{
+				isReadyToAttack = true;
+
+				fightCoroutine = StartCoroutine(Fight(other.gameObject));
+			}
 			else
 			{
-				Transform agentTransform = other.gameObject.transform.parent;
-				Animator manAnimator = agentTransform.GetComponentInChildren<Animator>();
-				manAnimator.SetBool("isAttacking", true);
-
 				StartCoroutine(SufferSubmission(other.gameObject));
 			}
 		}
+
 
 		if (other.CompareTag("Desk"))
 		{
@@ -376,6 +466,14 @@ public class PlayerController : MonoBehaviour
 			isMoving = false;
 
 			isReadyToJump = false;
+		}
+
+		if (other.gameObject.name == "Communicator" && fightCoroutine != null)
+		{
+			StopCoroutine(fightCoroutine);
+			fightCoroutine = null;
+			attackingAgent = null;
+			isReadyToAttack = false;
 		}
 	}
 

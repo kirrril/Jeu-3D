@@ -7,6 +7,8 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField]
     private Animator animator;
 
+    private Coroutine pushCoroutine;
+
 
     void Update()
     {
@@ -58,6 +60,33 @@ public class PlayerAnimation : MonoBehaviour
         if (PlayerController.instance.isSubmissed == false)
         {
             animator.SetBool("isSubmissed", false);
+        }
+
+        if (PlayerController.instance.playerHasAttacked == true)
+        {
+            animator.SetBool("isPushing", true);
+
+            pushCoroutine = StartCoroutine(Push());
+        }
+
+        if (PlayerController.instance.playerHasAttacked == false)
+        {
+            pushCoroutine = null;
+
+            animator.SetBool("isPushing", false);
+        }
+
+        IEnumerator Push()
+        {
+            animator.SetFloat("PushingState", 0.5f);
+
+            yield return new WaitForSeconds(0.375f);
+
+            animator.SetFloat("PushingState", 1.9f);
+
+            yield return new WaitForSeconds(0.375f);
+
+            yield break;
         }
     }
 }
