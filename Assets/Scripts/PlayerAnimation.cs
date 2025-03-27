@@ -62,29 +62,29 @@ public class PlayerAnimation : MonoBehaviour
             animator.SetBool("isSubmissed", false);
         }
 
-        if (PlayerController.instance.playerHasAttacked == true)
+        if (PlayerController.instance.playerAttacks == true)
         {
             animator.SetBool("isPushing", true);
 
             pushCoroutine = StartCoroutine(Push());
         }
 
-        if (PlayerController.instance.playerHasAttacked == false)
-        {
-            pushCoroutine = null;
-
-            animator.SetBool("isPushing", false);
-        }
 
         IEnumerator Push()
         {
             animator.SetFloat("PushingState", 0.5f);
 
-            yield return new WaitForSeconds(0.375f);
+            yield return new WaitForSeconds(0.3f);
 
             animator.SetFloat("PushingState", 1.9f);
 
-            yield return new WaitForSeconds(0.375f);
+            yield return new WaitForSeconds(0.3f);
+
+            animator.SetFloat("PushingState", 0.1f);
+
+            animator.SetBool("isPushing", false);
+
+            pushCoroutine = null;
 
             yield break;
         }

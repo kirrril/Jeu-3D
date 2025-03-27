@@ -7,46 +7,84 @@ public class Door : MonoBehaviour
     [SerializeField]
     protected Transform pushingPosition;
 
+    [SerializeField]
+    Collider doorCollider;
+
     protected GameObject trainingPerson;
 
-    protected string animationBool = "isPushingDoor";
+    protected string animationBool = "isPushing";
 
-    protected Coroutine gamingCoroutine;
+    protected Coroutine pushingCoroutine;
 
 
-    public virtual void Interact(GameObject user)
+    void Interact(GameObject user)
     {
-        trainingPerson = user;
-
-        TakePlace();
-
-        user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
+        pushingCoroutine = StartCoroutine(PushingCorout(user));
     }
 
-    // IEnumerator TrainingCorout()
-    // {
-    //     yield return new WaitForSeconds(1f);
-    // }
+
+    IEnumerator PushingCorout(GameObject user)
+    {
+        while (true)
+        {
+            while (!Input.GetKey(KeyCode.Space))
+            {
+                yield return null;
+            }
+
+            Animator playerAnimator = user.GetComponentInChildren<Animator>();
+            playerAnimator.SetBool(animationBool, true);
+            playerAnimator.SetFloat("PushingState", 0.5f);
+
+            while (Input.GetKey(KeyCode.Space))
+            {
+                yield return null;
+            }
+
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                if (GameManager.instance.currentPlayer.chestTraining < 1f)
+                {
+                    playerAnimator.SetBool(animationBool, false);
+                }
+                else
+                {
+                    doorCollider.enabled = false;
+
+                    Animator doorAnimator = GetComponentInChildren<Animator>();
+                    doorAnimator.SetBool("isOpenning", true);
+
+                    playerAnimator.SetFloat("PushingState", 1.9f);
+
+                    yield return new WaitForSeconds(0.375f);
+
+                    playerAnimator.SetBool(animationBool, false);
+
+                    pushingCoroutine = null;
+
+                    yield break;
+                }
+
+
+            }
+
+        }
+    }
+
 
     void OnTriggerEnter(Collider other)
     {
         Interact(other.gameObject);
-
-        Animator animator = GetComponentInChildren<Animator>();
-        animator.SetBool("isOpenning", true);
     }
 
     void OnTriggerExit(Collider other)
     {
-        Animator animator = GetComponentInChildren<Animator>();
-        animator.SetBool("isOpenning", false);
+        Animator doorAnimator = GetComponentInChildren<Animator>();
+        doorAnimator.SetBool("isOpenning", false);
 
-        other.GetComponentInChildren<Animator>().SetBool(animationBool, false);
-    }
+        Animator playerAnimator = other.GetComponentInChildren<Animator>();
+        playerAnimator.SetBool(animationBool, false);
 
-    void TakePlace()
-    {
-        trainingPerson.transform.position = pushingPosition.position;
-        trainingPerson.transform.rotation = pushingPosition.rotation;
+        doorCollider.enabled = true;
     }
 }

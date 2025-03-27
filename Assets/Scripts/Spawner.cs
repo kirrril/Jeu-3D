@@ -33,7 +33,6 @@ public class Spawner : MonoBehaviour
                 return itemInfo.itemPrefab;
             }
         }
-        Debug.Log($"Aucun item {itemName} n'est trouvé");
 
         return null;
     }
@@ -43,7 +42,7 @@ public class Spawner : MonoBehaviour
         yield return new WaitForSeconds(5);
 
         int spawnPointX = Random.Range(-9, 9);
-        int spawnPointY = 2;
+        float spawnPointY = 0.1f;
         int spawnPointZ = Random.Range(-9, 9);
 
         Vector3 spawnPosition = new Vector3(spawnPointX, spawnPointY, spawnPointZ);

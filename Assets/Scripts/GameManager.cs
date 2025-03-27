@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,9 +13,21 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
 
         LaunchGame();
+    }
+
+    void Start()
+    {
+        DontDestroyOnLoad(this.gameObject);
     }
 
     void Update()
@@ -36,7 +45,9 @@ public class GameManager : MonoBehaviour
 
     void LaunchGame()
     {
-        currentPlayer = new Player("Kirill");
+        currentPlayer = new Player(UserHolder.instance.userProfile.userName);
+
+        // currentPlayer = new Player("Kirill");
     }
 
     public void LifeManagement()
@@ -53,11 +64,11 @@ public class GameManager : MonoBehaviour
     {
         PersistantData.instance.GetData();
 
-        SceneManager.LoadScene("GameOver");
+        SceneManager.LoadScene("YouWin");
     }
 
     public void YouLoose()
     {
-        SceneManager.LoadScene("GameOver");
+        SceneManager.LoadScene("YouLose");
     }
 }

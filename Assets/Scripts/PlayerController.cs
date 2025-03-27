@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -54,6 +55,8 @@ public class PlayerController : MonoBehaviour
 
 	public bool isGaming;
 
+	public bool isClimbing;
+
 	public bool isReadyToJump;
 
 	public bool isChargingJump;
@@ -65,6 +68,8 @@ public class PlayerController : MonoBehaviour
 	public bool isReadyToAttack;
 
 	public bool playerWasAttacked;
+
+	public bool playerAttacks;
 
 	public bool playerHasAttacked;
 
@@ -79,6 +84,7 @@ public class PlayerController : MonoBehaviour
 	public bool isSubmissed;
 
 	public bool isDehydrated;
+
 	Coroutine tunnelCoroutine;
 
 
@@ -95,9 +101,6 @@ public class PlayerController : MonoBehaviour
 		StartPosition();
 
 		lastPosition = transform.position;
-
-		GameManager.instance.currentPlayer.chestTraining = 0.6f; ///////////////////////////
-		GameManager.instance.currentPlayer.level = 2; ////////////////////////
 	}
 
 	void Update()
@@ -105,6 +108,7 @@ public class PlayerController : MonoBehaviour
 		GetInput();
 		Jump();
 		GroundControl();
+		Climb();
 	}
 
 	void FixedUpdate()
@@ -113,8 +117,10 @@ public class PlayerController : MonoBehaviour
 		RotatePlayer();
 		MovePlayer();
 
-
-		rb.angularVelocity = Vector3.zero;
+		if (!isClimbing)
+		{
+			rb.angularVelocity = Vector3.zero;
+		}
 	}
 
 	void GetInput()
@@ -126,7 +132,7 @@ public class PlayerController : MonoBehaviour
 
 	void RotatePlayer()
 	{
-		if (isTraining == false && isGaming == false)
+		if (isTraining == false && isGaming == false && isClimbing == false)
 		{
 			float playerRotation = inputRotate * rotationCoeff * rotationSpeed * Time.fixedDeltaTime;
 
@@ -138,7 +144,7 @@ public class PlayerController : MonoBehaviour
 
 	void MovePlayer()
 	{
-		if (isTraining == false && isReadyToJump == false)
+		if (isTraining == false && isReadyToJump == false && isClimbing == false)
 		{
 			Vector3 forwardMove = transform.forward * inputMove.y * forwardSpeed;
 			Vector3 sideMove = transform.right * inputMove.x * sideSpeed;
@@ -203,41 +209,34 @@ public class PlayerController : MonoBehaviour
 	}
 
 
+	public void Climb()
+	{
+		if (isClimbing)
+		{
+			if (Input.GetKey(KeyCode.Space))
+			{
+				transform.Translate(Vector3.up * 1.5f * Time.deltaTime);
+			}
 
+			if (!Input.GetKey(KeyCode.Space))
+			{
+				if (transform.position.y > -8f)
+				{
+					transform.Translate(Vector3.down * 1.5f * Time.deltaTime);
+				}
 
-
-	// public IEnumerator LoseLife()
-	// {
-	// 	isTraining = false;
-
-	// 	isMoving = true;
-
-	// 	isReadyToJump = false;
-
-	// 	lostLife = false;
-
-	// 	isSubmissed = false;
-
-	// 	isDehydrated = false;
-
-	// 	yield return new WaitForSeconds(10.0f);
-
-	// 	GameManager.instance.currentPlayer.life -= 1;
-
-	// 	StartPosition();
-
-	// 	StopAllCoroutines();
-	// }
-
+			}
+		}
+	}
 
 	void GroundControl()
 	{
-		if (transform.position.y < -1f && tunnelCoroutine == null)
+		if (transform.position.y < -10.0f && tunnelCoroutine == null)
 		{
 			tunnelCoroutine = StartCoroutine(EnterTheVoid());
 		}
 
-		else if (transform.position.y >= -1f && tunnelCoroutine != null)
+		else if (transform.position.y >= -10.0f && tunnelCoroutine != null)
 		{
 			StopCoroutine(tunnelCoroutine);
 			tunnelCoroutine = null;
@@ -247,11 +246,7 @@ public class PlayerController : MonoBehaviour
 
 	IEnumerator EnterTheVoid()
 	{
-		yield return new WaitForSeconds(0.5f);
-
-
-
-		yield return new WaitForSeconds(5.0f);
+		yield return new WaitForSeconds(2.0f);
 
 		GameManager.instance.currentPlayer.life -= 1;
 
@@ -269,15 +264,13 @@ public class PlayerController : MonoBehaviour
 
 	IEnumerator Fight(GameObject communicator)
 	{
-		Debug.Log("Fight called!");
-
 		float elapsedTime = 0f;
 
 		while (elapsedTime < 1f)
 		{
 			if (IsFacingAgent() && Input.GetKeyDown(KeyCode.Space))
 			{
-				playerHasAttacked = true;
+				playerAttacks = true;
 
 				StartCoroutine(DefeatEnemy(communicator));
 				fightCoroutine = null;
@@ -316,14 +309,17 @@ public class PlayerController : MonoBehaviour
 		Animator manAnimator = agentTransform.GetComponentInChildren<Animator>();
 		manAnimator.SetBool("isSubmissed", true);
 
-		playerHasAttacked = false;
+		IHM.instance.DisplayVictoryMessage();
+
+		playerAttacks = false;
+
+		playerHasAttacked = true;
 
 		yield return new WaitForSeconds(3.5f);
 
 		manAnimator.SetBool("isSubmissed", false);
-
-		
 	}
+
 
 	public IEnumerator SufferSubmission(GameObject communicator)
 	{
@@ -367,34 +363,16 @@ public class PlayerController : MonoBehaviour
 		lostLife = false;
 
 		isDehydrated = false;
-
+ 
 		lights.SetActive(true);
 
 		StartPosition();
 
+		IHM.instance.DisplayDefeatMessage();
+
 		playerWasAttacked = false;
-		playerHasAttacked = false;
+		playerAttacks = false;
 	}
-
-
-	// public void LifeManagement()
-	// {
-	// 	if (transform.position.y < -4f)
-	// 	{
-	// 		lostLife = true;
-	// 		StartCoroutine(LoseLife());
-	// 	}
-
-	// 	if (isSubmissed)
-	// 	{
-	// 		StartCoroutine(LoseLife());
-	// 	}
-
-	// 	if (isDehydrated)
-	// 	{
-	// 		StartCoroutine(LoseLife());
-	// 	}
-	// }
 
 
 	public void MakeHugs()
@@ -424,6 +402,20 @@ public class PlayerController : MonoBehaviour
 			isMoving = false;
 		}
 
+		if (other.CompareTag("JumpZone"))
+		{
+			isReadyToJump = true;
+
+			isTraining = false;
+		}
+
+		if (other.CompareTag("Rope"))
+		{
+			isClimbing = true;
+
+			isMoving = false;
+		}
+
 		if (other.gameObject.name == "Communicator")
 		{
 			attackingAgent = other.gameObject.transform.parent;
@@ -444,17 +436,48 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-
-		if (other.CompareTag("Desk"))
+		if (other.gameObject.name == "Level1")
 		{
-			isReadyToJump = false;
-
-			isTraining = false;
-
-			isMoving = false;
-
-			isGaming = true;
+			GameManager.instance.currentPlayer.level = 1;
 		}
+
+		if (other.gameObject.name == "Level2")
+		{
+			GameManager.instance.currentPlayer.level = 2;
+
+			IHM.instance.FlipLegCanvas();
+		}
+
+		if (other.gameObject.name == "Level3")
+		{
+			GameManager.instance.currentPlayer.level = 3;
+		}
+
+
+		if (other.CompareTag("YouWin"))
+		{
+			StartCoroutine(YouWin());
+		}
+	}
+
+	IEnumerator YouWin()
+	{
+		GameManager.instance.YouWin();
+
+		yield return null;
+
+		Animator playerAnimator = GetComponentInChildren<Animator>();
+		playerAnimator.SetBool("isClimbing", false);
+
+		GetComponent<Rigidbody>().isKinematic = false;
+
+		startPosition = GameObject.Find("StartPosition").transform;
+
+		transform.position = startPosition.position;
+
+		isClimbing = false;
+
+		isMoving = true;
 	}
 
 	private void OnTriggerExit(Collider other)
@@ -474,6 +497,13 @@ public class PlayerController : MonoBehaviour
 			fightCoroutine = null;
 			attackingAgent = null;
 			isReadyToAttack = false;
+			playerAttacks = false;
+		}
+
+
+		if (other.CompareTag("Rope"))
+		{
+			isClimbing = false;
 		}
 	}
 

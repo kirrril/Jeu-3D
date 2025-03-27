@@ -6,4 +6,6 @@ using UnityEngine;
 public class UserProfile
 {
     public string userName;
+
+    public int alphaCoeff;
 }

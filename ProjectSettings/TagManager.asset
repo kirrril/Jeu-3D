@@ -22,6 +22,11 @@ TagManager:
   - Desk
   - Door
   - Test
+  - JumpZone
+  - Rope
+  - YouWin
+  - StepBench
+  - YogaPad
   layers:
   - Default
   - TransparentFX

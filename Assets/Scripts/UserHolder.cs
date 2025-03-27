@@ -16,14 +16,16 @@ public class UserHolder : MonoBehaviour
 
             return;
         }
-
-        instance = this;
-
-        DontDestroyOnLoad(this.gameObject);
+        else
+        {
+            instance = this;
+        }
     }
 
     void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
+
         userProfile = new UserProfile();
     }
 }

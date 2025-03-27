@@ -10,7 +10,7 @@ public class Timer : MonoBehaviour
 
     [SerializeField] TMP_Text timerText;
 
-    [SerializeField] public float time;
+    [SerializeField] public float time = 1.0f;
 
     TimeSpan timeSpan;
 

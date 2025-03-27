@@ -110,48 +110,6 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Circle1
-      rect:
-        serializedVersion: 2
-        x: 89
-        y: 583
-        width: 82
-        height: 83
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b894d7b61e4ecec4f9139ba9eee914e7
-      internalID: -1825019365
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Circle2
-      rect:
-        serializedVersion: 2
-        x: 212
-        y: 582
-        width: 83
-        height: 84
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2ca35e9b9a536644a9a2c4b4c66f1d3b
-      internalID: -1607763323
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Life5
       rect:
         serializedVersion: 2
@@ -168,111 +126,6 @@ TextureImporter:
       bones: []
       spriteID: 42d41b8fb33fb3b4a876d0b476b4d047
       internalID: 7110386
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Protein9
-      rect:
-        serializedVersion: 2
-        x: 761
-        y: 421
-        width: 186
-        height: 236
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e1cd68e6d34799f4baef50c624003425
-      internalID: -817563898
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Protein8
-      rect:
-        serializedVersion: 2
-        x: 1003
-        y: 421
-        width: 185
-        height: 236
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 03c18c0ceaee9584bad4d4c25b8ee393
-      internalID: 112984124
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Protein7
-      rect:
-        serializedVersion: 2
-        x: 1247
-        y: 421
-        width: 185
-        height: 236
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7c218d8aa00ea9748979c921cc8082b8
-      internalID: 1454571725
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Protein6
-      rect:
-        serializedVersion: 2
-        x: 1504
-        y: 422
-        width: 186
-        height: 237
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 580451c7b3d8efe4ab6044ddf7a8f3f5
-      internalID: 1264240279
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Protein5
-      rect:
-        serializedVersion: 2
-        x: 1765
-        y: 420
-        width: 185
-        height: 237
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9d6aee70b82a75c4ca1c5a4dec4b1f6e
-      internalID: -1367090020
       vertices: []
       indices: 
       edges: []
@@ -299,27 +152,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: StopTraining
-      rect:
-        serializedVersion: 2
-        x: 61
-        y: 398
-        width: 124
-        height: 112
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8fa3927747e2cd1498efa53ac6352396
-      internalID: -214523107
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Life4
       rect:
         serializedVersion: 2
@@ -336,27 +168,6 @@ TextureImporter:
       bones: []
       spriteID: 2f8f18e484154fc49bbb31928f31fdd5
       internalID: -968370881
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: StopGame
-      rect:
-        serializedVersion: 2
-        x: 239
-        y: 436
-        width: 39
-        height: 39
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 368509e7fe8b8e649989e0a8594c37b5
-      internalID: 553803400
       vertices: []
       indices: 
       edges: []
@@ -441,111 +252,6 @@ TextureImporter:
       bones: []
       spriteID: 212713c13966bce4d9cf562dae997e11
       internalID: 2046641458
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Protein4
-      rect:
-        serializedVersion: 2
-        x: 760
-        y: 108
-        width: 186
-        height: 236
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ce34be8d1c9d19c448b1d2f2912eb7ba
-      internalID: -2067825952
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Protein3
-      rect:
-        serializedVersion: 2
-        x: 1003
-        y: 108
-        width: 184
-        height: 236
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: dee14ff30a418df47aa803f02423410d
-      internalID: 49908168
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Protein2
-      rect:
-        serializedVersion: 2
-        x: 1247
-        y: 108
-        width: 185
-        height: 236
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a40f8f02219bd7c4d8428c3d2cc65118
-      internalID: 389185851
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Protein1
-      rect:
-        serializedVersion: 2
-        x: 1506
-        y: 108
-        width: 184
-        height: 236
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8c08466a38cb3bc499ff1db4689084c9
-      internalID: -1235093576
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Protein0
-      rect:
-        serializedVersion: 2
-        x: 1766
-        y: 108
-        width: 185
-        height: 236
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2812fde20ccbef74da67a24ec17b4a75
-      internalID: 741103535
       vertices: []
       indices: 
       edges: []

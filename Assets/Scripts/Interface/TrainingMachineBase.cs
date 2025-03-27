@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -89,6 +88,8 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
             trainingPerson = user;
 
             TakePlace();
+
+            IHM.instance.DisplayWaterWarning();
 
             user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
 
@@ -192,7 +193,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     }
 
 
-    protected void WaterManagement()
+    protected virtual void WaterManagement()
     {
         if (PlayerController.instance.isTraining == true)
         {

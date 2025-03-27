@@ -5,8 +5,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class IHM_StartGame : MonoBehaviour
+public class IHM_startGame : MonoBehaviour
 {
+    // public static IHM_startGame instance;
+
+    // void Awake()
+    // {
+    //     instance = this;
+    // }
 
     [SerializeField]
     private TMP_InputField nameInputField;
@@ -14,9 +20,12 @@ public class IHM_StartGame : MonoBehaviour
     [SerializeField]
     private Button startGameButton;
 
+    [SerializeField]
+    public GameObject panel;
+
     void Start()
     {
-        FocusInputField();
+        panel.SetActive(false);
     }
 
     public void FocusInputField()
@@ -27,8 +36,12 @@ public class IHM_StartGame : MonoBehaviour
     }
 
     public void GetInput()
-    {
-        UserHolder.instance.userProfile.userName = nameInputField.text;
+    {   
+        if (nameInputField.text != "")
+        {
+            UserHolder.instance.userProfile.userName = nameInputField.text;
+            StartGame();
+        }
     }
 
     public void StartGame()
