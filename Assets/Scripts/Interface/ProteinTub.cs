@@ -1,4 +1,4 @@
- using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +8,9 @@ public class ProteinTub : MonoBehaviour, ICollectable
 
     [SerializeField]
     private GameObject proteinTub;
+
+    [SerializeField]
+    AudioSource proteinCollect;
 
     public bool isCollectable { get { return true; } }
 
@@ -23,10 +26,26 @@ public class ProteinTub : MonoBehaviour, ICollectable
         {
             Collect();
         }
+
+        if (other.CompareTag("Ground"))
+        {
+            StartCoroutine(Expire());
+        }
+    }
+
+    IEnumerator Expire()
+    {
+        yield return new WaitForSeconds(10);
+
+        Destroy(gameObject);
+
+        spawner.SpawnItem("Protein");
     }
 
     public void Collect()
     {
+        proteinCollect.Play();
+
         GameManager.instance.currentPlayer.protein += 1;
 
         Destroy(gameObject);

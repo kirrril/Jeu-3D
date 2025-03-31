@@ -27,12 +27,20 @@ public class DeskStart : MonoBehaviour
     [SerializeField]
     Transform screen;
 
+    [SerializeField]
+    AudioSource ambientAudio;
+
+    [SerializeField]
+    AudioSource keyboardAudio;
+
 
     public virtual void Interact(GameObject user)
     {
         trainingPerson = user;
 
         TakePlace();
+
+        keyboardAudio.Play();
 
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
 
@@ -53,6 +61,8 @@ public class DeskStart : MonoBehaviour
 
         panel.SetActive(true);
         ihm_StartGame.FocusInputField();
+
+        keyboardAudio.Stop();
     }
 
     void OnTriggerEnter(Collider other)
@@ -62,13 +72,6 @@ public class DeskStart : MonoBehaviour
 
     void TakePlace()
     {
-        // trainingPerson.transform.position = gamingPosition.position;
-        // trainingPerson.transform.rotation = gamingPosition.rotation;
-
-        // Rigidbody rb;
-        // rb = trainingPerson.GetComponent<Rigidbody>();
-        // rb.velocity = new Vector3(0, rb.velocity.y, 0);
-
         trainingPerson.transform.position = new Vector3(0f, 0f, 4.3f);
         trainingPerson.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
     }

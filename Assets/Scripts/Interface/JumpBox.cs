@@ -24,14 +24,42 @@ public class JumpBox : TrainingMachineBase, IInteractable
         TrainingProgress();
     }
 
+        public void DisplayMachineWarning()
+    {
+        if (GameManager.instance.jumpboxTraining == 0.35f)
+        {
+            IHM.instance.contextMessageCorout = StartCoroutine(MachineWarning());
+
+            trainingAudio.Stop();
+        }
+    }
+
+    public IEnumerator MachineWarning()
+    {
+        IHM.instance.contextMessage.text = $"JUMPBOX TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(1f);
+
+        IHM.instance.contextMessage.text = $"JUMPBOX TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(1f);
+
+        IHM.instance.contextMessage.text = $"JUMPBOX TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(1f);
+
+        IHM.instance.contextMessage.text = "";
+    }
 
     void TrainingProgress()
     {
         if (PlayerController.instance.isTraining)
         {
-            GameManager.instance.treadmillTraining += Time.deltaTime / 500;
+            GameManager.instance.jumpboxTraining += Time.deltaTime / 500;
 
-            GameManager.instance.treadmillTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
+            GameManager.instance.jumpboxTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
+
+            DisplayMachineWarning();
         }
     }
 }

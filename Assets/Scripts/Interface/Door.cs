@@ -51,6 +51,8 @@ public class Door : MonoBehaviour
                 {
                     doorCollider.enabled = false;
 
+                    PlayerController.instance.voiceHa.Play();
+
                     Animator doorAnimator = GetComponentInChildren<Animator>();
                     doorAnimator.SetBool("isOpenning", true);
 
@@ -84,6 +86,8 @@ public class Door : MonoBehaviour
 
         Animator playerAnimator = other.GetComponentInChildren<Animator>();
         playerAnimator.SetBool(animationBool, false);
+
+        StopCoroutine(PushingCorout(other.gameObject));
 
         doorCollider.enabled = true;
     }

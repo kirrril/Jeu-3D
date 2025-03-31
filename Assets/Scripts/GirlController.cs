@@ -6,6 +6,12 @@ public class GirlController : AgentController
 {
     private float fleeDistance = 2f;
 
+    [SerializeField]
+    AudioSource voiceAgressive;
+
+    [SerializeField]
+    AudioSource voiceSweet;
+
 
     protected override IEnumerator ChaseFleePlayer()
     {
@@ -18,5 +24,7 @@ public class GirlController : AgentController
         Vector3 fleePosition = transform.position + fleeDirection;
 
         agent.SetDestination(fleePosition);
+
+        voiceAgressive.Play();
     }
 }

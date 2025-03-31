@@ -44,6 +44,9 @@ public class IHM : MonoBehaviour
     public TMP_Text contextMessage;
 
     [SerializeField]
+    public Image blackOutPanel;
+
+    [SerializeField]
     private GameObject legCanvas;
 
     public Coroutine mainMessageCorout;
@@ -91,7 +94,7 @@ public class IHM : MonoBehaviour
         lifeImage.sprite = remainingLives[GameManager.instance.currentPlayer.life];
         proteinAmount.text = Convert.ToString(GameManager.instance.currentPlayer.protein);
         defeatesEnemies.text = Convert.ToString(GameManager.instance.currentPlayer.defeatedEnemies);
-        alphaCoeff.text = Convert.ToString(UserHolder.instance.userProfile.alphaCoeff);
+        alphaCoeff.text = Convert.ToString(PersistantData.instance.data.alphaCoeff);
     }
 
 
@@ -177,6 +180,33 @@ public class IHM : MonoBehaviour
 
         mainMessage.text = "";
     }
+
+    public void FadeToBlack()
+    {
+        StartCoroutine(FadeCoroutine(0f, 1f, 1.8f));
+    }
+
+    public void FadeOut()
+    {
+        StartCoroutine(FadeCoroutine(1f, 0f, 1f));
+    }
+
+    IEnumerator FadeCoroutine(float startAlpha, float endAlpha, float duration)
+    {
+        float time = 0f;
+        Color color = blackOutPanel.color;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            color.a = Mathf.Lerp(startAlpha, endAlpha, time / duration);
+            blackOutPanel.color = color;
+            yield return null;
+        }
+        color.a = endAlpha;
+        blackOutPanel.color = color;
+    }
+
 
     public void Quit()
     {

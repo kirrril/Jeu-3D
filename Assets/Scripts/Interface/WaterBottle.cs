@@ -12,6 +12,9 @@ public class WaterBottle : MonoBehaviour, ICollectable
     [SerializeField]
     private float waterContent = 1.0f;
 
+    [SerializeField]
+    AudioSource waterCollect;
+
     public bool isCollectable { get { return true; } }
 
 
@@ -26,10 +29,26 @@ public class WaterBottle : MonoBehaviour, ICollectable
         {
             Collect();
         }
+
+        if (other.CompareTag("Ground"))
+        {
+            StartCoroutine(Expire());
+        }
+    }
+
+    IEnumerator Expire()
+    {
+        yield return new WaitForSeconds(10);
+
+        Destroy(gameObject);
+
+        spawner.SpawnItem("Water");
     }
 
     public void Collect()
     {
+        waterCollect.Play();
+        
         GameManager.instance.currentPlayer.water = waterContent;
 
         Destroy(gameObject);

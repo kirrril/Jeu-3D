@@ -7,6 +7,12 @@ using UnityEngine.AI;
 public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 {
     [SerializeField]
+    protected AudioSource trainingAudio;
+
+    [SerializeField]
+    AudioSource ambientSound;
+
+    [SerializeField]
     protected Transform trainingPosition;
     [SerializeField]
     protected Transform stopTrainingPosition;
@@ -33,6 +39,9 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = false;
+
+        GameObject ambientSoundSource = GameObject.Find("AmbientSound");
+        ambientSound = ambientSoundSource.GetComponent<AudioSource>();
     }
 
 
@@ -85,9 +94,16 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
         if (isInteractable && user.CompareTag("Player"))
         {
+            NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+            obstacle.enabled = true;
+
             trainingPerson = user;
 
             TakePlace();
+
+            trainingAudio.Play();
+
+            ambientSound.Stop();
 
             IHM.instance.DisplayWaterWarning();
 
@@ -116,8 +132,6 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         agent.isStopped = false;
         callBack();
     }
-
-
 
 
     protected virtual void OnTriggerEnter(Collider other)
@@ -183,6 +197,8 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         GameObject player = GameObject.Find("Player");
         player.transform.position = stopTrainingPosition.position;
         player.transform.rotation = stopTrainingPosition.rotation;
+        trainingAudio.Stop();
+        ambientSound.Play();
     }
 
 
@@ -193,26 +209,35 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     }
 
 
-    protected virtual void WaterManagement()
+    void WaterManagement()
     {
         if (PlayerController.instance.isTraining == true)
         {
-            float waterLoss = Time.deltaTime / 100;
+            float waterLoss = Time.deltaTime / 200;
 
             GameManager.instance.currentPlayer.water -= waterLoss;
         }
 
         if (GameManager.instance.currentPlayer.water <= 0)
         {
-            // PlayerController.instance.StartPosition();
+            PlayerController.instance.isTraining = false;
 
-            // IHM.instance.stopTrainingButton.gameObject.SetActive(false);
 
-            // GameManager.instance.currentPlayer.life--;
 
-            // GameManager.instance.currentPlayer.water = 0.5f;
+            // ambientSound.Play();
 
-            PlayerController.instance.isDehydrated = true;
+            PlayerController.instance.StartPosition();
+
+            IHM.instance.stopTrainingButton.gameObject.SetActive(false);
+
+            trainingAudio.Stop();
+
+
+            GameManager.instance.currentPlayer.life -= 1;
+
+            GameManager.instance.currentPlayer.water = 0.5f;
+
+            // PlayerController.instance.isDehydrated = true;
         }
     }
 }

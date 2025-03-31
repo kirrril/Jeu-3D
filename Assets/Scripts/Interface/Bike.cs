@@ -30,6 +30,8 @@ public class Bike : TrainingMachineBase, IInteractable
         if (GameManager.instance.bikeTraining == 0.35f)
         {
             IHM.instance.contextMessageCorout = StartCoroutine(MachineWarning());
+
+            trainingAudio.Stop();
         }
     }
 

@@ -24,6 +24,33 @@ public class Treadmill : TrainingMachineBase, IInteractable
         TrainingProgress();
     }
 
+        public void DisplayMachineWarning()
+    {
+        if (GameManager.instance.treadmillTraining == 0.35f)
+        {
+            IHM.instance.contextMessageCorout = StartCoroutine(MachineWarning());
+
+            trainingAudio.Stop();
+        }
+    }
+
+    public IEnumerator MachineWarning()
+    {
+        IHM.instance.contextMessage.text = $"TREADMILL TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(1f);
+
+        IHM.instance.contextMessage.text = $"TREADMILL TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(1f);
+
+        IHM.instance.contextMessage.text = $"TREADMILL TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(1f);
+
+        IHM.instance.contextMessage.text = "";
+    }
+
 
     void TrainingProgress()
     {
@@ -32,6 +59,8 @@ public class Treadmill : TrainingMachineBase, IInteractable
             GameManager.instance.treadmillTraining += Time.deltaTime / 500;
 
             GameManager.instance.treadmillTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
+
+            DisplayMachineWarning();
         }
     }
 }

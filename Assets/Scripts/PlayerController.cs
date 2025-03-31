@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
@@ -25,16 +26,13 @@ public class PlayerController : MonoBehaviour
 	private ParticleSystem starParticles;
 
 	[SerializeField]
-	private ParticleSystem tunnelParticles;
-
-	[SerializeField]
 	private Transform koFocus;
 
-	[SerializeField]
-	private Transform tunnelOrigin;
+	// [SerializeField]
+	// private Transform tunnelOrigin;
 
-	[SerializeField]
-	private Image tunnelUI;
+	// [SerializeField]
+	// private Image tunnelUI;
 
 	private Vector3 inputMove = Vector3.zero;
 
@@ -83,12 +81,26 @@ public class PlayerController : MonoBehaviour
 
 	public bool isSubmissed;
 
-	public bool isDehydrated;
-
-	Coroutine tunnelCoroutine;
-
+	Coroutine fallCoroutine;
 
 	Vector3 lastPosition;
+
+	[SerializeField]
+	AudioSource ambientSound;
+
+	[SerializeField]
+	public AudioSource voiceHa;
+
+	[SerializeField]
+	AudioSource voiceLeaveMeAlone;
+
+	[SerializeField]
+	AudioSource sfxLanding;
+
+	[SerializeField]
+	AudioSource sfxFalling;
+
+
 
 
 	void Awake()
@@ -101,6 +113,8 @@ public class PlayerController : MonoBehaviour
 		StartPosition();
 
 		lastPosition = transform.position;
+
+		ambientSound.Play();
 	}
 
 	void Update()
@@ -188,6 +202,8 @@ public class PlayerController : MonoBehaviour
 		{
 			if (Input.GetKey(KeyCode.Space))
 			{
+				voiceHa.Play();
+
 				chargeJump += Time.deltaTime * 20;
 
 				chargeJump = Mathf.Clamp(chargeJump, 0, 20);
@@ -197,6 +213,8 @@ public class PlayerController : MonoBehaviour
 
 			if (Input.GetKeyUp(KeyCode.Space))
 			{
+				ambientSound.Stop();
+
 				rb.velocity = (transform.forward * chargeJump * 0.5f/* * GameManager.instance.currentPlayer.legsTraining*/) + (transform.up * chargeJump * 1.2f/* * GameManager.instance.currentPlayer.legsTraining*/);
 
 				isChargingJump = false;
@@ -231,22 +249,22 @@ public class PlayerController : MonoBehaviour
 
 	void GroundControl()
 	{
-		if (transform.position.y < -10.0f && tunnelCoroutine == null)
+		if (transform.position.y < -10.0f && fallCoroutine == null)
 		{
-			tunnelCoroutine = StartCoroutine(EnterTheVoid());
-		}
-
-		else if (transform.position.y >= -10.0f && tunnelCoroutine != null)
-		{
-			StopCoroutine(tunnelCoroutine);
-			tunnelCoroutine = null;
+			fallCoroutine = StartCoroutine(EnterTheVoid());
 		}
 	}
 
 
 	IEnumerator EnterTheVoid()
 	{
-		yield return new WaitForSeconds(2.0f);
+		IHM.instance.FadeToBlack();
+
+		ambientSound.Stop();
+
+		sfxFalling.Play();
+
+		yield return new WaitForSeconds(2f);
 
 		GameManager.instance.currentPlayer.life -= 1;
 
@@ -258,7 +276,15 @@ public class PlayerController : MonoBehaviour
 
 		StartPosition();
 
-		tunnelCoroutine = null;
+		yield return new WaitForSeconds(1f);
+
+		IHM.instance.FadeOut();
+
+		ambientSound.Play();
+
+		sfxFalling.Stop();
+
+		fallCoroutine = null;
 	}
 
 
@@ -330,12 +356,23 @@ public class PlayerController : MonoBehaviour
 		Transform agentTransform = communicator.gameObject.transform.parent;
 		Animator manAnimator = agentTransform.GetComponentInChildren<Animator>();
 		manAnimator.SetBool("isAttacking", true);
+		// Transform enemyLittleNerdObject = agentTransform.Find("LittleNerd");
+		// AudioSource littleNerd = enemyLittleNerdObject.GetComponentInChildren<AudioSource>();
+		// littleNerd.Play();
 
 		yield return new WaitForSeconds(1.0f);
 
+		Transform enemyYeahGameObject = agentTransform.Find("Yeah");
+		AudioSource enemyYeah = enemyYeahGameObject.GetComponentInChildren<AudioSource>();
+		enemyYeah.Play();
+
 		isSubmissed = true;
 
-		yield return new WaitForSeconds(0.3f);
+		yield return new WaitForSeconds(0.7f);
+
+		voiceHa.Play();
+
+		ambientSound.Stop();
 
 		lights.SetActive(false);
 
@@ -362,11 +399,11 @@ public class PlayerController : MonoBehaviour
 
 		lostLife = false;
 
-		isDehydrated = false;
- 
 		lights.SetActive(true);
 
 		StartPosition();
+
+		ambientSound.Play();
 
 		IHM.instance.DisplayDefeatMessage();
 
@@ -384,6 +421,11 @@ public class PlayerController : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
+		if (other.CompareTag("Ground"))
+		{
+			ambientSound.Play();
+		}
+
 		if (other.CompareTag("Training"))
 		{
 			isTraining = true;
@@ -424,7 +466,7 @@ public class PlayerController : MonoBehaviour
 			{
 				MakeHugs();
 			}
-			else if (GameManager.instance.currentPlayer.level == 3 && GameManager.instance.currentPlayer.chestTraining >= 0.5f || GameManager.instance.currentPlayer.level == 2 && GameManager.instance.currentPlayer.chestTraining >= 0.5f)
+			else if (GameManager.instance.currentPlayer.level == 3 || GameManager.instance.currentPlayer.level == 2 && GameManager.instance.currentPlayer.chestTraining >= 0.5f)
 			{
 				isReadyToAttack = true;
 
@@ -482,11 +524,16 @@ public class PlayerController : MonoBehaviour
 
 	private void OnTriggerExit(Collider other)
 	{
+		// if (other.CompareTag("Ground"))
+		// {
+		// 	ambientSound.Stop();
+		// }
+
 		if (other.CompareTag("Training"))
 		{
 			isTraining = false;
 
-			isMoving = false;
+			isMoving = true;
 
 			isReadyToJump = false;
 		}
@@ -521,6 +568,10 @@ public class PlayerController : MonoBehaviour
 	IEnumerator Landing()
 	{
 		isLanded = true;
+
+		ambientSound.Play();
+
+		sfxLanding.Play();
 
 		yield return new WaitForSeconds(1.2f);
 

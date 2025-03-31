@@ -21,6 +21,12 @@ public class Desk : MonoBehaviour
     [SerializeField]
     Transform screen;
 
+    [SerializeField]
+    AudioSource ambientAudio;
+
+    [SerializeField]
+    AudioSource keyboardAudio;
+
 
     public virtual void Interact(GameObject user)
     {
@@ -29,6 +35,8 @@ public class Desk : MonoBehaviour
         TakePlace();
 
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
+
+        keyboardAudio.Play();
 
         StartCoroutine(TryAgainCorout());
     }
@@ -48,6 +56,8 @@ public class Desk : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         IHM_youLose.instance.panel.SetActive(true);
+
+        keyboardAudio.Stop();
     }
 
     void OnTriggerEnter(Collider other)
