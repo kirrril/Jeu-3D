@@ -101,9 +101,9 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
             TakePlace();
 
-            trainingAudio.Play();
+            if (trainingAudio != null) trainingAudio.Play();
 
-            ambientSound.Stop();
+            if (ambientSound != null) ambientSound.Stop();
 
             IHM.instance.DisplayWaterWarning();
 
@@ -211,33 +211,43 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     void WaterManagement()
     {
-        if (PlayerController.instance.isTraining == true)
+        if (PlayerController.instance.isTraining == true && trainingPerson == PlayerController.instance.gameObject)
         {
-            float waterLoss = Time.deltaTime / 200;
+            float waterLoss = Time.deltaTime / 20;
 
             GameManager.instance.currentPlayer.water -= waterLoss;
         }
 
-        if (GameManager.instance.currentPlayer.water <= 0)
+        if (GameManager.instance.currentPlayer.water <= 0 && trainingPerson == PlayerController.instance.gameObject)
         {
             PlayerController.instance.isTraining = false;
-
-
-
-            // ambientSound.Play();
 
             PlayerController.instance.StartPosition();
 
             IHM.instance.stopTrainingButton.gameObject.SetActive(false);
 
-            trainingAudio.Stop();
+            NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+            obstacle.enabled = false;
 
+            trainingPerson = null;
+
+            Debug.Log($"{gameObject.name}: trainingAudio state before stop: isPlaying = {trainingAudio.isPlaying}, clip = {trainingAudio.clip?.name}");
+            if (trainingAudio != null)
+            {
+                trainingAudio.Stop();
+                Debug.Log($"{gameObject.name}: trainingAudio stopped");
+            }
+            else
+            {
+                Debug.LogWarning($"{gameObject.name}: ambientSound is null");
+            }
+
+
+            if (ambientSound != null) ambientSound.Play();
 
             GameManager.instance.currentPlayer.life -= 1;
 
             GameManager.instance.currentPlayer.water = 0.5f;
-
-            // PlayerController.instance.isDehydrated = true;
         }
     }
 }

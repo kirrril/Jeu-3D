@@ -100,6 +100,12 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	AudioSource sfxFalling;
 
+	[SerializeField]
+	public AudioSource sfxProteinCollect;
+
+	[SerializeField]
+	public AudioSource sfxWaterCollect;
+
 
 
 
@@ -298,8 +304,20 @@ public class PlayerController : MonoBehaviour
 			{
 				playerAttacks = true;
 
+				voiceLeaveMeAlone.Play();
+
+				yield return new WaitForSeconds(1f);
+
+				Transform agentTransform = communicator.gameObject.transform.parent;
+				Transform enemyYeahGameObject = agentTransform.Find("Yeah");
+				AudioSource enemyYeah = enemyYeahGameObject.GetComponentInChildren<AudioSource>();
+				enemyYeah.volume = 0.5f;
+				enemyYeah.Play();
+
 				StartCoroutine(DefeatEnemy(communicator));
 				fightCoroutine = null;
+
+				enemyYeah.volume = 1f;
 
 				yield break;
 			}
@@ -569,9 +587,11 @@ public class PlayerController : MonoBehaviour
 	{
 		isLanded = true;
 
-		ambientSound.Play();
-
 		sfxLanding.Play();
+
+		yield return null;
+
+		ambientSound.Play();
 
 		yield return new WaitForSeconds(1.2f);
 

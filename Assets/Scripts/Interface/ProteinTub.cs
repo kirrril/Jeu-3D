@@ -44,7 +44,7 @@ public class ProteinTub : MonoBehaviour, ICollectable
 
     public void Collect()
     {
-        proteinCollect.Play();
+        PlayerController.instance.sfxProteinCollect.Play();
 
         GameManager.instance.currentPlayer.protein += 1;
 

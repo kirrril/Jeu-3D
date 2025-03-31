@@ -7,6 +7,10 @@ public class AgentControllerYouWin : MonoBehaviour
     protected NavMeshAgent agent;
     protected Transform player;
     private Animator animator;
+
+    [SerializeField]
+    AudioSource voiceSweet;
+    
     public GameObject[] actionPoints;
     public Coroutine currentCoroutine;
     public string currentCoroutineName;
@@ -87,6 +91,8 @@ public class AgentControllerYouWin : MonoBehaviour
             if (distanceToPlayer > chaseDistance)
             {
                 agent.SetDestination(player.position);
+
+                voiceSweet.Play();
             }
             else
             {
@@ -129,5 +135,10 @@ public class AgentControllerYouWin : MonoBehaviour
         {
             return; // Ne rien faire, laisser l'agent continuer son comportement
         }
+
+        // if (other.CompareTag("Player"))
+        // {
+        //     voiceSweet.Play();
+        // }
     }
 }

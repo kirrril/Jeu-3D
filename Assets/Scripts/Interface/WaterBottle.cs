@@ -47,7 +47,7 @@ public class WaterBottle : MonoBehaviour, ICollectable
 
     public void Collect()
     {
-        waterCollect.Play();
+        PlayerController.instance.sfxWaterCollect.Play();
         
         GameManager.instance.currentPlayer.water = waterContent;
 
