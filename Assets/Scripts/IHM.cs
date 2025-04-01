@@ -71,6 +71,8 @@ public class IHM : MonoBehaviour
     {
         DisplayData();
         DisplayWelcomeMessage();
+
+        blackOutPanel.enabled = false;
     }
 
 
@@ -183,11 +185,13 @@ public class IHM : MonoBehaviour
 
     public void FadeToBlack()
     {
+        blackOutPanel.enabled = true;
         StartCoroutine(FadeCoroutine(0f, 1f, 1.8f));
     }
 
     public void FadeOut()
     {
+        blackOutPanel.enabled = false;
         StartCoroutine(FadeCoroutine(1f, 0f, 1f));
     }
 

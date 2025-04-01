@@ -28,12 +28,6 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	private Transform koFocus;
 
-	// [SerializeField]
-	// private Transform tunnelOrigin;
-
-	// [SerializeField]
-	// private Image tunnelUI;
-
 	private Vector3 inputMove = Vector3.zero;
 
 	private float inputRotate = 0;
@@ -106,6 +100,12 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	public AudioSource sfxWaterCollect;
 
+	[SerializeField]
+	Light spotLight;
+
+	[SerializeField]
+	Transform spotLightPosition;
+
 
 
 
@@ -121,6 +121,8 @@ public class PlayerController : MonoBehaviour
 		lastPosition = transform.position;
 
 		ambientSound.Play();
+
+		spotLight.enabled = false;
 	}
 
 	void Update()
@@ -302,17 +304,24 @@ public class PlayerController : MonoBehaviour
 		{
 			if (IsFacingAgent() && Input.GetKeyDown(KeyCode.Space))
 			{
+				Transform agentTransform = communicator.gameObject.transform.parent;
+
 				playerAttacks = true;
+
+				spotLight.enabled = true;
+				spotLight.transform.position = spotLightPosition.position;
+				spotLight.transform.LookAt(agentTransform.position);
 
 				voiceLeaveMeAlone.Play();
 
 				yield return new WaitForSeconds(1f);
 
-				Transform agentTransform = communicator.gameObject.transform.parent;
 				Transform enemyYeahGameObject = agentTransform.Find("Yeah");
 				AudioSource enemyYeah = enemyYeahGameObject.GetComponentInChildren<AudioSource>();
 				enemyYeah.volume = 0.5f;
 				enemyYeah.Play();
+
+				spotLight.enabled = false;
 
 				StartCoroutine(DefeatEnemy(communicator));
 				fightCoroutine = null;
