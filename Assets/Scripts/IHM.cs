@@ -76,7 +76,7 @@ public class IHM : MonoBehaviour
     }
 
 
-    void Update()
+    void LateUpdate()
     {
         DisplayData();
     }
@@ -90,9 +90,9 @@ public class IHM : MonoBehaviour
     public void DisplayData()
     {
         waterImage.fillAmount = GameManager.instance.currentPlayer.water;
-        legsImage.fillAmount = GameManager.instance.currentPlayer.legsTraining;
-        chestImage.fillAmount = GameManager.instance.currentPlayer.chestTraining;
-        backImage.fillAmount = GameManager.instance.currentPlayer.backTraining;
+        legsImage.fillAmount = GameManager.instance.currentPlayer.legsTraining / 1.05f;
+        chestImage.fillAmount = GameManager.instance.currentPlayer.chestTraining / 1.05f;
+        backImage.fillAmount = GameManager.instance.currentPlayer.backTraining / 1.05f;
         lifeImage.sprite = remainingLives[GameManager.instance.currentPlayer.life];
         proteinAmount.text = Convert.ToString(GameManager.instance.currentPlayer.protein);
         defeatesEnemies.text = Convert.ToString(GameManager.instance.currentPlayer.defeatedEnemies);

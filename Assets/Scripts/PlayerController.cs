@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
@@ -308,20 +307,14 @@ public class PlayerController : MonoBehaviour
 
 				playerAttacks = true;
 
-				spotLight.enabled = true;
-				spotLight.transform.position = spotLightPosition.position;
-				spotLight.transform.LookAt(agentTransform.position);
-
 				voiceLeaveMeAlone.Play();
 
-				yield return new WaitForSeconds(1f);
+				yield return new WaitForSeconds(0.2f);
 
 				Transform enemyYeahGameObject = agentTransform.Find("Yeah");
 				AudioSource enemyYeah = enemyYeahGameObject.GetComponentInChildren<AudioSource>();
 				enemyYeah.volume = 0.5f;
 				enemyYeah.Play();
-
-				spotLight.enabled = false;
 
 				StartCoroutine(DefeatEnemy(communicator));
 				fightCoroutine = null;
@@ -356,6 +349,8 @@ public class PlayerController : MonoBehaviour
 	{
 		GameManager.instance.currentPlayer.defeatedEnemies += 1;
 
+		spotLight.enabled = false;
+
 		yield return null;
 
 		Transform agentTransform = communicator.gameObject.transform.parent;
@@ -383,9 +378,6 @@ public class PlayerController : MonoBehaviour
 		Transform agentTransform = communicator.gameObject.transform.parent;
 		Animator manAnimator = agentTransform.GetComponentInChildren<Animator>();
 		manAnimator.SetBool("isAttacking", true);
-		// Transform enemyLittleNerdObject = agentTransform.Find("LittleNerd");
-		// AudioSource littleNerd = enemyLittleNerdObject.GetComponentInChildren<AudioSource>();
-		// littleNerd.Play();
 
 		yield return new WaitForSeconds(1.0f);
 
@@ -460,6 +452,10 @@ public class PlayerController : MonoBehaviour
 			isMoving = false;
 
 			isReadyToJump = false;
+
+			spotLight.enabled = true;
+			spotLight.transform.position = spotLightPosition.position;
+			spotLight.transform.LookAt(other.transform.position);
 		}
 
 		if (other.CompareTag("Trampoline"))
@@ -483,11 +479,19 @@ public class PlayerController : MonoBehaviour
 			isClimbing = true;
 
 			isMoving = false;
+
+			spotLight.enabled = true;
+			spotLight.transform.position = spotLightPosition.position;
+			spotLight.transform.LookAt(transform);
 		}
 
 		if (other.gameObject.name == "Communicator")
 		{
 			attackingAgent = other.gameObject.transform.parent;
+
+			spotLight.enabled = true;
+			spotLight.transform.position = spotLightPosition.position;
+			spotLight.transform.LookAt(other.gameObject.transform.parent);
 
 			if (GameManager.instance.currentPlayer.level == 4)
 			{
@@ -551,11 +555,6 @@ public class PlayerController : MonoBehaviour
 
 	private void OnTriggerExit(Collider other)
 	{
-		// if (other.CompareTag("Ground"))
-		// {
-		// 	ambientSound.Stop();
-		// }
-
 		if (other.CompareTag("Training"))
 		{
 			isTraining = false;
@@ -563,6 +562,8 @@ public class PlayerController : MonoBehaviour
 			isMoving = true;
 
 			isReadyToJump = false;
+
+			spotLight.enabled = false;
 		}
 
 		if (other.gameObject.name == "Communicator" && fightCoroutine != null)
@@ -572,12 +573,16 @@ public class PlayerController : MonoBehaviour
 			attackingAgent = null;
 			isReadyToAttack = false;
 			playerAttacks = false;
+
+			spotLight.enabled = false;
 		}
 
 
 		if (other.CompareTag("Rope"))
 		{
 			isClimbing = false;
+
+			spotLight.enabled = false;
 		}
 	}
 

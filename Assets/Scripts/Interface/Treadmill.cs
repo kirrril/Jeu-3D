@@ -11,7 +11,7 @@ public class Treadmill : TrainingMachineBase, IInteractable
     protected override void Start()
     {
         base.Start();
-        
+
         trainingDuration = 10.0f;
 
         animationBool = "isJogging";
@@ -21,10 +21,12 @@ public class Treadmill : TrainingMachineBase, IInteractable
     {
         base.Update();
 
-        TrainingProgress();
+        TreadmillTrainingProgress();
+
+        DisplayMachineWarning();
     }
 
-        public void DisplayMachineWarning()
+    public void DisplayMachineWarning()
     {
         if (GameManager.instance.treadmillTraining == 0.35f)
         {
@@ -52,15 +54,13 @@ public class Treadmill : TrainingMachineBase, IInteractable
     }
 
 
-    void TrainingProgress()
+    void TreadmillTrainingProgress()
     {
         if (PlayerController.instance.isTraining)
         {
             GameManager.instance.treadmillTraining += Time.deltaTime / 500;
 
             GameManager.instance.treadmillTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
-
-            DisplayMachineWarning();
         }
     }
 }

@@ -31,10 +31,6 @@ public class Dumbbells : MonoBehaviour
     {
         trainingDuration = 10.0f;
 
-        // animationBool = "isLiftingDumbbells";
-
-        // animationBool2 = "isLiftingDumbbells2";
-
         GameObject wall = transform.Find("Wall").gameObject;
         wall.SetActive(false);
 
@@ -48,7 +44,7 @@ public class Dumbbells : MonoBehaviour
     {
         AgentController controller = user.GetComponent<AgentController>();
 
-        if (!isInteractable && user.CompareTag("Man") || !isInteractable && user.CompareTag("Girl"))
+        if (!isInteractable && (user.CompareTag("Man") || user.CompareTag("Girl")))
         {
             if (controller.currentCoroutine != null)
             {
@@ -59,7 +55,7 @@ public class Dumbbells : MonoBehaviour
             controller.isBusy = false;
         }
 
-        if (isInteractable && user.CompareTag("Man") || isInteractable && user.CompareTag("Girl"))
+        if (isInteractable && (user.CompareTag("Man") || user.CompareTag("Girl")))
         {
             if (controller.currentCoroutine != null)
             {

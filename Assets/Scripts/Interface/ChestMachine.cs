@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class ChestMachine : TrainingMachineBase, IInteractable
 {
@@ -17,9 +18,35 @@ public class ChestMachine : TrainingMachineBase, IInteractable
     {
         base.Update();
 
-        TrainingProgress();
+        Chest1TrainingProgress();
     }
 
+    public void DisplayMachineWarning()
+    {
+        if (GameManager.instance.chest1Training >= 0.35f)
+        {
+            IHM.instance.contextMessageCorout = StartCoroutine(MachineWarning());
+
+            trainingAudio.Stop();
+        }
+    }
+
+    public IEnumerator MachineWarning()
+    {
+        IHM.instance.contextMessage.text = $"TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(1f);
+
+        IHM.instance.contextMessage.text = $"TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(1f);
+
+        IHM.instance.contextMessage.text = $"TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(1f);
+
+        IHM.instance.contextMessage.text = "";
+    }
 
     protected override void OnTriggerEnter(Collider other)
     {
@@ -27,6 +54,20 @@ public class ChestMachine : TrainingMachineBase, IInteractable
 
         Animator animator = GetComponentInChildren<Animator>();
         animator.SetBool("chestMachineIsMoving", true);
+
+        if (other.CompareTag("Player"))
+        {
+            Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+            cameraTarget.localPosition = new Vector3(0f, 0.6f, -0.5f);
+
+            CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+            CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+            playerTransposer.m_FollowOffset = new Vector3(0f, 1.5f, 1.5f);
+
+            CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
+            CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
+            observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
+        }
     }
 
 
@@ -36,16 +77,30 @@ public class ChestMachine : TrainingMachineBase, IInteractable
 
         Animator animator = GetComponentInChildren<Animator>();
         animator.SetBool("chestMachineIsMoving", false);
+
+         if (other.CompareTag("Player"))
+            {
+                Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+                cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
+
+                CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+                CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+                playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
+
+                CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
+                CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
+                observerTransposer.m_FollowOffset = new Vector3(4f, 4.5f, -2f);
+            }
     }
 
 
-    void TrainingProgress()
+    void Chest1TrainingProgress()
     {
-        if (PlayerController.instance.isTraining)
+        if (PlayerController.instance.isTraining && trainingPerson == PlayerController.instance.gameObject && GameManager.instance.bikeTraining < 0.35f)
         {
-            GameManager.instance.bikeTraining += Time.deltaTime / 500;
+            GameManager.instance.chest1Training += Time.deltaTime / 500;
 
-            GameManager.instance.bikeTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
+            GameManager.instance.chest1Training = Mathf.Clamp(GameManager.instance.chest1Training, 0, 0.35f);
         }
     }
 }

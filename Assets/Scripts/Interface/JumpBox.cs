@@ -21,7 +21,7 @@ public class JumpBox : TrainingMachineBase, IInteractable
     {
         base.Update();
 
-        TrainingProgress();
+        JumpboxTrainingProgress();
     }
 
         public void DisplayMachineWarning()
@@ -51,13 +51,13 @@ public class JumpBox : TrainingMachineBase, IInteractable
         IHM.instance.contextMessage.text = "";
     }
 
-    void TrainingProgress()
+    void JumpboxTrainingProgress()
     {
         if (PlayerController.instance.isTraining)
         {
             GameManager.instance.jumpboxTraining += Time.deltaTime / 500;
 
-            GameManager.instance.jumpboxTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
+            GameManager.instance.jumpboxTraining = Mathf.Clamp(GameManager.instance.jumpboxTraining, 0, 0.35f);
 
             DisplayMachineWarning();
         }

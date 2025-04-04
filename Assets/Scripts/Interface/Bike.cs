@@ -21,13 +21,15 @@ public class Bike : TrainingMachineBase, IInteractable
     {
         base.Update();
 
-        TrainingProgress();
+        BikeTrainingProgress();
+
+        DisplayMachineWarning();
     }
 
 
     public void DisplayMachineWarning()
     {
-        if (GameManager.instance.bikeTraining == 0.35f)
+        if (GameManager.instance.bikeTraining >= 0.35f && trainingPerson == PlayerController.instance.gameObject)
         {
             IHM.instance.contextMessageCorout = StartCoroutine(MachineWarning());
 
@@ -52,17 +54,23 @@ public class Bike : TrainingMachineBase, IInteractable
         IHM.instance.contextMessage.text = "";
     }
 
-
-
-    void TrainingProgress()
+    void BikeTrainingProgress()
     {
-        if (PlayerController.instance.isTraining)
+        if (PlayerController.instance.isTraining && trainingPerson == PlayerController.instance.gameObject && GameManager.instance.bikeTraining < 0.35f)
         {
             GameManager.instance.bikeTraining += Time.deltaTime / 500;
 
-            GameManager.instance.bikeTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
-
-            DisplayMachineWarning();
+            GameManager.instance.bikeTraining = Mathf.Clamp(GameManager.instance.bikeTraining, 0, 0.35f);
         }
+    }
+
+    protected override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+    }
+
+    protected override void OnTriggerExit(Collider other)
+    {
+        base.OnTriggerExit(other);
     }
 }

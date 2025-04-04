@@ -14,7 +14,7 @@ public class Player
 
     public float legsTraining = 0f;
 
-    public float chestTraining = 1.5f;
+    public float chestTraining = 1f;
 
     public float backTraining = 0f;
 

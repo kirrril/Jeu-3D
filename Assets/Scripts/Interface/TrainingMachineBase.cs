@@ -136,7 +136,10 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        Interact(other.gameObject);
+        if (other.CompareTag("Girl") || other.CompareTag("Man") || other.CompareTag("Player"))
+        {
+            Interact(other.gameObject);
+        }
     }
 
 
@@ -231,11 +234,9 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
             trainingPerson = null;
 
-            Debug.Log($"{gameObject.name}: trainingAudio state before stop: isPlaying = {trainingAudio.isPlaying}, clip = {trainingAudio.clip?.name}");
             if (trainingAudio != null)
             {
                 trainingAudio.Stop();
-                Debug.Log($"{gameObject.name}: trainingAudio stopped");
             }
             else
             {

@@ -10,6 +10,10 @@ public class GameManager : MonoBehaviour
     public float treadmillTraining;
     public float bikeTraining;
     public float jumpboxTraining;
+    public float barbellTraining;
+    public float chest1Training;
+    public float chest2Training;
+
 
     void Awake()
     {
@@ -58,6 +62,7 @@ public class GameManager : MonoBehaviour
     public void TrainingManagement()
     {
         currentPlayer.legsTraining = treadmillTraining + bikeTraining + jumpboxTraining;
+        // currentPlayer.chestTraining = barbellTraining + chest1Training + chest2Training;
     }
 
     public void YouWin()

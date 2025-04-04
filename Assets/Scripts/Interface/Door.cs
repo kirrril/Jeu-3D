@@ -5,10 +5,10 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     [SerializeField]
-    protected Transform pushingPosition;
+    Collider doorCollider;
 
     [SerializeField]
-    Collider doorCollider;
+    Animator doorAnimator;
 
     protected GameObject trainingPerson;
 
@@ -36,6 +36,8 @@ public class Door : MonoBehaviour
             playerAnimator.SetBool(animationBool, true);
             playerAnimator.SetFloat("PushingState", 0.5f);
 
+            PlayerController.instance.voiceHa.Play();
+
             while (Input.GetKey(KeyCode.Space))
             {
                 yield return null;
@@ -47,13 +49,11 @@ public class Door : MonoBehaviour
                 {
                     playerAnimator.SetBool(animationBool, false);
                 }
-                else
+                else if (GameManager.instance.currentPlayer.chestTraining >= 1f)
                 {
                     doorCollider.enabled = false;
 
-                    PlayerController.instance.voiceHa.Play();
-
-                    Animator doorAnimator = GetComponentInChildren<Animator>();
+                    // Animator doorAnimator = GetComponentInChildren<Animator>();
                     doorAnimator.SetBool("isOpenning", true);
 
                     playerAnimator.SetFloat("PushingState", 1.9f);
@@ -66,8 +66,6 @@ public class Door : MonoBehaviour
 
                     yield break;
                 }
-
-
             }
 
         }
@@ -81,7 +79,7 @@ public class Door : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        Animator doorAnimator = GetComponentInChildren<Animator>();
+        // Animator doorAnimator = GetComponentInChildren<Animator>();
         doorAnimator.SetBool("isOpenning", false);
 
         Animator playerAnimator = other.GetComponentInChildren<Animator>();
