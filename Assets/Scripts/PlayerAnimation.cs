@@ -25,32 +25,37 @@ public class PlayerAnimation : MonoBehaviour
             }
         }
 
-        if (PlayerController.instance.isReadyToJump)
+
+
+        if (PlayerController.instance.isLanding)
+        {
+            animator.SetBool("isLanding", true);
+            animator.SetBool("isJumping", false);
+        }
+
+        if (!PlayerController.instance.isLanding)
+        {
+            animator.SetBool("isLanding", false);
+        }
+
+        if (PlayerController.instance.isJumping)
+        {
+            animator.SetFloat("JumpState", 2.9f);
+        }
+        else if (PlayerController.instance.isChargingJump)
+        {
+            animator.SetFloat("JumpState", 1.9f);
+        }
+        else if (PlayerController.instance.isReadyToJump)
         {
             animator.SetBool("isJumping", true);
 
             animator.SetFloat("JumpState", 0.5f);
-
-            if (PlayerController.instance.isChargingJump)
-            {
-                animator.SetFloat("JumpState", 1.9f);
-            }
-
-            if (PlayerController.instance.isJumping)
-            {
-                animator.SetFloat("JumpState", 2.9f);
-            }
-
-            if (PlayerController.instance.isLanded)
-            {
-                animator.SetFloat("JumpState", 4.0f);
-            }
         }
 
-        if (PlayerController.instance.isReadyToJump == false)
-        {
-            animator.SetBool("isJumping", false);
-        }
+
+
+
 
         if (PlayerController.instance.isSubmissed)
         {

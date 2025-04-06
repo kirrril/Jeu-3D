@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
 	public bool isJumping;
 
-	public bool isLanded;
+	public bool isLanding;
 
 	public bool isReadyToAttack;
 
@@ -104,6 +104,8 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField]
 	Transform spotLightPosition;
+
+	private bool isLandingCoroutineRunning;
 
 
 
@@ -224,6 +226,8 @@ public class PlayerController : MonoBehaviour
 
 				rb.velocity = (transform.forward * chargeJump * 0.5f/* * GameManager.instance.currentPlayer.legsTraining*/) + (transform.up * chargeJump * 1.2f/* * GameManager.instance.currentPlayer.legsTraining*/);
 
+				isReadyToJump = false;
+
 				isChargingJump = false;
 
 				isJumping = true;
@@ -249,8 +253,9 @@ public class PlayerController : MonoBehaviour
 				{
 					transform.Translate(Vector3.down * 1.5f * Time.deltaTime);
 				}
-
 			}
+
+			spotLight.transform.position = spotLightPosition.position;
 		}
 	}
 
@@ -258,6 +263,8 @@ public class PlayerController : MonoBehaviour
 	{
 		if (transform.position.y < -10.0f && fallCoroutine == null)
 		{
+			isJumping = false;
+
 			fallCoroutine = StartCoroutine(EnterTheVoid());
 		}
 	}
@@ -440,11 +447,6 @@ public class PlayerController : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.CompareTag("Ground"))
-		{
-			ambientSound.Play();
-		}
-
 		if (other.CompareTag("Training"))
 		{
 			isTraining = true;
@@ -482,7 +484,7 @@ public class PlayerController : MonoBehaviour
 
 			spotLight.enabled = true;
 			spotLight.transform.position = spotLightPosition.position;
-			spotLight.transform.LookAt(transform);
+			spotLight.transform.LookAt(transform.position);
 		}
 
 		if (other.gameObject.name == "Communicator")
@@ -590,7 +592,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (collision.gameObject.CompareTag("Ground"))
 		{
-			if (isJumping)
+			if (isJumping && !isLandingCoroutineRunning)
 			{
 				StartCoroutine(Landing());
 			}
@@ -599,7 +601,11 @@ public class PlayerController : MonoBehaviour
 
 	IEnumerator Landing()
 	{
-		isLanded = true;
+		isLandingCoroutineRunning = true;
+
+		isJumping = false;
+
+		isLanding = true;
 
 		sfxLanding.Play();
 
@@ -609,14 +615,10 @@ public class PlayerController : MonoBehaviour
 
 		yield return new WaitForSeconds(1.2f);
 
-		isLanded = false;
+		isLanding = false;
 
-		isJumping = false;
+		isLandingCoroutineRunning = false;
 
 		isTraining = false;
-
-		isMoving = false;
-
-		isReadyToJump = false;
 	}
 }

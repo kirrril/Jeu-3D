@@ -53,13 +53,19 @@ public class IHM : MonoBehaviour
 
     public Coroutine contextMessageCorout;
 
+    [SerializeField]
+    private Image colorGradient;
+    private float colorGradientDuration = 2f;
+    private Material colorGradientMaterial;
 
+    [SerializeField]
+    private Image thirstyGradient;
+    private float thirstyGradientDuration = 3f;
+    private Material thirstyGradientMaterial;
 
-
+    private int loopCount = 2;
 
     public List<Sprite> remainingLives;
-
-
 
 
     void Awake()
@@ -73,6 +79,10 @@ public class IHM : MonoBehaviour
         DisplayWelcomeMessage();
 
         blackOutPanel.enabled = false;
+
+        colorGradientMaterial = colorGradient.material;
+
+        thirstyGradientMaterial = thirstyGradient.material;
     }
 
 
@@ -209,6 +219,50 @@ public class IHM : MonoBehaviour
         }
         color.a = endAlpha;
         blackOutPanel.color = color;
+    }
+
+
+    public IEnumerator ColorGradientCorout()
+    {
+        colorGradient.gameObject.SetActive(true);
+
+        for (int i = 0; i < loopCount; i++)
+        {
+            float elapsedTime = 0f;
+            float startOffset = 1f;
+            float endOffset = -1f;
+
+            while (elapsedTime < colorGradientDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = elapsedTime / colorGradientDuration;
+                float currentOffset = Mathf.Lerp(startOffset, endOffset, t);
+                colorGradientMaterial.SetFloat("_Offset", currentOffset);
+                yield return null;
+            }
+        }
+    }
+
+
+    public IEnumerator ThirstyDeathCorout()
+    {
+        thirstyGradient.gameObject.SetActive(true);
+
+        float elapsedTime = 0f;
+        float startOffset = 1f;
+        float endOffset = -1f;
+
+        while (elapsedTime < colorGradientDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / thirstyGradientDuration;
+            float currentOffset = Mathf.Lerp(startOffset, endOffset, t);
+            thirstyGradientMaterial.SetFloat("_Offset", currentOffset);
+            yield return null;
+        }
+        yield return new WaitForSeconds(2f);
+
+        thirstyGradient.gameObject.SetActive(false);
     }
 
 

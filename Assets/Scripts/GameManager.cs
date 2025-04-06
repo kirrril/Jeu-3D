@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -50,8 +51,6 @@ public class GameManager : MonoBehaviour
     void LaunchGame()
     {
         currentPlayer = new Player(UserHolder.instance.userProfile.userName);
-
-        // currentPlayer = new Player("Kirill");
     }
 
     public void LifeManagement()
@@ -67,13 +66,24 @@ public class GameManager : MonoBehaviour
 
     public void YouWin()
     {
+        StartCoroutine(YouWinTransitionCorout());
+    }
+
+    IEnumerator YouWinTransitionCorout()
+    {
         PersistantData.instance.GetData();
+
+        StartCoroutine(IHM.instance.ColorGradientCorout());
+
+        yield return new WaitForSeconds(3f);
 
         SceneManager.LoadScene("YouWin");
     }
 
     public void YouLoose()
     {
+        Destroy(instance);
+
         SceneManager.LoadScene("YouLose");
     }
 }

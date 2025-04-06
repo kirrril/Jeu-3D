@@ -9,9 +9,7 @@ public class Rope : MonoBehaviour
 
     protected GameObject trainingPerson;
 
-    protected string animationBool = "isClimbing";
-
-    Coroutine climbingCoroutine;
+    Coroutine climbingCoroutine; 
 
 
     void Interact(GameObject user)
@@ -27,17 +25,19 @@ public class Rope : MonoBehaviour
     IEnumerator ClimbingCorout(GameObject user)
     {
         Animator playerAnimator = user.GetComponentInChildren<Animator>();
-        playerAnimator.SetBool(animationBool, true);
+        playerAnimator.SetBool("isClimbing", true);
+
+        yield return null;
 
         while (PlayerController.instance.isClimbing)
         {
             if (Input.GetKey(KeyCode.Space))
             {
-                playerAnimator.SetFloat("ClimbingState", 1.9f);
+                playerAnimator.SetBool("isClimbingUp", true);
             }
             else
             {
-                playerAnimator.SetFloat("ClimbingState", 0.1f);
+                playerAnimator.SetBool("isClimbingUp", false);
             }
 
             yield return null;

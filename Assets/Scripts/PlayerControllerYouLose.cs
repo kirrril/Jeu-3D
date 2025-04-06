@@ -33,7 +33,7 @@ public class PlayerControllerYouLose : MonoBehaviour
     {
         instance = this;
 
-		Destroy(GameManager.instance);
+		// Destroy(GameManager.instance);
 		// Destroy(PersistantData.instance);
     }
 

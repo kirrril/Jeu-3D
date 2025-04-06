@@ -89,6 +89,8 @@ public class IHM_youWin : MonoBehaviour
     public void PlayAgain()
     {
         SceneManager.LoadScene("GameScene");
+
+        Destroy(PersistantData.instance);
     }
 
     public void Quit()

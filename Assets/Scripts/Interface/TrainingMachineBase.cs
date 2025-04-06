@@ -223,26 +223,14 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
         if (GameManager.instance.currentPlayer.water <= 0 && trainingPerson == PlayerController.instance.gameObject)
         {
-            PlayerController.instance.isTraining = false;
-
-            PlayerController.instance.StartPosition();
-
-            IHM.instance.stopTrainingButton.gameObject.SetActive(false);
-
-            NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
-            obstacle.enabled = false;
-
-            trainingPerson = null;
-
             if (trainingAudio != null)
             {
                 trainingAudio.Stop();
             }
-            else
-            {
-                Debug.LogWarning($"{gameObject.name}: ambientSound is null");
-            }
 
+            IHM.instance.stopTrainingButton.gameObject.SetActive(false);
+
+            StartCoroutine(ThirstyCorout());
 
             if (ambientSound != null) ambientSound.Play();
 
@@ -250,5 +238,21 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
             GameManager.instance.currentPlayer.water = 0.5f;
         }
+    }
+
+    IEnumerator ThirstyCorout()
+    {
+        StartCoroutine(IHM.instance.ThirstyDeathCorout());
+
+        yield return new WaitForSeconds(3f);
+
+        PlayerController.instance.isTraining = false;
+
+        PlayerController.instance.StartPosition();
+
+        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        obstacle.enabled = false;
+
+        trainingPerson = null;
     }
 }
