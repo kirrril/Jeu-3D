@@ -1,45 +1,32 @@
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
-
 
 public class AgentController : MonoBehaviour
 {
     protected NavMeshAgent agent;
-
     protected Transform player;
-
     private Animator animator;
-
     public GameObject[] actionPoints;
 
     public Coroutine currentCoroutine;
     public string currentCoroutineName;
-
-    int lastIndex = -1;
-
-    float distance;
-
+    private int lastIndex = -1;
+    private float distance;
     public bool isBusy;
-
-    bool playerIsHere;
+    private bool playerIsHere;
 
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-
         player = GameObject.Find("Player").transform;
-
         animator = GetComponentInChildren<Animator>();
     }
 
     void Start()
     {
-        currentCoroutine = StartCoroutine(MoveToTarget());
-        currentCoroutineName = "MoveToTarget";
+        StartMoveToTarget();
     }
 
     void Update()
@@ -48,11 +35,11 @@ public class AgentController : MonoBehaviour
         UpdateSpeed();
     }
 
-
     void UpdateSpeed()
     {
-        float speed = new Vector3(agent.velocity.x, 0, agent.velocity.z).magnitude;
+        if (!agent.enabled) return;
 
+        float speed = new Vector3(agent.velocity.x, 0, agent.velocity.z).magnitude;
         if (speed > 0.1f)
         {
             animator.SetFloat("MovementSpeed", 1.9f);
@@ -63,73 +50,91 @@ public class AgentController : MonoBehaviour
         }
     }
 
-
     void UpdateAgentBehaviour()
     {
-        distance = Vector3.Distance(player.position, transform.position);
+        if (isBusy)
+        {
+            return;
+        }
+
+        Vector3 playerPosFlat = new Vector3(player.position.x, 0, player.position.z);
+        Vector3 agentPosFlat = new Vector3(transform.position.x, 0, transform.position.z);
+        distance = Vector3.Distance(playerPosFlat, agentPosFlat);
 
         playerIsHere = distance < 3f;
 
-        if (!isBusy)
+        if (!PlayerController.instance.isTraining && !PlayerController.instance.isReadyToJump && playerIsHere)
         {
-            if (!PlayerController.instance.isTraining && !PlayerController.instance.isReadyToJump && playerIsHere)
+            if (currentCoroutineName != "ChaseFleePlayer")
             {
-                if (currentCoroutineName != "ChaseFleePlayer")
+                if (currentCoroutine != null)
                 {
-                    if (currentCoroutine != null)
-                    {
-                        StopCoroutine(currentCoroutine);
-                    }
-
-                    currentCoroutine = StartCoroutine(ChaseFleePlayer());
-                    currentCoroutineName = "ChaseFleePlayer";
+                    StopCoroutine(currentCoroutine);
                 }
+
+                currentCoroutine = StartCoroutine(ChaseFleePlayer());
+                currentCoroutineName = "ChaseFleePlayer";
             }
-            else
+        }
+        else
+        {
+            if (currentCoroutineName != "MoveToTarget" || currentCoroutine == null)
             {
-                if (currentCoroutineName != "MoveToTarget" && currentCoroutine != null)
-                {
-                    currentCoroutine = null;
-
-                    currentCoroutine = StartCoroutine(MoveToTarget());
-                    currentCoroutineName = "MoveToTarget";
-                }
-
-                if (currentCoroutine == null)
-                {
-                    currentCoroutine = StartCoroutine(MoveToTarget());
-                    currentCoroutineName = "MoveToTarget";
-                }
-
+                StartMoveToTarget();
             }
         }
     }
-
 
     protected virtual IEnumerator ChaseFleePlayer()
     {
         yield return null;
     }
 
+    public void StartMoveToTarget()
+    {
+        if (isBusy)
+        {
+            return;
+        }
+
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+        }
+
+        currentCoroutine = StartCoroutine(MoveToTarget());
+        currentCoroutineName = "MoveToTarget";
+    }
 
     public IEnumerator MoveToTarget()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.4f);
 
         int targetIndex;
-
         do
         {
             targetIndex = Random.Range(0, actionPoints.Length);
-
         } while (targetIndex == lastIndex);
 
         lastIndex = targetIndex;
 
         Vector3 targetPosition = actionPoints[targetIndex].transform.position;
 
-        agent.SetDestination(targetPosition);
+        if (agent.enabled && !agent.isStopped)
+        {
+            agent.SetDestination(targetPosition);
+        }
 
-        yield return null;
+        if (!agent.enabled || agent.isStopped)
+        {
+            yield break;
+        }
+
+        while (agent.enabled && agent.remainingDistance > agent.stoppingDistance && !agent.isStopped)
+        {
+            yield return null;
+        }
+
+        StartMoveToTarget();
     }
 }

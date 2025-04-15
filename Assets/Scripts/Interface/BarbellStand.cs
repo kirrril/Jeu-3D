@@ -16,15 +16,17 @@ public class BarbellStand : TrainingMachineBase, IInteractable
 
     protected override void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Man"))
+        if (!other.CompareTag("Man"))
         {
-            Interact(other.gameObject);
-
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("barbellStandIsMoving", true);
+            return;
         }
         else
         {
+            Interact(other.gameObject);
+
+            Animator machineAnimator = GetComponentInChildren<Animator>();
+            machineAnimator.SetBool("barbellStandIsMoving", true);
+
             GameObject wall = transform.Find("Wall").gameObject;
             wall.SetActive(true);
         }
@@ -44,61 +46,37 @@ public class BarbellStand : TrainingMachineBase, IInteractable
                 trainingCoroutine = null;
             }
 
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("barbellStandIsMoving", false);
+            Animator machineAnimator = GetComponentInChildren<Animator>();
+            machineAnimator.SetBool("barbellStandIsMoving", false);
 
             trainingPerson = null;
-        }
-        else
-        {
+
             GameObject wall = transform.Find("Wall").gameObject;
             wall.SetActive(false);
+
+            AgentController agentController = other.GetComponent<AgentController>();
+
+            if (agentController.currentCoroutineName != "MoveToTarget")
+            {
+                if (agentController.currentCoroutine != null)
+                {
+                    StopCoroutine(agentController.currentCoroutine);
+                }
+
+                agentController.StartMoveToTarget();        
+            }
+            
         }
     }
 
 
     public override void Interact(GameObject user)
     {
-        if (user.CompareTag("Man"))
-        {
-            AgentController controller = user.GetComponent<AgentController>();
-
-            if (!isInteractable)
-            {
-                if (controller.currentCoroutine != null)
-                {
-                    StopCoroutine(controller.currentCoroutine);
-                    controller.currentCoroutine = null;
-                    controller.currentCoroutineName = "null";
-                }
-                controller.isBusy = false;
-            }
-
-            if (isInteractable)
-            {
-                if (controller.currentCoroutine != null)
-                {
-                    StopCoroutine(controller.currentCoroutine);
-                    controller.currentCoroutine = null;
-                    controller.currentCoroutineName = "null";
-                }
-                controller.isBusy = true;
-
-                NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
-                agent.isStopped = true;
-                agent.enabled = false;
-
-                trainingPerson = user;
-
-                TakePlace();
-
-                trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
-            }
-        }
-        else
+        if (!user.CompareTag("Man"))
         {
             return;
         }
-    }
 
+        base.Interact(user);
+    }
 }

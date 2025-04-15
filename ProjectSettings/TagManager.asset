@@ -34,10 +34,10 @@ TagManager:
   - Safe
   - Water
   - UI
-  - CameraCollider
-  - 
-  - 
-  - 
+  - Camera
+  - SpawnZones
+  - NoLand
+  - Player
   - 
   - 
   - 

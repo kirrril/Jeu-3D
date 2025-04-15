@@ -28,8 +28,7 @@ public class Barbell : TrainingMachineBase, IInteractable
     {
         if (other.CompareTag("Girl"))
         {
-            GameObject wall = transform.Find("Wall").gameObject;
-            wall.SetActive(true);
+            return;
         }
         else if (other.CompareTag("Player"))
         {
@@ -85,11 +84,6 @@ public class Barbell : TrainingMachineBase, IInteractable
             CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
             observerTransposer.m_FollowOffset = new Vector3(4f, 4.5f, -2f);
-        }
-        else
-        {
-            GameObject wall = transform.Find("Wall").gameObject;
-            wall.SetActive(false);
         }
     }
 

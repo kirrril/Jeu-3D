@@ -8,6 +8,23 @@ public class Spawner : MonoBehaviour
     [SerializeField]
     List<ItemInfo> itemsList;
 
+    [System.Serializable]
+    public class ItemInfo
+    {
+        public string itemName;
+
+        public GameObject itemPrefab;
+    }
+
+    [SerializeField]
+    List<BoxCollider> spawnZones1;
+
+    [SerializeField]
+    List<BoxCollider> spawnZones2;
+
+    [SerializeField]
+    List<BoxCollider> spawnZones3;
+
 
     void Start()
     {
@@ -39,49 +56,38 @@ public class Spawner : MonoBehaviour
 
     IEnumerator SpawnItemCorout(GameObject item)
     {
-        float spawnPointX = 0f;
-        float spawnPointY = 0f;
-        float spawnPointZ = 0f;
-
         yield return new WaitForSeconds(3);
+
+        BoxCollider spawnZone = null;
 
         if (GameManager.instance.currentPlayer.level == 1)
         {
-            spawnPointX = Random.Range(-9f, 9f);
-            spawnPointY = 0.1f;
-            spawnPointZ = Random.Range(-9f, 9f);
-
-            if (spawnPointX < 3f && spawnPointZ > 3f)
-            {
-                spawnPointX = Random.Range(-9f, 9f);
-                spawnPointZ = Random.Range(-9f, 9f);
-            }
+            spawnZone = spawnZones1[Random.Range(0, spawnZones1.Count)];
         }
-
-        if (GameManager.instance.currentPlayer.level == 2)
+        else if (GameManager.instance.currentPlayer.level == 2)
         {
-            spawnPointX = Random.Range(-21f, -7f);
-            spawnPointY = 3.4f;
-            spawnPointZ = Random.Range(23f, 50f);
+            spawnZone = spawnZones2[Random.Range(0, spawnZones2.Count)];
         }
-
-        if (GameManager.instance.currentPlayer.level == 3)
+        else if (GameManager.instance.currentPlayer.level == 3)
         {
-            spawnPointX = Random.Range(-3.5f, 18f);
-            spawnPointY = -8f;
-            spawnPointZ = Random.Range(58f, 76f);
+            spawnZone = spawnZones3[Random.Range(0, spawnZones3.Count)];
         }
 
-        Vector3 spawnPosition = new Vector3(spawnPointX, spawnPointY, spawnPointZ);
+        Vector3 spawnPosition = GetRandomPointInCollider(spawnZone);
+
         Instantiate(item, spawnPosition, Quaternion.identity);
 
     }
+
+    private Vector3 GetRandomPointInCollider(BoxCollider collider)
+    {
+        Bounds bounds = collider.bounds;
+
+        float randomX = Random.Range(bounds.min.x, bounds.max.x);
+        float randomY = bounds.min.y + 0.2f;
+        float randomZ = Random.Range(bounds.min.z, bounds.max.z);
+
+        return new Vector3(randomX, randomY, randomZ);
+    }
 }
 
-[System.Serializable]
-public class ItemInfo
-{
-    public string itemName;
-
-    public GameObject itemPrefab;
-}

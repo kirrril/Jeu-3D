@@ -50,11 +50,17 @@ public class PlayerController : MonoBehaviour
 
 	public bool isReadyToJump;
 
+
+
 	public bool isChargingJump;
 
 	public bool isJumping;
 
 	public bool isLanding;
+
+	public bool isInJumpZone;
+
+	public bool hasFallen;
 
 	public bool isReadyToAttack;
 
@@ -105,6 +111,9 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	Transform spotLightPosition;
 
+	[SerializeField]
+	List<GameObject> noLandColliderObjects;
+
 	private bool isLandingCoroutineRunning;
 
 
@@ -124,6 +133,8 @@ public class PlayerController : MonoBehaviour
 		ambientSound.Play();
 
 		spotLight.enabled = false;
+
+		NoLandEnabled(false);
 	}
 
 	void Update()
@@ -136,9 +147,11 @@ public class PlayerController : MonoBehaviour
 
 	void FixedUpdate()
 	{
+		CheckIfMovingInJumpingZone();
 		CheckIfMoving();
 		RotatePlayer();
 		MovePlayer();
+		MovePlayerInJumpZone();
 
 		if (!isClimbing)
 		{
@@ -181,6 +194,22 @@ public class PlayerController : MonoBehaviour
 	}
 
 
+	void MovePlayerInJumpZone()
+	{
+		if (isInJumpZone)
+		{
+			Vector3 forwardMove = transform.forward * inputMove.y * forwardSpeed;
+			Vector3 sideMove = transform.right * inputMove.x * sideSpeed;
+
+			Vector3 resultMove = forwardMove + sideMove;
+
+			rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime);
+
+			playerSpeed = rb.velocity.magnitude * 1000;
+		}
+	}
+
+
 	void CheckIfMoving()
 	{
 		if (isTraining == false && isReadyToJump == false)
@@ -194,8 +223,26 @@ public class PlayerController : MonoBehaviour
 				isMoving = false;
 			}
 		}
-
 	}
+
+		void CheckIfMovingInJumpingZone()
+	{
+		if (isInJumpZone == true)
+		{
+			if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+			{
+				isReadyToJump = false;
+				isMoving = true;
+			}
+			else
+			{
+				isReadyToJump = true;
+				isMoving = false;
+			}
+		}
+	}
+
+
 	public void StartPosition()
 	{
 		isSubmissed = false;
@@ -233,10 +280,20 @@ public class PlayerController : MonoBehaviour
 				isJumping = true;
 
 				chargeJump = 0f;
+
+				NoLandEnabled(true);
 			}
 		}
 	}
 
+
+	void NoLandEnabled(bool enabled)
+	{
+		foreach (GameObject colliderObject in noLandColliderObjects)
+		{
+			colliderObject.SetActive(enabled);
+		}
+	}
 
 	public void Climb()
 	{
@@ -284,9 +341,13 @@ public class PlayerController : MonoBehaviour
 
 		isTraining = false;
 
-		isMoving = true;
+		isJumping = false;
 
 		isReadyToJump = false;
+
+		hasFallen = true;
+
+		NoLandEnabled(false);
 
 		StartPosition();
 
@@ -299,6 +360,8 @@ public class PlayerController : MonoBehaviour
 		sfxFalling.Stop();
 
 		fallCoroutine = null;
+
+		hasFallen = false;
 	}
 
 
@@ -437,14 +500,6 @@ public class PlayerController : MonoBehaviour
 		playerAttacks = false;
 	}
 
-
-	public void MakeHugs()
-	{
-
-	}
-
-
-
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.CompareTag("Training"))
@@ -474,6 +529,8 @@ public class PlayerController : MonoBehaviour
 			isReadyToJump = true;
 
 			isTraining = false;
+
+			isInJumpZone = true;
 		}
 
 		if (other.CompareTag("Rope"))
@@ -495,11 +552,7 @@ public class PlayerController : MonoBehaviour
 			spotLight.transform.position = spotLightPosition.position;
 			spotLight.transform.LookAt(other.gameObject.transform.parent);
 
-			if (GameManager.instance.currentPlayer.level == 4)
-			{
-				MakeHugs();
-			}
-			else if (GameManager.instance.currentPlayer.level == 3 || GameManager.instance.currentPlayer.level == 2 && GameManager.instance.currentPlayer.chestTraining >= 0.5f)
+			if (GameManager.instance.currentPlayer.level == 3 || GameManager.instance.currentPlayer.level == 2 && GameManager.instance.currentPlayer.chestTraining >= 0.5f)
 			{
 				isReadyToAttack = true;
 
@@ -586,6 +639,13 @@ public class PlayerController : MonoBehaviour
 
 			spotLight.enabled = false;
 		}
+
+		if (other.CompareTag("JumpZone"))
+		{
+			isReadyToJump = false;
+
+			isInJumpZone = false;
+		}
 	}
 
 	private void OnCollisionEnter(Collision collision)
@@ -620,5 +680,7 @@ public class PlayerController : MonoBehaviour
 		isLandingCoroutineRunning = false;
 
 		isTraining = false;
+
+		NoLandEnabled(false);
 	}
 }

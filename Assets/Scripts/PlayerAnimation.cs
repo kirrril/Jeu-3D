@@ -26,6 +26,24 @@ public class PlayerAnimation : MonoBehaviour
         }
 
 
+        if (PlayerController.instance.isInJumpZone)
+        {
+            Debug.Log($"isMoving: {PlayerController.instance.isMoving}");
+
+            if (PlayerController.instance.isMoving)
+            {
+                animator.SetBool("isJumping", false);
+                animator.SetFloat("MovementSpeed", 2.1f);
+            }
+
+            if (PlayerController.instance.isMoving == false)
+            {
+                animator.SetFloat("MovementSpeed", 0.2f);
+                animator.SetBool("isJumping", true);
+            }
+        }
+
+
 
         if (PlayerController.instance.isLanding)
         {
@@ -36,6 +54,12 @@ public class PlayerAnimation : MonoBehaviour
         if (!PlayerController.instance.isLanding)
         {
             animator.SetBool("isLanding", false);
+        }
+
+        if (PlayerController.instance.hasFallen)
+        {
+            animator.SetBool("isLanding", false);
+            animator.SetBool("isJumping", false);
         }
 
         if (PlayerController.instance.isJumping)
