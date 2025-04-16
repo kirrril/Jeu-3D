@@ -104,7 +104,7 @@ NavMeshObstacle:
   m_Enabled: 0
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 2, y: 0.5, z: 2}
+  m_Extents: {x: 1.35, y: 0.5, z: 2}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
@@ -196,7 +196,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3, y: 1, z: 0.2}
+  m_Size: {x: 2.5, y: 1, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3608151364932551153
 GameObject:
@@ -286,7 +286,7 @@ Transform:
   m_GameObject: {fileID: 6165981397442382082}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.398, y: 0.5, z: 0}
+  m_LocalPosition: {x: -1.144, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -339,7 +339,7 @@ Transform:
   m_GameObject: {fileID: 8264646024258376640}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.384, y: 0.5, z: 0}
+  m_LocalPosition: {x: 1.122, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -60,12 +60,6 @@ public class Dumbbells : MonoBehaviour
 
         controller.isBusy = true;
 
-        // if (controller.currentCoroutine != null)
-        // {
-        //     StopCoroutine(controller.currentCoroutine);
-        //     controller.currentCoroutine = null;
-        //     controller.currentCoroutineName = "null";
-        // }
         agent.enabled = false;
 
         TakePlace(user);
@@ -149,46 +143,6 @@ public class Dumbbells : MonoBehaviour
         {
             return;
         }
-
-        // NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
-        // obstacle.enabled = false;
-
-        // if (other.CompareTag("Man") || other.CompareTag("Girl"))
-        // {
-        //     if (trainingCoroutine != null)
-        //     {
-        //         StopCoroutine(trainingCoroutine);
-        //         trainingCoroutine = null;
-
-        //         Animator userAnimator = trainingPerson.GetComponentInChildren<Animator>();
-        //         userAnimator.SetBool(animationBool, false);
-        //         machineAnimator.SetBool(machineAnimationBool, false);
-
-        //         AgentController controller = trainingPerson.GetComponent<AgentController>();
-
-        //         controller.isBusy = false;
-
-        //         NavMeshAgent agent = other.GetComponent<NavMeshAgent>();
-
-        //         if (!agent.enabled)
-        //         {
-        //             agent.enabled = true;
-        //             agent.isStopped = false;
-        //         }
-
-        //         if (controller.currentCoroutineName != "MoveToTarget")
-        //         {
-        //             if (controller.currentCoroutine != null)
-        //             {
-        //                 StopCoroutine(controller.currentCoroutine);
-        //             }
-
-        //             controller.StartMoveToTarget();
-        //         }
-        //     }
-        // }
-
-        // trainingPerson = null;
     }
 
     protected void TakePlace(GameObject trainingPerson)

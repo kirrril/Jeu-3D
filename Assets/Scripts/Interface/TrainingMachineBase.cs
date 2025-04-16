@@ -74,12 +74,6 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
             controller.isBusy = true;
 
-            // if (controller.currentCoroutine != null)
-            // {
-            //     StopCoroutine(controller.currentCoroutine);
-            //     controller.currentCoroutine = null;
-            //     controller.currentCoroutineName = "null";
-            // }
             agent.enabled = false;
 
             TakePlace(user);
@@ -119,23 +113,12 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     }
 
 
-    protected IEnumerator TrainingCorout(GameObject user, System.Action callBack)
+    protected virtual IEnumerator TrainingCorout(GameObject user, System.Action callBack)
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
         yield return new WaitForSeconds(trainingDuration);
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
         yield return new WaitForSeconds(0.1f);
-
-        // yield return new WaitForSeconds(0.2f);
-        // 
-        // obstacle.enabled = false;
-        // 
-        // wall.SetActive(false);
-        // NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
-        // agent.enabled = true;
-        // yield return null;
-        // agent.isStopped = false;
-        // callBack();
 
         trainingCoroutine = null;
         callBack();

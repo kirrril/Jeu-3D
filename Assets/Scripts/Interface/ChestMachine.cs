@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.AI;
 
 public class ChestMachine : TrainingMachineBase, IInteractable
 {
@@ -52,9 +53,6 @@ public class ChestMachine : TrainingMachineBase, IInteractable
     {
         base.OnTriggerEnter(other);
 
-        Animator animator = GetComponentInChildren<Animator>();
-        animator.SetBool("chestMachineIsMoving", true);
-
         if (other.CompareTag("Player"))
         {
             Transform cameraTarget = GameObject.Find("CameraTarget").transform;
@@ -75,24 +73,44 @@ public class ChestMachine : TrainingMachineBase, IInteractable
     {
         base.OnTriggerExit(other);
 
-        Animator animator = GetComponentInChildren<Animator>();
-        animator.SetBool("chestMachineIsMoving", false);
+        if (other.CompareTag("Player"))
+        {
+            Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+            cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
 
-         if (other.CompareTag("Player"))
-            {
-                Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-                cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
+            CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+            CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+            playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
 
-                CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
-                CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-                playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
-
-                CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-                CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-                observerTransposer.m_FollowOffset = new Vector3(4f, 4.5f, -2f);
-            }
+            CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
+            CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
+            observerTransposer.m_FollowOffset = new Vector3(4f, 4.5f, -2f);
+        }
     }
 
+    protected override IEnumerator TrainingCorout(GameObject user, System.Action callBack)
+    {
+        user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
+        Animator machineAnimator = GetComponentInChildren<Animator>();
+        machineAnimator.SetBool("chestMachineIsMoving", true);
+        yield return new WaitForSeconds(trainingDuration);
+        user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
+        machineAnimator.SetBool("chestMachineIsMoving", false);
+        yield return new WaitForSeconds(0.1f);
+
+        trainingCoroutine = null;
+        callBack();
+
+        NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
+        agent.enabled = true;
+        agent.isStopped = false;
+
+        yield return new WaitForSeconds(2f);
+        GameObject wall = transform.Find("Wall").gameObject;
+        wall.SetActive(false);
+        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        obstacle.enabled = false;
+    }
 
     void Chest1TrainingProgress()
     {
