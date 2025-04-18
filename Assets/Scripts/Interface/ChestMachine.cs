@@ -6,6 +6,8 @@ using UnityEngine.AI;
 
 public class ChestMachine : TrainingMachineBase, IInteractable
 {
+    bool thisChestMachine;
+
     protected override void Start()
     {
         base.Start();
@@ -20,33 +22,65 @@ public class ChestMachine : TrainingMachineBase, IInteractable
         base.Update();
 
         Chest1TrainingProgress();
+
+        WaterManagement();
+
+        DisplayMachineWarning();
     }
 
     public void DisplayMachineWarning()
     {
-        if (GameManager.instance.chest1Training >= 0.35f)
+        if (thisChestMachine && GameManager.instance.chest1Training >= 0.35f)
         {
-            IHM.instance.contextMessageCorout = StartCoroutine(MachineWarning());
-
+            if (IHM.instance.contextMessageCoroutName != "Chest1TrainingCompleted")
+            {
+                IHM.instance.contextMessageCorout = StartCoroutine(Chest1TrainingCompletedWarning());
+                IHM.instance.contextMessageCoroutName = "Chest1TrainingCompleted";
+            }
             trainingAudio.Stop();
         }
     }
 
-    public IEnumerator MachineWarning()
+    public IEnumerator Chest1TrainingCompletedWarning()
     {
-        IHM.instance.contextMessage.text = $"TRAINING COMPLETED";
+        IHM.instance.contextMessage.text = "CHEST 1 TRAINING COMPLETED";
 
         yield return new WaitForSeconds(1f);
 
-        IHM.instance.contextMessage.text = $"TRAINING COMPLETED";
+        IHM.instance.contextMessage.text = "CHEST 1 TRAINING COMPLETED";
 
         yield return new WaitForSeconds(1f);
 
-        IHM.instance.contextMessage.text = $"TRAINING COMPLETED";
+        IHM.instance.contextMessage.text = "CHEST 1 TRAINING COMPLETED";
 
         yield return new WaitForSeconds(1f);
 
         IHM.instance.contextMessage.text = "";
+    }
+
+    void WaterManagement()
+    {
+        if (thisChestMachine && GameManager.instance.chest1Training < 0.35f)
+        {
+            float waterLoss = Time.deltaTime / 20;
+
+            GameManager.instance.currentPlayer.water -= waterLoss;
+        }
+
+        if (GameManager.instance.currentPlayer.water <= 0)
+        {
+            trainingAudio.Stop();
+
+            IHM.instance.stopTrainingButton.gameObject.SetActive(false);
+
+            StartCoroutine(ThirstyCorout());
+
+            ambientSound.Play();
+
+            GameManager.instance.currentPlayer.life -= 1;
+
+            GameManager.instance.currentPlayer.water = 0.5f;
+        }
     }
 
     protected override void OnTriggerEnter(Collider other)
@@ -55,6 +89,11 @@ public class ChestMachine : TrainingMachineBase, IInteractable
 
         if (other.CompareTag("Player"))
         {
+            thisChestMachine = true;
+
+            Animator animator = GetComponentInChildren<Animator>();
+            animator.SetBool("chestMachineIsMoving", true);
+
             Transform cameraTarget = GameObject.Find("CameraTarget").transform;
             cameraTarget.localPosition = new Vector3(0f, 0.6f, -0.5f);
 
@@ -65,6 +104,11 @@ public class ChestMachine : TrainingMachineBase, IInteractable
             CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
             observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
+
+            if (GameManager.instance.chest1Training <= 0.35f)
+            {
+                IHM.instance.DisplayWaterWarning();
+            }
         }
     }
 
@@ -75,6 +119,11 @@ public class ChestMachine : TrainingMachineBase, IInteractable
 
         if (other.CompareTag("Player"))
         {
+            thisChestMachine = false;
+
+            Animator animator = GetComponentInChildren<Animator>();
+            animator.SetBool("chestMachineIsMoving", false);
+
             Transform cameraTarget = GameObject.Find("CameraTarget").transform;
             cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
 
@@ -88,7 +137,7 @@ public class ChestMachine : TrainingMachineBase, IInteractable
         }
     }
 
-    protected override IEnumerator TrainingCorout(GameObject user/*, System.Action callBack*/)
+    protected override IEnumerator TrainingCorout(GameObject user)
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
         Animator machineAnimator = GetComponentInChildren<Animator>();
@@ -98,32 +147,30 @@ public class ChestMachine : TrainingMachineBase, IInteractable
         machineAnimator.SetBool("chestMachineIsMoving", false);
         yield return new WaitForSeconds(0.1f);
 
+        NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
+        agent.enabled = true;
+
+        trainingPerson.transform.position = stopTrainingPosition.position;
+        trainingPerson.transform.rotation = stopTrainingPosition.rotation;
+
         AgentController controller = trainingPerson.GetComponent<AgentController>();
         controller.isBusy = false;
 
-        NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
-        agent.enabled = true;
-        agent.isStopped = false;
+        controller.StartMoveToTarget();
 
-        // trainingCoroutine = null;
-        // callBack();
+        GameObject wall = transform.Find("Wall").gameObject;
+        wall.SetActive(false);
+        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        obstacle.enabled = false;
 
-        // NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
-        // agent.enabled = true;
-        // agent.isStopped = false;
-
-        // yield return new WaitForSeconds(2f);
-        // GameObject wall = transform.Find("Wall").gameObject;
-        // wall.SetActive(false);
-        // NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
-        // obstacle.enabled = false;
+        trainingPerson = null;
     }
 
     void Chest1TrainingProgress()
     {
-        if (PlayerController.instance.isTraining && trainingPerson == PlayerController.instance.gameObject && GameManager.instance.bikeTraining < 0.35f)
+        if (thisChestMachine)
         {
-            GameManager.instance.chest1Training += Time.deltaTime / 500;
+            GameManager.instance.chest1Training += Time.deltaTime / 100;
 
             GameManager.instance.chest1Training = Mathf.Clamp(GameManager.instance.chest1Training, 0, 0.35f);
         }

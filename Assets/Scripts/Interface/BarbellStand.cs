@@ -49,10 +49,10 @@ public class BarbellStand : TrainingMachineBase, IInteractable
         GameObject wall = transform.Find("Wall").gameObject;
         wall.SetActive(true);
 
-        // trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
+        trainingCoroutine = StartCoroutine(TrainingCorout(user));
     }
 
-    protected override IEnumerator TrainingCorout(GameObject user/*, System.Action callBack*/)
+    protected override IEnumerator TrainingCorout(GameObject user)
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
         Animator machineAnimator = GetComponentInChildren<Animator>();
@@ -67,19 +67,17 @@ public class BarbellStand : TrainingMachineBase, IInteractable
 
         NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
         agent.enabled = true;
-        agent.isStopped = false;
 
-        // trainingCoroutine = null;
-        // callBack();
+        trainingPerson.transform.position = stopTrainingPosition.position;
+        trainingPerson.transform.rotation = stopTrainingPosition.rotation;
 
-        // NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
-        // agent.enabled = true;
-        // agent.isStopped = false;
+        controller.StartMoveToTarget();
 
-        // yield return new WaitForSeconds(2f);
-        // GameObject wall = transform.Find("Wall").gameObject;
-        // wall.SetActive(false);
-        // NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
-        // obstacle.enabled = false;
+        GameObject wall = transform.Find("Wall").gameObject;
+        wall.SetActive(false);
+        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        obstacle.enabled = false;
+
+        trainingPerson = null;
     }
 }

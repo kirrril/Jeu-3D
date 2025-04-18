@@ -7,6 +7,8 @@ using UnityEngine.AI;
 
 public class Barbell : TrainingMachineBase, IInteractable
 {
+    bool thisBarbell;
+
     protected override void Start()
     {
         base.Start();
@@ -21,8 +23,74 @@ public class Barbell : TrainingMachineBase, IInteractable
         base.Update();
 
         BarbellTrainingProgress();
+
+        WaterManagement();
+
+        DisplayMachineWarning();
     }
 
+    public void DisplayMachineWarning()
+    {
+        if (thisBarbell && GameManager.instance.barbellTraining >= 0.35f)
+        {
+            if (IHM.instance.contextMessageCoroutName != "BarbellTrainingCompleted")
+            {
+                IHM.instance.contextMessageCorout = StartCoroutine(BarbellTrainingCompletedWarning());
+                IHM.instance.contextMessageCoroutName = "BarbellTrainingCompleted";
+            }
+            trainingAudio.Stop();
+        }
+    }
+
+    IEnumerator BarbellTrainingCompletedWarning()
+    {
+        IHM.instance.contextMessage.text = "BARBELL TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(0.5f);
+
+        IHM.instance.contextMessage.text = "";
+
+        yield return new WaitForSeconds(0.5f);
+
+        IHM.instance.contextMessage.text = "BARBELL TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(0.5f);
+
+        IHM.instance.contextMessage.text = "";
+
+        yield return new WaitForSeconds(0.5f);
+
+        IHM.instance.contextMessage.text = "BARBELL TRAINING COMPLETED";
+
+        yield return new WaitForSeconds(0.5f);
+
+        IHM.instance.contextMessage.text = "";
+    }
+
+    void WaterManagement()
+    {
+        if (thisBarbell && GameManager.instance.barbellTraining < 0.35f)
+        {
+            float waterLoss = Time.deltaTime / 20;
+
+            GameManager.instance.currentPlayer.water -= waterLoss;
+        }
+
+        if (GameManager.instance.currentPlayer.water <= 0)
+        {
+            trainingAudio.Stop();
+
+            IHM.instance.stopTrainingButton.gameObject.SetActive(false);
+
+            StartCoroutine(ThirstyCorout());
+
+            ambientSound.Play();
+
+            GameManager.instance.currentPlayer.life -= 1;
+
+            GameManager.instance.currentPlayer.water = 0.5f;
+        }
+    }
 
     protected override void OnTriggerEnter(Collider other)
     {
@@ -33,6 +101,8 @@ public class Barbell : TrainingMachineBase, IInteractable
         else if (other.CompareTag("Player"))
         {
             base.OnTriggerEnter(other);
+
+            thisBarbell = true;
 
             Animator animator = GetComponentInChildren<Animator>();
             animator.SetBool("barbellisMoving", true);
@@ -47,6 +117,11 @@ public class Barbell : TrainingMachineBase, IInteractable
             CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
             observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
+
+            if (GameManager.instance.barbellTraining <= 0.35f)
+            {
+                IHM.instance.DisplayWaterWarning();
+            }
         }
         else if (other.CompareTag("Man"))
         {
@@ -71,6 +146,8 @@ public class Barbell : TrainingMachineBase, IInteractable
         {
             base.OnTriggerExit(other);
 
+            thisBarbell = false;
+
             Animator animator = GetComponentInChildren<Animator>();
             animator.SetBool("barbellisMoving", false);
 
@@ -90,9 +167,9 @@ public class Barbell : TrainingMachineBase, IInteractable
 
     void BarbellTrainingProgress()
     {
-        if (PlayerController.instance.isTraining)
+        if (thisBarbell)
         {
-            GameManager.instance.barbellTraining += Time.deltaTime / 500;
+            GameManager.instance.barbellTraining += Time.deltaTime / 100;
 
             GameManager.instance.barbellTraining = Mathf.Clamp(GameManager.instance.barbellTraining, 0, 0.35f);
         }

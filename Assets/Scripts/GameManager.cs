@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     public void TrainingManagement()
     {
         currentPlayer.legsTraining = treadmillTraining + bikeTraining + jumpboxTraining;
-        // currentPlayer.chestTraining = barbellTraining + chest1Training + chest2Training;
+        currentPlayer.chestTraining = barbellTraining + chest1Training + chest2Training;
     }
 
     public void YouWin()

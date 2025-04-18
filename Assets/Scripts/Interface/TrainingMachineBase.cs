@@ -154,7 +154,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     }
 
 
-    void StopTrainingButtonOn()
+    protected void StopTrainingButtonOn()
     {
         IHM.instance.stopTrainingButton.gameObject.SetActive(true);
 
