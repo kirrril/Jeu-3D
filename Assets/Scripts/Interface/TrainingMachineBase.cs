@@ -10,7 +10,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     protected AudioSource trainingAudio;
 
     [SerializeField]
-    AudioSource ambientSound;
+    protected AudioSource ambientSound;
 
     [SerializeField]
     protected Transform trainingPosition;
@@ -47,7 +47,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     protected virtual void Update()
     {
-        WaterManagement();
+
     }
 
 
@@ -58,15 +58,15 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
             AgentController controller = user.GetComponent<AgentController>();
             NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
 
+            if (controller.currentCoroutine != null)
+            {
+                StopCoroutine(controller.currentCoroutine);
+                controller.currentCoroutine = null;
+                controller.currentCoroutineName = "null";
+            }
+
             if (!isInteractable)
             {
-                if (controller.currentCoroutine != null)
-                {
-                    StopCoroutine(controller.currentCoroutine);
-                    controller.currentCoroutine = null;
-                    controller.currentCoroutineName = "null";
-                }
-
                 controller.StartMoveToTarget();
             }
 
@@ -83,7 +83,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
             GameObject wall = transform.Find("Wall").gameObject;
             wall.SetActive(true);
 
-            trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
+            trainingCoroutine = StartCoroutine(TrainingCorout(user/*, LeavePlace*/));
         }
         else if (user.CompareTag("Player"))
         {
@@ -101,10 +101,10 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
             GameObject wall = transform.Find("Wall").gameObject;
             wall.SetActive(true);
 
-            if (trainingAudio != null) trainingAudio.Play();
-            if (ambientSound != null) ambientSound.Stop();
+            trainingAudio.Play();
 
-            IHM.instance.DisplayWaterWarning();
+            ambientSound.Stop();
+
             user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
             PlayerController.instance.isTraining = true;
 
@@ -112,26 +112,47 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         }
     }
 
-
-    protected virtual IEnumerator TrainingCorout(GameObject user, System.Action callBack)
+    protected virtual IEnumerator TrainingCorout(GameObject user/*, System.Action callBack*/)
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
         yield return new WaitForSeconds(trainingDuration);
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
         yield return new WaitForSeconds(0.1f);
 
-        trainingCoroutine = null;
-        callBack();
 
-        NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
+
+        NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
         agent.enabled = true;
         agent.isStopped = false;
 
-        yield return new WaitForSeconds(2f);
+        trainingPerson.transform.position = stopTrainingPosition.position;
+        trainingPerson.transform.rotation = stopTrainingPosition.rotation;
+
+        // // yield return null;
+        // // trainingCoroutine = null;
+        // callBack();
+
+        // yield return new WaitForSeconds(0.3f);
+
+        AgentController controller = trainingPerson.GetComponent<AgentController>();
+        controller.isBusy = false;
+
+        controller.StartMoveToTarget();
+
+        // // yield return null;
+        // // AgentController controller = trainingPerson.GetComponent<AgentController>();
+        // // controller.StartMoveToTarget();
+
+        // yield return new WaitForSeconds(2f);
+
+        // // yield return null;
         GameObject wall = transform.Find("Wall").gameObject;
         wall.SetActive(false);
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = false;
+
+        trainingPerson = null;
+        // trainingCoroutine = null;
     }
 
 
@@ -143,43 +164,8 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         }
     }
 
-
-
-
     protected virtual void OnTriggerExit(Collider other)
     {
-        if (other.gameObject != trainingPerson)
-        {
-            return;
-        }
-
-        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
-        obstacle.enabled = false;
-        GameObject wall = transform.Find("Wall").gameObject;
-        wall.SetActive(false);
-
-        if (other.CompareTag("Man") || other.CompareTag("Girl"))
-        {
-            if (trainingCoroutine != null)
-            {
-                StopCoroutine(trainingCoroutine);
-                trainingCoroutine = null;
-
-                Animator userAnimator = trainingPerson.GetComponentInChildren<Animator>();
-                userAnimator.SetBool(animationBool, false);
-
-                NavMeshAgent agent = other.gameObject.GetComponent<NavMeshAgent>();
-                agent.enabled = true;
-                agent.isStopped = false;
-            }
-        }
-        else if (other.CompareTag("Player"))
-        {
-            PlayerController.instance.isTraining = false;
-            trainingPerson.GetComponentInChildren<Animator>().SetBool(animationBool, false);
-            StopTrainingButtonOff();
-        }
-
         trainingPerson = null;
     }
 
@@ -207,36 +193,41 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         trainingPerson.transform.position = stopTrainingPosition.position;
         trainingPerson.transform.rotation = stopTrainingPosition.rotation;
 
-        NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
-        agent.enabled = true;
-        agent.isStopped = false;
-
-        AgentController controller = trainingPerson.GetComponent<AgentController>();
-        controller.isBusy = false;
-
-        if (!agent.enabled)
-        {
-            agent.enabled = true;
-            agent.isStopped = false;
-        }
-        controller.StartMoveToTarget();
-
         trainingPerson = null;
+
+        trainingCoroutine = null;
+
+        // NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
+        // agent.enabled = true;
+        // agent.isStopped = false;
+
+        // AgentController controller = trainingPerson.GetComponent<AgentController>();
+        // controller.isBusy = false;
+
+        // controller.StartMoveToTarget();
     }
 
 
     protected void PlayerLeavePlace()
     {
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
-        obstacle.enabled = true;
+        obstacle.enabled = false;
         GameObject wall = transform.Find("Wall").gameObject;
-        wall.SetActive(true);
+        wall.SetActive(false);
+
+        PlayerController.instance.isTraining = false;
 
         GameObject player = GameObject.Find("Player");
+
+        player.GetComponentInChildren<Animator>().SetBool(animationBool, false);
+
         player.transform.position = stopTrainingPosition.position;
         player.transform.rotation = stopTrainingPosition.rotation;
+
         trainingAudio.Stop();
         ambientSound.Play();
+
+        trainingPerson = null;
     }
 
 
@@ -246,42 +237,17 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         StopTrainingButtonOff();
     }
 
-
-    void WaterManagement()
-    {
-        if (PlayerController.instance.isTraining == true && trainingPerson == PlayerController.instance.gameObject)
-        {
-            float waterLoss = Time.deltaTime / 20;
-
-            GameManager.instance.currentPlayer.water -= waterLoss;
-        }
-
-        if (GameManager.instance.currentPlayer.water <= 0 && trainingPerson == PlayerController.instance.gameObject)
-        {
-            if (trainingAudio != null)
-            {
-                trainingAudio.Stop();
-            }
-
-            IHM.instance.stopTrainingButton.gameObject.SetActive(false);
-
-            StartCoroutine(ThirstyCorout());
-
-            if (ambientSound != null) ambientSound.Play();
-
-            GameManager.instance.currentPlayer.life -= 1;
-
-            GameManager.instance.currentPlayer.water = 0.5f;
-        }
-    }
-
-    IEnumerator ThirstyCorout()
+    protected IEnumerator ThirstyCorout()
     {
         StartCoroutine(IHM.instance.ThirstyDeathCorout());
 
         yield return new WaitForSeconds(3f);
 
         PlayerController.instance.isTraining = false;
+
+        PlayerController.instance.GetComponentInChildren<Animator>().SetBool(animationBool, false);
+
+        StopTrainingButtonOff();
 
         PlayerController.instance.StartPosition();
 

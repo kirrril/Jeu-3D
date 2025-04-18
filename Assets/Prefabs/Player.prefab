@@ -517,7 +517,9 @@ MonoBehaviour:
   isReadyToJump: 0
   isChargingJump: 0
   isJumping: 0
-  isLanded: 0
+  isLanding: 0
+  isInJumpZone: 0
+  hasFallen: 0
   isReadyToAttack: 0
   playerWasAttacked: 0
   playerAttacks: 0
@@ -536,6 +538,7 @@ MonoBehaviour:
   sfxWaterCollect: {fileID: 3667522997212001931}
   spotLight: {fileID: 0}
   spotLightPosition: {fileID: 0}
+  noLandColliderObjects: []
 --- !u!54 &3725972796900507326
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1306,6 +1309,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 83291882a7abce542b92009aa32071f6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2933139716659438605, guid: 83291882a7abce542b92009aa32071f6, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 83291882a7abce542b92009aa32071f6, type: 3}
       propertyPath: m_Name

@@ -52,6 +52,7 @@ public class IHM : MonoBehaviour
     public Coroutine mainMessageCorout;
 
     public Coroutine contextMessageCorout;
+    public string contextMessageCoroutName = "";
 
     [SerializeField]
     private Image colorGradient;
@@ -136,6 +137,7 @@ public class IHM : MonoBehaviour
     public void DisplayWaterWarning()
     {
         contextMessageCorout = StartCoroutine(WaterWarning());
+        contextMessageCoroutName = "WaterWarning";
     }
 
     public IEnumerator WaterWarning()

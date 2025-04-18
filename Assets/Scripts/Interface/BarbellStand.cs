@@ -24,15 +24,15 @@ public class BarbellStand : TrainingMachineBase, IInteractable
         AgentController controller = user.GetComponent<AgentController>();
         NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
 
+        if (controller.currentCoroutine != null)
+        {
+            StopCoroutine(controller.currentCoroutine);
+            controller.currentCoroutine = null;
+            controller.currentCoroutineName = "null";
+        }
+
         if (!isInteractable)
         {
-            if (controller.currentCoroutine != null)
-            {
-                StopCoroutine(controller.currentCoroutine);
-                controller.currentCoroutine = null;
-                controller.currentCoroutineName = "null";
-            }
-
             controller.StartMoveToTarget();
         }
 
@@ -49,10 +49,10 @@ public class BarbellStand : TrainingMachineBase, IInteractable
         GameObject wall = transform.Find("Wall").gameObject;
         wall.SetActive(true);
 
-        trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
+        // trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
     }
 
-    protected override IEnumerator TrainingCorout(GameObject user, System.Action callBack)
+    protected override IEnumerator TrainingCorout(GameObject user/*, System.Action callBack*/)
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
         Animator machineAnimator = GetComponentInChildren<Animator>();
@@ -62,17 +62,24 @@ public class BarbellStand : TrainingMachineBase, IInteractable
         machineAnimator.SetBool("barbellStandIsMoving", false);
         yield return new WaitForSeconds(0.1f);
 
-        trainingCoroutine = null;
-        callBack();
+        AgentController controller = trainingPerson.GetComponent<AgentController>();
+        controller.isBusy = false;
 
-        NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
+        NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
         agent.enabled = true;
         agent.isStopped = false;
 
-        yield return new WaitForSeconds(2f);
-        GameObject wall = transform.Find("Wall").gameObject;
-        wall.SetActive(false);
-        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
-        obstacle.enabled = false;
+        // trainingCoroutine = null;
+        // callBack();
+
+        // NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
+        // agent.enabled = true;
+        // agent.isStopped = false;
+
+        // yield return new WaitForSeconds(2f);
+        // GameObject wall = transform.Find("Wall").gameObject;
+        // wall.SetActive(false);
+        // NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        // obstacle.enabled = false;
     }
 }

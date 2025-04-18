@@ -40,11 +40,6 @@ public class GameManager : MonoBehaviour
         TrainingManagement();
 
         LifeManagement();
-
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            YouWin();
-        }
     }
 
 

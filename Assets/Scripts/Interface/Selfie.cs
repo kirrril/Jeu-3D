@@ -67,7 +67,7 @@ public class Selfie : TrainingMachineBase, IInteractable
             GameObject wall = transform.Find("Wall").gameObject;
             wall.SetActive(true);
 
-            trainingCoroutine = StartCoroutine(TrainingCorout(user, LeavePlace));
+            trainingCoroutine = StartCoroutine(TrainingCorout(user/*, LeavePlace*/));
         }
     }
 }

@@ -88,7 +88,7 @@ public class ChestMachine : TrainingMachineBase, IInteractable
         }
     }
 
-    protected override IEnumerator TrainingCorout(GameObject user, System.Action callBack)
+    protected override IEnumerator TrainingCorout(GameObject user/*, System.Action callBack*/)
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
         Animator machineAnimator = GetComponentInChildren<Animator>();
@@ -98,18 +98,25 @@ public class ChestMachine : TrainingMachineBase, IInteractable
         machineAnimator.SetBool("chestMachineIsMoving", false);
         yield return new WaitForSeconds(0.1f);
 
-        trainingCoroutine = null;
-        callBack();
+        AgentController controller = trainingPerson.GetComponent<AgentController>();
+        controller.isBusy = false;
 
-        NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
+        NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
         agent.enabled = true;
         agent.isStopped = false;
 
-        yield return new WaitForSeconds(2f);
-        GameObject wall = transform.Find("Wall").gameObject;
-        wall.SetActive(false);
-        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
-        obstacle.enabled = false;
+        // trainingCoroutine = null;
+        // callBack();
+
+        // NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
+        // agent.enabled = true;
+        // agent.isStopped = false;
+
+        // yield return new WaitForSeconds(2f);
+        // GameObject wall = transform.Find("Wall").gameObject;
+        // wall.SetActive(false);
+        // NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        // obstacle.enabled = false;
     }
 
     void Chest1TrainingProgress()

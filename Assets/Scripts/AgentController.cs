@@ -40,7 +40,7 @@ public class AgentController : MonoBehaviour
         if (!agent.enabled) return;
 
         float speed = new Vector3(agent.velocity.x, 0, agent.velocity.z).magnitude;
-        if (speed > 0.1f)
+        if (speed > 0.005f)
         {
             animator.SetFloat("MovementSpeed", 1.9f);
         }
@@ -108,13 +108,14 @@ public class AgentController : MonoBehaviour
 
     public IEnumerator MoveToTarget()
     {
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.1f);
 
-        int targetIndex;
-        do
+        int targetIndex = lastIndex;
+        
+        while (targetIndex == lastIndex)
         {
             targetIndex = Random.Range(0, actionPoints.Length);
-        } while (targetIndex == lastIndex);
+        }
 
         lastIndex = targetIndex;
 
