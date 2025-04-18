@@ -121,17 +121,17 @@ public class AgentController : MonoBehaviour
 
         Vector3 targetPosition = actionPoints[targetIndex].transform.position;
 
-        if (agent.enabled && !agent.isStopped)
+        if (agent.enabled)
         {
             agent.SetDestination(targetPosition);
         }
 
-        if (!agent.enabled || agent.isStopped)
+        if (!agent.enabled)
         {
             yield break;
         }
 
-        while (agent.enabled && agent.remainingDistance > agent.stoppingDistance && !agent.isStopped)
+        while (agent.enabled && agent.remainingDistance > agent.stoppingDistance)
         {
             yield return null;
         }
