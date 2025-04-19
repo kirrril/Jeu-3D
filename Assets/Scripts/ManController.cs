@@ -10,6 +10,12 @@ public class ManController : AgentController
     {
         while (Vector3.Distance(transform.position, player.position) > 1f && !playerWasAttacked)
         {
+            if (agent == null || !agent.enabled || !agent.isOnNavMesh)
+            {
+                Debug.LogWarning($"NavMeshAgent désactivé ou non valide pour {gameObject.name}");
+                yield break;
+            }
+            
             // Vérifier si le chemin est atteignable
             NavMeshPath path = new NavMeshPath();
             agent.CalculatePath(player.position, path);

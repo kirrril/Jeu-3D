@@ -58,12 +58,12 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
             AgentController controller = user.GetComponent<AgentController>();
             NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
 
-            if (controller.currentCoroutine != null)
-            {
-                StopCoroutine(controller.currentCoroutine);
-                controller.currentCoroutine = null;
-                controller.currentCoroutineName = "null";
-            }
+            // if (controller.currentCoroutine != null)
+            // {
+            //     StopCoroutine(controller.currentCoroutine);
+            //     controller.currentCoroutine = null;
+            //     controller.currentCoroutineName = "null";
+            // }
 
             if (!isInteractable)
             {
@@ -120,13 +120,13 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
 
 
-        NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
+        NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
         agent.enabled = true;
 
-        trainingPerson.transform.position = stopTrainingPosition.position;
-        trainingPerson.transform.rotation = stopTrainingPosition.rotation;
+        user.transform.position = stopTrainingPosition.position;
+        user.transform.rotation = stopTrainingPosition.rotation;
 
-        AgentController controller = trainingPerson.GetComponent<AgentController>();
+        AgentController controller = user.GetComponent<AgentController>();
         controller.isBusy = false;
 
         controller.StartMoveToTarget();

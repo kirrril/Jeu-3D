@@ -785,7 +785,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_TagString
@@ -2933,7 +2933,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_TagString
@@ -3306,6 +3306,10 @@ PrefabInstance:
     - target: {fileID: 509364924452301850, guid: 031632c6462ffe14f9b097d76760de8c, type: 3}
       propertyPath: m_Name
       value: Dumbbells1
+      objectReference: {fileID: 0}
+    - target: {fileID: 509364924452301850, guid: 031632c6462ffe14f9b097d76760de8c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2773456805397365420, guid: 031632c6462ffe14f9b097d76760de8c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5406,6 +5410,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Girl3
       objectReference: {fileID: 0}
+    - target: {fileID: 3482003785570299501, guid: 80113c20d2f61d8419d46c3374eb6334, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5517031626445461065, guid: 80113c20d2f61d8419d46c3374eb6334, type: 3}
       propertyPath: avoidancePriority
       value: 65
@@ -6428,7 +6436,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_TagString
@@ -7934,7 +7942,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_TagString
@@ -9373,6 +9381,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dumbbells3
       objectReference: {fileID: 0}
+    - target: {fileID: 509364924452301850, guid: 031632c6462ffe14f9b097d76760de8c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2773456805397365420, guid: 031632c6462ffe14f9b097d76760de8c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -21.139
@@ -10770,6 +10782,10 @@ PrefabInstance:
     - target: {fileID: 3482003785570299501, guid: cc86a4b0d7c4a31478a276271e7fc0ba, type: 3}
       propertyPath: m_Name
       value: Girl2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3482003785570299501, guid: cc86a4b0d7c4a31478a276271e7fc0ba, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5517031626445461065, guid: cc86a4b0d7c4a31478a276271e7fc0ba, type: 3}
       propertyPath: avoidancePriority
@@ -13219,6 +13235,10 @@ PrefabInstance:
     - target: {fileID: 509364924452301850, guid: 031632c6462ffe14f9b097d76760de8c, type: 3}
       propertyPath: m_Name
       value: Dumbbells2
+      objectReference: {fileID: 0}
+    - target: {fileID: 509364924452301850, guid: 031632c6462ffe14f9b097d76760de8c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2773456805397365420, guid: 031632c6462ffe14f9b097d76760de8c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -18424,6 +18444,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Girl7
       objectReference: {fileID: 0}
+    - target: {fileID: 3482003785570299501, guid: 707d4c83ccd51e743b882c34fed0816f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5517031626445461065, guid: 707d4c83ccd51e743b882c34fed0816f, type: 3}
       propertyPath: avoidancePriority
       value: 66
@@ -22602,7 +22626,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_TagString
@@ -28021,7 +28045,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 947447572068492181, guid: 1dfd8cdc4cb1e334da40d8f6f7486978, type: 3}
       propertyPath: m_TagString
