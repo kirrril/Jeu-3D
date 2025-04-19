@@ -28,8 +28,6 @@ public class PlayerAnimation : MonoBehaviour
 
         if (PlayerController.instance.isInJumpZone)
         {
-            Debug.Log($"isMoving: {PlayerController.instance.isMoving}");
-
             if (PlayerController.instance.isMoving)
             {
                 animator.SetBool("isJumping", false);

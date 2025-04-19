@@ -53,7 +53,6 @@ public class Door : MonoBehaviour
                 {
                     doorCollider.enabled = false;
 
-                    // Animator doorAnimator = GetComponentInChildren<Animator>();
                     doorAnimator.SetBool("isOpenning", true);
 
                     playerAnimator.SetFloat("PushingState", 1.9f);
@@ -79,7 +78,6 @@ public class Door : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        // Animator doorAnimator = GetComponentInChildren<Animator>();
         doorAnimator.SetBool("isOpenning", false);
 
         Animator playerAnimator = other.GetComponentInChildren<Animator>();
