@@ -497,6 +497,11 @@ public class PlayerController : MonoBehaviour
 			yield break;
 		}
 
+		if (playerWasAttacked)
+		{
+			yield break;
+		}
+
 		playerWasAttacked = true;
 
 		Transform agentTransform = communicator.gameObject.transform.parent;
