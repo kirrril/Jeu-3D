@@ -142,10 +142,22 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Girl") || other.CompareTag("Man") || other.CompareTag("Player"))
+        if (other.CompareTag("Girl") || other.CompareTag("Man"))
         {
             Interact(other.gameObject);
         }
+
+        if (other.CompareTag("Player"))
+        {
+            StartCoroutine(GiveWay(other.gameObject));
+        }
+    }
+
+    IEnumerator GiveWay(GameObject player)
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        Interact(player);
     }
 
     protected virtual void OnTriggerExit(Collider other)

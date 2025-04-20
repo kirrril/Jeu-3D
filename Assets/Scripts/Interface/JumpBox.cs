@@ -111,17 +111,20 @@ public class JumpBox : TrainingMachineBase, IInteractable
 
     protected override void OnTriggerEnter(Collider other)
     {
-        base.OnTriggerEnter(other);
+        // if (trainingPerson == null)
+        // {
+            base.OnTriggerEnter(other);
 
-        if (other.CompareTag("Player"))
-        {
-            thisJumpbox = true;
-        }
+            if (other.CompareTag("Player"))
+            {
+                thisJumpbox = true;
+            }
 
-        if (thisJumpbox && GameManager.instance.bikeTraining <= 0.35f)
-        {
-            IHM.instance.DisplayWaterWarning();
-        }
+            if (thisJumpbox && GameManager.instance.bikeTraining <= 0.35f)
+            {
+                IHM.instance.DisplayWaterWarning();
+            }
+        // }
     }
 
     protected override void OnTriggerExit(Collider other)
