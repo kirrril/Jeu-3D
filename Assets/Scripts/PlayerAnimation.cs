@@ -115,5 +115,28 @@ public class PlayerAnimation : MonoBehaviour
 
             yield break;
         }
+
+
+        if (PlayerController.instance.isInClimbingZone)
+        {
+            if (PlayerController.instance.isClimbing)
+            {
+                animator.SetBool("isClimbing", true);
+
+                if (PlayerController.instance.isClimbingUp)
+                {
+                    animator.SetBool("isClimbingUp", true);
+                }
+                else
+                {
+                    animator.SetBool("isClimbingUp", false);
+                }
+            }
+            else
+            {
+                animator.SetBool("isClimbingUp", false);
+                animator.SetBool("isClimbing", false);
+            }
+        }
     }
 }

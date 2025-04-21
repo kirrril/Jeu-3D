@@ -25,8 +25,6 @@ public class Treadmill : TrainingMachineBase, IInteractable
 
         TreadmillTrainingProgress();
 
-        Debug.Log("Legs training: " + GameManager.instance.currentPlayer.legsTraining);
-
         DisplayMachineWarning();
 
         WaterManagement();

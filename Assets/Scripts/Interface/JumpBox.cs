@@ -23,8 +23,6 @@ public class JumpBox : TrainingMachineBase, IInteractable
     {
         base.Update();
 
-        Debug.Log("Legs training: " + GameManager.instance.currentPlayer.legsTraining);
-
         JumpboxTrainingProgress();
 
         DisplayMachineWarning();

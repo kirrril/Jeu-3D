@@ -4,68 +4,77 @@ using UnityEngine;
 
 public class Rope : MonoBehaviour
 {
-    [SerializeField]
-    protected Transform climbingPosition;
+    // [SerializeField]
+    // Transform climbingPosition;
 
-    protected GameObject trainingPerson;
+    // [SerializeField]
+    // Transform stopClimbingPosition;
 
-    Coroutine climbingCoroutine; 
+    // [SerializeField]
+    // GameObject player;
 
+    // [SerializeField]
+    // Animator playerAnimator;
 
-    void Interact(GameObject user)
-    {
-        trainingPerson = user;
-
-        TakePlace();
-
-        climbingCoroutine = StartCoroutine(ClimbingCorout(trainingPerson));
-    }
+    // Coroutine climbingCoroutine;
 
 
-    IEnumerator ClimbingCorout(GameObject user)
-    {
-        Animator playerAnimator = user.GetComponentInChildren<Animator>();
-        playerAnimator.SetBool("isClimbing", true);
-
-        yield return null;
-
-        while (PlayerController.instance.isClimbing)
-        {
-            if (Input.GetKey(KeyCode.Space))
-            {
-                playerAnimator.SetBool("isClimbingUp", true);
-            }
-            else
-            {
-                playerAnimator.SetBool("isClimbingUp", false);
-            }
-
-            yield return null;
-        }
-    }
+    // void Interact()
+    // {
+    //     climbingCoroutine = StartCoroutine(ClimbingPositionUpdate());
+    // }
 
 
-    void OnTriggerEnter(Collider other)
-    {
-        trainingPerson = other.gameObject;
+    // IEnumerator ClimbingPositionUpdate()
+    // {
+    //     yield return null;
 
-        TakePlace();
+    //     while (PlayerController.instance.isInClimbingZone)
+    //     {
+    //         if (PlayerController.instance.isClimbing)
+    //         {
+    //             player.GetComponent<Rigidbody>().isKinematic = true;
+    //             player.transform.position = climbingPosition.position;
+    //             player.transform.rotation = climbingPosition.rotation;
 
-        Interact(other.gameObject);
-    }
+    //             if (PlayerController.instance.isClimbingUp)
+    //             {
+    //                 playerAnimator.SetBool("isClimbing", true);
+    //                 playerAnimator.SetBool("isClimbingUp", true);
+    //             }
 
-    void OnTriggerExit(Collider other)
-    {
-        trainingPerson = null;
+    //             if (PlayerController.instance.isSlidingDown)
+    //             {
+    //                 playerAnimator.SetBool("isClimbing", true);
+    //                 playerAnimator.SetBool("isClimbingUp", false);
+    //             }
+    //         }
+    //         else
+    //         {
+    //             player.GetComponent<Rigidbody>().isKinematic = false;
+    //             player.transform.position = stopClimbingPosition.position;
+    //             player.transform.rotation = stopClimbingPosition.rotation;
+    //             playerAnimator.SetBool("isClimbing", false);
+    //             playerAnimator.SetBool("isClimbingUp", false);
+    //         }
 
-        climbingCoroutine = null;
-    }
+    //         yield return null;
+    //     }
+    // }
 
 
-    void TakePlace()
-    {
-        trainingPerson.GetComponent<Rigidbody>().isKinematic = true;
-        trainingPerson.transform.position = climbingPosition.position;
-        trainingPerson.transform.rotation = climbingPosition.rotation;
-    }
+    // void OnTriggerEnter(Collider other)
+    // {
+    //     if (!other.CompareTag("Player"))
+    //     {
+    //         return;
+    //     }
+
+    //     Interact();
+    // }
+
+    // void OnTriggerExit(Collider other)
+    // {
+    //     climbingCoroutine = null;
+    // }
 }

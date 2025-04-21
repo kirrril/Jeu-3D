@@ -48,9 +48,31 @@ public class PlayerController : MonoBehaviour
 
 	public bool isClimbing;
 
+	public bool isClimbingUp;
+
+	public bool isSlidingDown;
+
+	public bool isInClimbingZone;
+
+	[SerializeField]
+	GameObject climbingPosition;
+
+	bool isInitializedAtClimbingPosition;
+
+	[SerializeField]
+	GameObject stopClimbingPosition;
+
+	private float climbSpeed = 1.5f;
+	private float climbGroundY = -4.5f;
+
+	bool maxwHeightReached;
+
+	bool isOnTheFloor = false;
+
+	bool canWalk;
+
+
 	public bool isReadyToJump;
-
-
 
 	public bool isChargingJump;
 
@@ -118,8 +140,6 @@ public class PlayerController : MonoBehaviour
 
 	private bool isLandingCoroutineRunning;
 
-	// GameObject trampoline;
-
 
 
 
@@ -139,8 +159,6 @@ public class PlayerController : MonoBehaviour
 		spotLight.enabled = false;
 
 		NoLandEnabled(false);
-
-		// trampoline = GameObject.Find("Trampoline");
 	}
 
 	void Update()
@@ -148,7 +166,11 @@ public class PlayerController : MonoBehaviour
 		GetInput();
 		Jump();
 		GroundControl();
-		Climb();
+
+		if (isInClimbingZone)
+		{
+			Climb();
+		}
 	}
 
 	void FixedUpdate()
@@ -157,7 +179,7 @@ public class PlayerController : MonoBehaviour
 		CheckIfMoving();
 		RotatePlayer();
 		MovePlayer();
-		MovePlayerInJumpZone();
+		// MovePlayerInJumpAndClimbZone();
 
 		if (!isClimbing)
 		{
@@ -186,10 +208,10 @@ public class PlayerController : MonoBehaviour
 
 	void MovePlayer()
 	{
-		if (isTraining == false && isReadyToJump == false && isClimbing == false)
+		if (!isTraining && !isReadyToJump && !isClimbing && !isInClimbingZone && !isInJumpZone || canWalk)
 		{
 			Vector3 forwardMove = transform.forward * inputMove.y * forwardSpeed;
-			Vector3 sideMove = transform.right * inputMove.x * sideSpeed;
+			Vector3 sideMove = transform.right * inputMove.x * sideSpeed; 
 
 			Vector3 resultMove = forwardMove + sideMove;
 
@@ -200,20 +222,20 @@ public class PlayerController : MonoBehaviour
 	}
 
 
-	void MovePlayerInJumpZone()
-	{
-		if (isInJumpZone)
-		{
-			Vector3 forwardMove = transform.forward * inputMove.y * forwardSpeed;
-			Vector3 sideMove = transform.right * inputMove.x * sideSpeed;
+	// void MovePlayerInJumpAndClimbZone()
+	// {
+	// 	if (canWalk)
+	// 	{
+	// 		Vector3 forwardMove = transform.forward * inputMove.y * forwardSpeed;
+	// 		Vector3 sideMove = transform.right * inputMove.x * sideSpeed;
 
-			Vector3 resultMove = forwardMove + sideMove;
+	// 		Vector3 resultMove = forwardMove + sideMove;
 
-			rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime);
+	// 		rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime);
 
-			playerSpeed = rb.velocity.magnitude * 1000;
-		}
-	}
+	// 		playerSpeed = rb.velocity.magnitude * 1000;
+	// 	}
+	// }
 
 
 	void CheckIfMoving()
@@ -267,9 +289,9 @@ public class PlayerController : MonoBehaviour
 
 	public void Jump()
 	{
-		if (isReadyToJump)
+		if (isInJumpZone)
 		{
-			if (Input.GetKey(KeyCode.Space))
+			if (isReadyToJump && Input.GetKey(KeyCode.Space))
 			{
 				voiceHa.Play();
 
@@ -282,57 +304,49 @@ public class PlayerController : MonoBehaviour
 
 			if (Input.GetKeyUp(KeyCode.Space))
 			{
-				ambientSound.Stop();
-
-				isReadyToJump = false;
-
-				isChargingJump = false;
-
-				isJumping = true;
-
-				chargeJump = 0f;
-
-				NoLandEnabled(true);
-
-				if (GameManager.instance.currentPlayer.legsTraining < 0.5f)
+				if (GameManager.instance.currentPlayer.legsTraining < 1f)
 				{
-					jumpingCoeff = 5f;
-				}
-				else if (GameManager.instance.currentPlayer.legsTraining > 0.5f && GameManager.instance.currentPlayer.legsTraining < 1f)
-				{
-					jumpingCoeff = 10f;
-				}
+					if (GameManager.instance.currentPlayer.legsTraining < 0.5f)
+					{
+						jumpingCoeff = 5f;
+					}
+					else if (GameManager.instance.currentPlayer.legsTraining > 0.5f && GameManager.instance.currentPlayer.legsTraining < 1f)
+					{
+						jumpingCoeff = 10f;
+					}
 
-				rb.velocity = transform.up * jumpingCoeff;
+					rb.velocity = transform.up * jumpingCoeff;
 
-				if (GameManager.instance.currentPlayer.legsTraining >= 1f)
+					ambientSound.Stop();
+
+					isReadyToJump = false;
+
+					isChargingJump = false;
+
+					isJumping = true;
+
+					chargeJump = 0f;
+
+					NoLandEnabled(true);
+				}
+				else
 				{
 					rb.velocity = (transform.forward * chargeJump * 0.5f * GameManager.instance.currentPlayer.legsTraining) + (transform.up * chargeJump * 1.2f * GameManager.instance.currentPlayer.legsTraining);
+
+					ambientSound.Stop();
+
+					isReadyToJump = false;
+
+					isChargingJump = false;
+
+					isJumping = true;
+
+					chargeJump = 0f;
+
+					NoLandEnabled(true);
 				}
 			}
 		}
-	}
-
-
-	IEnumerator LandingOnTrampoline()
-	{
-		isJumping = false;
-
-		isLanding = true;
-
-		sfxLanding.Play();
-
-		yield return null;
-
-		ambientSound.Play();
-
-		yield return null;
-
-		isLanding = false;
-
-		isTraining = false;
-
-		NoLandEnabled(false);
 	}
 
 
@@ -344,26 +358,102 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+	IEnumerator CanWalkCorout()
+	{
+		yield return new WaitForSeconds(5f);
+
+		canWalk = true;
+	}
+
 	public void Climb()
 	{
-		if (isClimbing)
+		float maxHeight = GetMaxClimbHeight();
+
+		if (Input.GetKey(KeyCode.Space))
 		{
-			if (Input.GetKey(KeyCode.Space))
+			isClimbing = true;
+			rb.isKinematic = true;
+			isOnTheFloor = false;
+			canWalk = false;
+
+			if (!isInitializedAtClimbingPosition)
 			{
-				transform.Translate(Vector3.up * 1.5f * Time.deltaTime);
+				transform.position = climbingPosition.transform.position;
+				transform.rotation = climbingPosition.transform.rotation;
+
+				isInitializedAtClimbingPosition = true;
 			}
 
-			if (!Input.GetKey(KeyCode.Space))
+			if (transform.position.y < maxHeight && !maxwHeightReached)
 			{
-				if (transform.position.y > -8f)
+				isClimbingUp = true;
+				isSlidingDown = false;
+				transform.Translate(Vector3.up * climbSpeed * Time.deltaTime);
+			}
+			else
+			{
+				maxwHeightReached = true;
+
+				if (transform.position.y > climbGroundY)
 				{
-					transform.Translate(Vector3.down * 1.5f * Time.deltaTime);
+					isClimbingUp = false;
+					isSlidingDown = true;
+					transform.Translate(Vector3.down * climbSpeed * Time.deltaTime);
+				}
+				else
+				{
+					GetReadyToClimb();
 				}
 			}
+		}
+		else
+		{
+			maxwHeightReached = false;
 
-			spotLight.transform.position = spotLightPosition.position;
+			if (transform.position.y > climbGroundY)
+			{
+				isClimbing = true;
+				isClimbingUp = false;
+				isSlidingDown = true;
+				transform.Translate(Vector3.down * climbSpeed * Time.deltaTime);
+			}
+			else
+			{
+				GetReadyToClimb();
+			}
 		}
 	}
+
+	float GetMaxClimbHeight()
+	{
+		float backTraining = GameManager.instance.currentPlayer.backTraining;
+		if (backTraining < 0.2f) return -2.5f;
+		if (backTraining < 0.5f) return 3f;
+		if (backTraining < 0.8f) return 4.5f;
+		return float.MaxValue;
+	}
+
+	void GetReadyToClimb()
+	{
+		isClimbing = false;
+		isClimbingUp = false;
+		isSlidingDown = false;
+		rb.isKinematic = false;
+
+		if (!isOnTheFloor)
+		{
+			transform.position = stopClimbingPosition.transform.position;
+			transform.rotation = stopClimbingPosition.transform.rotation;
+			isOnTheFloor = true;
+		}
+
+		maxwHeightReached = false;
+
+		isInitializedAtClimbingPosition = false;
+
+		canWalk = true;
+	}
+
 
 	void GroundControl()
 	{
@@ -602,7 +692,9 @@ public class PlayerController : MonoBehaviour
 
 			isTraining = false;
 
-			StartCoroutine(SetJumpZone());
+			isInJumpZone = true;
+
+			StartCoroutine(CanWalkCorout());
 		}
 
 		if (other.CompareTag("JumpZone"))
@@ -612,17 +704,22 @@ public class PlayerController : MonoBehaviour
 			isTraining = false;
 
 			isInJumpZone = true;
+
+			canWalk = true;
 		}
 
 		if (other.CompareTag("Rope"))
 		{
-			isClimbing = true;
-
-			isMoving = false;
-
 			spotLight.enabled = true;
 			spotLight.transform.position = spotLightPosition.position;
 			spotLight.transform.LookAt(transform.position);
+
+			transform.position = stopClimbingPosition.transform.position;
+			transform.rotation = stopClimbingPosition.transform.rotation;
+
+			isInClimbingZone = true;
+
+			StartCoroutine(CanWalkCorout());
 		}
 
 		if (other.gameObject.name == "Communicator")
@@ -716,9 +813,11 @@ public class PlayerController : MonoBehaviour
 
 		if (other.CompareTag("Rope"))
 		{
-			isClimbing = false;
+			isInClimbingZone = false;
 
 			spotLight.enabled = false;
+
+			canWalk = false;
 		}
 
 		if (other.CompareTag("JumpZone"))
@@ -726,11 +825,17 @@ public class PlayerController : MonoBehaviour
 			isReadyToJump = false;
 
 			isInJumpZone = false;
+
+			canWalk = false; 
 		}
 
 		if (other.CompareTag("Trampoline"))
 		{
+			isReadyToJump = false;
+
 			isInJumpZone = false;
+
+			canWalk = false;
 		}
 	}
 
@@ -746,12 +851,7 @@ public class PlayerController : MonoBehaviour
 
 		if (collision.gameObject.CompareTag("TrampolineLanding"))
 		{
-			// Debug.Log("Collision detected");
-
-			// if (isJumping && !isLandingCoroutineRunning)
-			// {
 			StartCoroutine(LandingOnTrampoline());
-			// }
 		}
 	}
 
@@ -777,9 +877,31 @@ public class PlayerController : MonoBehaviour
 
 		isTraining = false;
 
+		isReadyToJump = false;
+
+		isInJumpZone = false;
+
 		NoLandEnabled(false);
 	}
 
+	IEnumerator LandingOnTrampoline()
+	{
+		isJumping = false;
 
+		isLanding = true;
 
+		sfxLanding.Play();
+
+		yield return null;
+
+		ambientSound.Play();
+
+		yield return null;
+
+		isLanding = false;
+
+		isTraining = false;
+
+		NoLandEnabled(false);
+	}
 }

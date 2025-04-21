@@ -19,6 +19,8 @@ public class Door : MonoBehaviour
 
     void Interact(GameObject user)
     {
+        if (!user.CompareTag("Player")) return;
+
         pushingCoroutine = StartCoroutine(PushingCorout(user));
     }
 
