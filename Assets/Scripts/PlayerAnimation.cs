@@ -12,8 +12,8 @@ public class PlayerAnimation : MonoBehaviour
 
     void Update()
     {
-        if (PlayerController.instance.isReadyToJump == false && PlayerController.instance.isTraining == false)
-        {
+        // if (PlayerController.instance.isReadyToJump == false && PlayerController.instance.isTraining == false)
+        // {
             if (PlayerController.instance.isMoving)
             {
                 animator.SetFloat("MovementSpeed", 2.1f);
@@ -23,7 +23,7 @@ public class PlayerAnimation : MonoBehaviour
             {
                 animator.SetFloat("MovementSpeed", 0.2f);
             }
-        }
+        // }
 
 
         if (PlayerController.instance.isInJumpZone)
@@ -68,14 +68,12 @@ public class PlayerAnimation : MonoBehaviour
         {
             animator.SetFloat("JumpState", 1.9f);
         }
-        else if (PlayerController.instance.isReadyToJump)
+        else if (PlayerController.instance.isReadyToJump && !PlayerController.instance.isMoving)
         {
             animator.SetBool("isJumping", true);
 
-            animator.SetFloat("JumpState", 0.5f);
+            animator.SetFloat("JumpState", 0f);
         }
-
-
 
 
 

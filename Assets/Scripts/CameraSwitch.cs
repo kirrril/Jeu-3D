@@ -8,9 +8,9 @@ public class CameraSwitch : MonoBehaviour
     // public static CameraSwitch instance;
 
     [SerializeField]
-    private CinemachineVirtualCamera playerCam;
+    public CinemachineVirtualCamera playerCam;
     [SerializeField]
-    private CinemachineVirtualCamera observerCam;
+    public CinemachineVirtualCamera observerCam;
 
 
     // void Awake()
