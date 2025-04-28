@@ -14,6 +14,13 @@ public class GameManager : MonoBehaviour
     public float barbellTraining;
     public float chest1Training;
     public float chest2Training;
+    public float dipsTraining;
+    public float back1Training;
+    public float back2Training;
+    public float rowerTraining;
+    public float extensionTraining;
+    public float backBarbell1Training;
+    public float pullUpsTraining;
 
 
     void Awake()
@@ -56,7 +63,9 @@ public class GameManager : MonoBehaviour
     public void TrainingManagement()
     {
         // currentPlayer.legsTraining = treadmillTraining + bikeTraining + jumpboxTraining;
-        // currentPlayer.chestTraining = barbellTraining + chest1Training + chest2Training;
+        // currentPlayer.chestTraining = barbellTraining + chest1Training + chest2Training + dipsTraining;
+        // currentPlayer.backTraining = back1Training + back2Training + rowerTraining + extensionTraining + backBarbell1Training +pullUpsTraining;
+        
 
         currentPlayer.legsTraining = 1.05f;
         currentPlayer.chestTraining = 1.05f;

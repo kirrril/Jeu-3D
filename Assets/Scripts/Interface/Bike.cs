@@ -23,17 +23,18 @@ public class Bike : TrainingMachineBase, IInteractable
     {
         base.Update();
 
-        BikeTrainingProgress();
-
-        DisplayMachineWarning();
-
-        WaterManagement();
+        if (thisBike)
+        {
+            BikeTrainingProgress();
+            DisplayMachineWarning();
+            WaterManagement();
+        }
     }
 
 
     public void DisplayMachineWarning()
     {
-        if (thisBike && GameManager.instance.bikeTraining >= 0.35f)
+        if (GameManager.instance.bikeTraining >= 0.35f)
         {
             if (IHM.instance.contextMessageCoroutName != "BikeTrainingCompleted")
             {
@@ -71,17 +72,14 @@ public class Bike : TrainingMachineBase, IInteractable
 
     void BikeTrainingProgress()
     {
-        if (thisBike)
-        {
-            GameManager.instance.bikeTraining += Time.deltaTime / 100;
+        GameManager.instance.bikeTraining += Time.deltaTime / 100;
 
-            GameManager.instance.bikeTraining = Mathf.Clamp(GameManager.instance.bikeTraining, 0, 0.35f);
-        }
+        GameManager.instance.bikeTraining = Mathf.Clamp(GameManager.instance.bikeTraining, 0, 0.35f);
     }
 
     void WaterManagement()
     {
-        if (thisBike && GameManager.instance.bikeTraining < 0.35f)
+        if (GameManager.instance.bikeTraining < 0.35f)
         {
             float waterLoss = Time.deltaTime / 20;
 
@@ -94,13 +92,16 @@ public class Bike : TrainingMachineBase, IInteractable
 
             IHM.instance.stopTrainingButton.gameObject.SetActive(false);
 
-            StartCoroutine(ThirstyCorout());
+            if (thirstyCoroutine == null)
+            {
+                thirstyCoroutine = StartCoroutine(ThirstyCorout());
+            }
 
-            ambientSound.Play();
+            // ambientSound.Play();
 
-            GameManager.instance.currentPlayer.life -= 1;
+            // GameManager.instance.currentPlayer.life -= 1;
 
-            GameManager.instance.currentPlayer.water = 0.5f;
+            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 

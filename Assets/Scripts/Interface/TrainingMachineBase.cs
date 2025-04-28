@@ -27,6 +27,8 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     protected Coroutine trainingCoroutine;
 
+    protected Coroutine thirstyCoroutine = null;
+
     public virtual bool isInteractable { get { return trainingPerson == null; } set { } }
 
     public bool isInteracting { get { return trainingPerson != null; } }
@@ -85,7 +87,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
             trainingCoroutine = StartCoroutine(TrainingCorout(user));
         }
-        
+
         if (user.CompareTag("Player"))
         {
             if (!isInteractable)
@@ -215,7 +217,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     {
         StartCoroutine(IHM.instance.ThirstyDeathCorout());
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2f);
 
         PlayerController.instance.isTraining = false;
 
@@ -227,7 +229,19 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = false;
+        GameObject wall = transform.Find("Wall").gameObject;
+        wall.SetActive(false);
 
-        trainingPerson = null;
+        // trainingPerson = null;
+
+        // yield return new WaitForSeconds(2f);
+
+        ambientSound.Play();
+
+        GameManager.instance.currentPlayer.life -= 1;
+
+        GameManager.instance.currentPlayer.water = 0.5f;
+
+        thirstyCoroutine = null;
     }
 }

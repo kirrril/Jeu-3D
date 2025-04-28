@@ -144,7 +144,7 @@ public class Dumbbells : MonoBehaviour
 
 
 
-    protected virtual void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other) ///////////// Pourquoi virtual ???
     {
         if (other.gameObject != trainingPerson)
         {

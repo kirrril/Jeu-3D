@@ -204,7 +204,7 @@ public class PlayerController : MonoBehaviour
 
 	void RotatePlayer()
 	{
-		if (isTraining == false && isGaming == false && isClimbing == false)
+		if (isTraining == false && isGaming == false && isClimbing == false && playerWasAttacked == false)
 		{
 			float playerRotation = inputRotate * rotationCoeff * rotationSpeed * Time.fixedDeltaTime;
 
@@ -613,15 +613,21 @@ public class PlayerController : MonoBehaviour
 
 		Transform agentTransform = communicator.gameObject.transform.parent;
 
-		float rotationDuration = 0.5f;
-		float elapsedTime = 0f;
-		while (elapsedTime < rotationDuration)
-		{
-			LookAtEnemy(transform, agentTransform, 3f);
-			LookAtEnemy(agentTransform, transform, 3f);
-			elapsedTime += Time.deltaTime;
-			yield return null;
-		}
+		canWalk = false;
+
+		// float rotationDuration = 0.3f;
+		// float elapsedTime = 0f;
+		// while (elapsedTime < rotationDuration)
+		// {
+		// 	LookAtEnemy(transform, agentTransform, 3f);
+		// 	LookAtEnemy(agentTransform, transform, 3f);
+		// 	elapsedTime += Time.deltaTime;
+		// 	yield return null;
+		// }
+		Transform defeatPoint = communicator.gameObject.transform.parent.Find("DefeatPoint");
+
+		transform.position = defeatPoint.position;
+		transform.rotation = defeatPoint.rotation;
 
 		Animator manAnimator = agentTransform.GetComponentInChildren<Animator>();
 		manAnimator.SetBool("isAttacking", true);
@@ -675,6 +681,7 @@ public class PlayerController : MonoBehaviour
 
 		playerWasAttacked = false;
 		playerAttacks = false;
+		canWalk = true;
 	}
 
 	void LookAtEnemy(Transform target, Transform self, float speed)
@@ -693,6 +700,8 @@ public class PlayerController : MonoBehaviour
 		if (other.CompareTag("Training"))
 		{
 			isTraining = true;
+
+			canWalk = false;
 
 			// isMoving = false;
 
@@ -809,6 +818,8 @@ public class PlayerController : MonoBehaviour
 		if (other.CompareTag("Training"))
 		{
 			isTraining = false;
+
+			canWalk = true;
 
 			// isMoving = true;
 

@@ -23,16 +23,17 @@ public class JumpBox : TrainingMachineBase, IInteractable
     {
         base.Update();
 
-        JumpboxTrainingProgress();
-
-        DisplayMachineWarning();
-
-        WaterManagement();
+        if (thisJumpbox)
+        {
+            JumpboxTrainingProgress();
+            DisplayMachineWarning();
+            WaterManagement();
+        }
     }
 
     public void DisplayMachineWarning()
     {
-        if (thisJumpbox && GameManager.instance.jumpboxTraining >= 0.35f)
+        if (GameManager.instance.jumpboxTraining >= 0.35f)
         {
             if (IHM.instance.contextMessageCoroutName != "JumpboxTrainingCompleted")
             {
@@ -71,17 +72,14 @@ public class JumpBox : TrainingMachineBase, IInteractable
 
     void JumpboxTrainingProgress()
     {
-        if (thisJumpbox)
-        {
-            GameManager.instance.jumpboxTraining += Time.deltaTime / 100;
+        GameManager.instance.jumpboxTraining += Time.deltaTime / 100;
 
-            GameManager.instance.jumpboxTraining = Mathf.Clamp(GameManager.instance.jumpboxTraining, 0, 0.35f);
-        }
+        GameManager.instance.jumpboxTraining = Mathf.Clamp(GameManager.instance.jumpboxTraining, 0, 0.35f);
     }
 
     void WaterManagement()
     {
-        if (thisJumpbox && GameManager.instance.jumpboxTraining < 0.35f)
+        if (GameManager.instance.jumpboxTraining < 0.35f)
         {
             float waterLoss = Time.deltaTime / 20;
 
@@ -90,20 +88,20 @@ public class JumpBox : TrainingMachineBase, IInteractable
 
         if (GameManager.instance.currentPlayer.water <= 0)
         {
-            if (trainingAudio != null)
-            {
-                trainingAudio.Stop();
-            }
+            trainingAudio.Stop();
 
             IHM.instance.stopTrainingButton.gameObject.SetActive(false);
 
-            StartCoroutine(ThirstyCorout());
+            if (thirstyCoroutine == null)
+            {
+                thirstyCoroutine = StartCoroutine(ThirstyCorout());
+            }
 
-            if (ambientSound != null) ambientSound.Play();
+            // ambientSound.Play();
 
-            GameManager.instance.currentPlayer.life -= 1;
+            // GameManager.instance.currentPlayer.life -= 1;
 
-            GameManager.instance.currentPlayer.water = 0.5f;
+            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -111,17 +109,17 @@ public class JumpBox : TrainingMachineBase, IInteractable
     {
         // if (trainingPerson == null)
         // {
-            base.OnTriggerEnter(other);
+        base.OnTriggerEnter(other);
 
-            if (other.CompareTag("Player"))
-            {
-                thisJumpbox = true;
-            }
+        if (other.CompareTag("Player"))
+        {
+            thisJumpbox = true;
+        }
 
-            if (thisJumpbox && GameManager.instance.bikeTraining <= 0.35f)
-            {
-                IHM.instance.DisplayWaterWarning();
-            }
+        if (thisJumpbox && GameManager.instance.bikeTraining <= 0.35f)
+        {
+            IHM.instance.DisplayWaterWarning();
+        }
         // }
     }
 

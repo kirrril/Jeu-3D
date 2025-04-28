@@ -33,9 +33,38 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
+      name: AustralianPullUps
+      takeName: AustralianPullUps
+      internalID: -7879110821788158452
+      firstFrame: 0
+      lastFrame: 39
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
       name: BoxJumping
-      takeName: Armature|BoxJumping
-      internalID: -8526911400461002891
+      takeName: BoxJumping
+      internalID: 1835908865711203768
       firstFrame: 0
       lastFrame: 49
       wrapMode: 0
@@ -63,8 +92,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: ChestMachine
-      takeName: Armature|ChestMachine
-      internalID: 2839993118442559493
+      takeName: ChestMachine
+      internalID: 1305083414732463922
       firstFrame: 0
       lastFrame: 39
       wrapMode: 0
@@ -92,8 +121,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: Cycling
-      takeName: Armature|Cycling
-      internalID: -2247504509490492700
+      takeName: Cycling
+      internalID: -2265723894260463728
       firstFrame: 0
       lastFrame: 39
       wrapMode: 0
@@ -121,8 +150,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: Dumbbells1
-      takeName: Armature|Dumbbells1
-      internalID: 7492466987211165609
+      takeName: Dumbbells1
+      internalID: 4289971257071821360
       firstFrame: 0
       lastFrame: 39
       wrapMode: 0
@@ -150,8 +179,66 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: Dumbbells2
-      takeName: Armature|Dumbbells2
-      internalID: 6745633666444339246
+      takeName: Dumbbells2
+      internalID: -3651638351087646295
+      firstFrame: 0
+      lastFrame: 39
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: GirlBackExtension
+      takeName: GirlBackExtension
+      internalID: 5930991315117088037
+      firstFrame: 0
+      lastFrame: 39
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: GirlPullingRower
+      takeName: GirlPullingRower
+      internalID: 4812331269117790818
       firstFrame: 0
       lastFrame: 39
       wrapMode: 0
@@ -179,8 +266,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: Idle
-      takeName: Armature|Idle
-      internalID: -8945691123924629249
+      takeName: Idle
+      internalID: -3100369314251171874
       firstFrame: 0
       lastFrame: 39
       wrapMode: 0
@@ -208,8 +295,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: Jogging
-      takeName: Armature|Jogging
-      internalID: 6638386485966200141
+      takeName: Jogging
+      internalID: 8648702121991251029
       firstFrame: 0
       lastFrame: 39
       wrapMode: 0
@@ -236,9 +323,38 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
+      name: PullingBackMachine2
+      takeName: PullingBackMachine2
+      internalID: 7384569433490207815
+      firstFrame: 0
+      lastFrame: 19
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
       name: Selfie
-      takeName: Armature|Selfie
-      internalID: 1197172014802083005
+      takeName: Selfie
+      internalID: 4237239086348404209
       firstFrame: 0
       lastFrame: 79
       wrapMode: 0
@@ -266,8 +382,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: Squats
-      takeName: Armature|Squats
-      internalID: 3269118872031765148
+      takeName: Squats
+      internalID: 9128495679283234229
       firstFrame: 0
       lastFrame: 39
       wrapMode: 0
@@ -295,8 +411,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: Step
-      takeName: Armature|Step
-      internalID: -2248545528610919299
+      takeName: Step
+      internalID: 897100832548060586
       firstFrame: 0
       lastFrame: 54
       wrapMode: 0
@@ -324,8 +440,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: Stretching
-      takeName: Armature|Stretching
-      internalID: 5665014738702724509
+      takeName: Stretching
+      internalID: 8953823714518014475
       firstFrame: 0
       lastFrame: 39
       wrapMode: 0
@@ -353,8 +469,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: Walking
-      takeName: Armature|Walking
-      internalID: -4274770991410265338
+      takeName: Walking
+      internalID: -1610863427237328480
       firstFrame: 0
       lastFrame: 39
       wrapMode: 0
@@ -396,7 +512,7 @@ ModelImporter:
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1

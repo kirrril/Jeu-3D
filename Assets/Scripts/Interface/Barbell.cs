@@ -22,16 +22,17 @@ public class Barbell : TrainingMachineBase, IInteractable
     {
         base.Update();
 
-        BarbellTrainingProgress();
-
-        WaterManagement();
-
-        DisplayMachineWarning();
+        if (thisBarbell)
+        {
+            BarbellTrainingProgress();
+            WaterManagement();
+            DisplayMachineWarning();
+        }
     }
 
     public void DisplayMachineWarning()
     {
-        if (thisBarbell && GameManager.instance.barbellTraining >= 0.35f)
+        if (GameManager.instance.barbellTraining >= 0.25f)
         {
             if (IHM.instance.contextMessageCoroutName != "BarbellTrainingCompleted")
             {
@@ -69,7 +70,7 @@ public class Barbell : TrainingMachineBase, IInteractable
 
     void WaterManagement()
     {
-        if (thisBarbell && GameManager.instance.barbellTraining < 0.35f)
+        if (GameManager.instance.barbellTraining < 0.25f)
         {
             float waterLoss = Time.deltaTime / 20;
 
@@ -82,13 +83,16 @@ public class Barbell : TrainingMachineBase, IInteractable
 
             IHM.instance.stopTrainingButton.gameObject.SetActive(false);
 
-            StartCoroutine(ThirstyCorout());
+            if (thirstyCoroutine == null)
+            {
+                thirstyCoroutine = StartCoroutine(ThirstyCorout());
+            }
 
-            ambientSound.Play();
+            // ambientSound.Play();
 
-            GameManager.instance.currentPlayer.life -= 1;
+            // GameManager.instance.currentPlayer.life -= 1;
 
-            GameManager.instance.currentPlayer.water = 0.5f;
+            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -118,7 +122,7 @@ public class Barbell : TrainingMachineBase, IInteractable
             CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
             observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
 
-            if (GameManager.instance.barbellTraining <= 0.35f)
+            if (GameManager.instance.barbellTraining <= 0.25f)
             {
                 IHM.instance.DisplayWaterWarning();
             }
@@ -167,11 +171,8 @@ public class Barbell : TrainingMachineBase, IInteractable
 
     void BarbellTrainingProgress()
     {
-        if (thisBarbell)
-        {
-            GameManager.instance.barbellTraining += Time.deltaTime / 100;
+        GameManager.instance.barbellTraining += Time.deltaTime / 100;
 
-            GameManager.instance.barbellTraining = Mathf.Clamp(GameManager.instance.barbellTraining, 0, 0.35f);
-        }
+        GameManager.instance.barbellTraining = Mathf.Clamp(GameManager.instance.barbellTraining, 0, 0.25f);
     }
 }

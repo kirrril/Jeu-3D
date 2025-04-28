@@ -21,16 +21,17 @@ public class ChestMachine2 : TrainingMachineBase, IInteractable
     {
         base.Update();
 
-        Chest2TrainingProgress();
-
-        WaterManagement();
-
-        DisplayMachineWarning();
+        if (thisChestMachine2)
+        {
+            Chest2TrainingProgress();
+            WaterManagement();
+            DisplayMachineWarning();
+        }
     }
 
     public void DisplayMachineWarning()
     {
-        if (thisChestMachine2 && GameManager.instance.chest2Training >= 0.35f)
+        if (GameManager.instance.chest2Training >= 0.25f)
         {
             if (IHM.instance.contextMessageCoroutName != "Chest2TrainingCompleted")
             {
@@ -60,7 +61,7 @@ public class ChestMachine2 : TrainingMachineBase, IInteractable
 
     void WaterManagement()
     {
-        if (thisChestMachine2 && GameManager.instance.chest2Training < 0.35f)
+        if (GameManager.instance.chest2Training < 0.25f)
         {
             float waterLoss = Time.deltaTime / 20;
 
@@ -73,13 +74,16 @@ public class ChestMachine2 : TrainingMachineBase, IInteractable
 
             IHM.instance.stopTrainingButton.gameObject.SetActive(false);
 
-            StartCoroutine(ThirstyCorout());
+            if (thirstyCoroutine == null)
+            {
+                thirstyCoroutine = StartCoroutine(ThirstyCorout());
+            }
 
-            ambientSound.Play();
+            // ambientSound.Play();
 
-            GameManager.instance.currentPlayer.life -= 1;
+            // GameManager.instance.currentPlayer.life -= 1;
 
-            GameManager.instance.currentPlayer.water = 0.5f;
+            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -102,7 +106,7 @@ public class ChestMachine2 : TrainingMachineBase, IInteractable
             CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
             observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
 
-            if (GameManager.instance.chest2Training <= 0.35f)
+            if (GameManager.instance.chest2Training <= 0.25f)
             {
                 IHM.instance.DisplayWaterWarning();
             }
@@ -234,11 +238,8 @@ public class ChestMachine2 : TrainingMachineBase, IInteractable
 
     void Chest2TrainingProgress()
     {
-        if (thisChestMachine2)
-        {
-            GameManager.instance.chest2Training += Time.deltaTime / 100;
+        GameManager.instance.chest2Training += Time.deltaTime / 100;
 
-            GameManager.instance.chest2Training = Mathf.Clamp(GameManager.instance.chest2Training, 0, 0.35f);
-        }
+        GameManager.instance.chest2Training = Mathf.Clamp(GameManager.instance.chest2Training, 0, 0.25f);
     }
 }

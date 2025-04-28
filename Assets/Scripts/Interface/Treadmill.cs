@@ -23,16 +23,17 @@ public class Treadmill : TrainingMachineBase, IInteractable
     {
         base.Update();
 
-        TreadmillTrainingProgress();
-
-        DisplayMachineWarning();
-
-        WaterManagement();
+        if (thisTreadmill)
+        {
+            TreadmillTrainingProgress();
+            DisplayMachineWarning();
+            WaterManagement();
+        }
     }
 
     public void DisplayMachineWarning()
     {
-        if (thisTreadmill && GameManager.instance.treadmillTraining >= 0.35f)
+        if (GameManager.instance.treadmillTraining >= 0.35f)
         {
             if (IHM.instance.contextMessageCoroutName != "TreadmillTrainingCompleted")
             {
@@ -71,17 +72,14 @@ public class Treadmill : TrainingMachineBase, IInteractable
 
     void TreadmillTrainingProgress()
     {
-        if (thisTreadmill)
-        {
-            GameManager.instance.treadmillTraining += Time.deltaTime / 100;
+        GameManager.instance.treadmillTraining += Time.deltaTime / 100;
 
-            GameManager.instance.treadmillTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
-        }
+        GameManager.instance.treadmillTraining = Mathf.Clamp(GameManager.instance.treadmillTraining, 0, 0.35f);
     }
 
     void WaterManagement()
     {
-        if (thisTreadmill && GameManager.instance.treadmillTraining < 0.35f)
+        if (GameManager.instance.treadmillTraining < 0.35f)
         {
             float waterLoss = Time.deltaTime / 20;
 
@@ -97,13 +95,16 @@ public class Treadmill : TrainingMachineBase, IInteractable
 
             IHM.instance.stopTrainingButton.gameObject.SetActive(false);
 
-            StartCoroutine(ThirstyCorout());
+            if (thirstyCoroutine == null)
+            {
+                thirstyCoroutine = StartCoroutine(ThirstyCorout());
+            }
 
-            if (ambientSound != null) ambientSound.Play();
+            // ambientSound.Play();
 
-            GameManager.instance.currentPlayer.life -= 1;
+            // GameManager.instance.currentPlayer.life -= 1;
 
-            GameManager.instance.currentPlayer.water = 0.5f;
+            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
