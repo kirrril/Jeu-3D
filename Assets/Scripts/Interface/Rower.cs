@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Rower : TrainingMachineBase, IInteractable
 {
@@ -121,6 +122,13 @@ public class Rower : TrainingMachineBase, IInteractable
                 {
                     IHM.instance.DisplayWaterWarning();
                 }
+
+                Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+                cameraTarget.localPosition = new Vector3(0f, 0.6f, -0.5f);
+
+                CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+                CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+                playerTransposer.m_FollowOffset = new Vector3(2f, 1.3f, -0.7f);
             }
         }
     }
@@ -141,6 +149,13 @@ public class Rower : TrainingMachineBase, IInteractable
             if (other.CompareTag("Player"))
             {
                 thisRower = false;
+
+                Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+                cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
+
+                CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+                CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+                playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
             }
         }
     }

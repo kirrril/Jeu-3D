@@ -44,7 +44,7 @@ public class Dumbbells : MonoBehaviour
     {
         AgentController controller = user.GetComponent<AgentController>();
         NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
-        
+
         // if (controller.currentCoroutine != null)
         // {
         //     StopCoroutine(controller.currentCoroutine);
@@ -70,6 +70,12 @@ public class Dumbbells : MonoBehaviour
         agent.enabled = false;
 
         TakePlace(user);
+
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(false);
+        }
 
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = true;
@@ -117,6 +123,12 @@ public class Dumbbells : MonoBehaviour
 
         trainingCoroutine = null;
         callBack();
+
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(true);
+        }
 
         NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
         agent.enabled = true;

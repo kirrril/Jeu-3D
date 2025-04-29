@@ -62,6 +62,12 @@ public class Selfie : TrainingMachineBase, IInteractable
 
             TakePlace(user);
 
+            if (user.CompareTag("Man"))
+            {
+                GameObject communicator = user.transform.Find("Communicator").gameObject;
+                communicator.SetActive(false);
+            }
+
             NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
             obstacle.enabled = true;
             GameObject wall = transform.Find("Wall").gameObject;

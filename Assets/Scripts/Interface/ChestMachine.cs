@@ -99,15 +99,15 @@ public class ChestMachine : TrainingMachineBase, IInteractable
             animator.SetBool("chestMachineIsMoving", true);
 
             Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-            cameraTarget.localPosition = new Vector3(0f, 0.6f, -0.5f);
+            cameraTarget.localPosition = new Vector3(0f, 0.8f, -0.5f);
 
             CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-            playerTransposer.m_FollowOffset = new Vector3(0f, 1.5f, 1.5f);
+            playerTransposer.m_FollowOffset = new Vector3(0f, 1.8f, 1.2f);
 
-            CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
+            // CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
+            // CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
+            // observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
 
             if (GameManager.instance.chest1Training <= 0.25f)
             {
@@ -156,6 +156,12 @@ public class ChestMachine : TrainingMachineBase, IInteractable
 
         trainingPerson.transform.position = stopTrainingPosition.position;
         trainingPerson.transform.rotation = stopTrainingPosition.rotation;
+
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(true);
+        }
 
         AgentController controller = trainingPerson.GetComponent<AgentController>();
         controller.isBusy = false;

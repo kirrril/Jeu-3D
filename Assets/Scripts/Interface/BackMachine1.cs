@@ -105,11 +105,11 @@ public class BackMachine1 : TrainingMachineBase, IInteractable
 
             CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-            playerTransposer.m_FollowOffset = new Vector3(0f, 1.5f, 1.5f);
+            playerTransposer.m_FollowOffset = new Vector3(-2f, 1.3f, -1f);
 
-            CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
+            // CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
+            // CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
+            // observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
 
             if (GameManager.instance.back1Training <= 0.167f)
             {
@@ -137,20 +137,87 @@ public class BackMachine1 : TrainingMachineBase, IInteractable
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
             playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
 
-            CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            observerTransposer.m_FollowOffset = new Vector3(4f, 4.5f, -2f);
+            // CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
+            // CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
+            // observerTransposer.m_FollowOffset = new Vector3(4f, 4.5f, -2f);
+        }
+    }
+
+    public override void Interact(GameObject user)
+    {
+        if (user.CompareTag("Girl"))
+        {
+            return;
+        }
+        else if (user.CompareTag("Man"))
+        {
+            AgentController controller = user.GetComponent<AgentController>();
+            NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
+
+            if (!isInteractable)
+            {
+                controller.StartMoveToTarget();
+            }
+
+            if (user.CompareTag("Man"))
+            {
+                GameObject communicator = user.transform.Find("Communicator").gameObject;
+                communicator.SetActive(false);
+            }
+
+            trainingPerson = user;
+
+            controller.isBusy = true;
+
+            agent.enabled = false;
+
+            TakePlace(user);
+
+            NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+            obstacle.enabled = true;
+            GameObject wall = transform.Find("Wall").gameObject;
+            wall.SetActive(true);
+
+            trainingCoroutine = StartCoroutine(TrainingCorout(user));
+        }
+
+        if (user.CompareTag("Player"))
+        {
+            if (!isInteractable)
+            {
+                return;
+            }
+
+            TakePlace(user);
+
+            NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+            obstacle.enabled = true;
+            GameObject wall = transform.Find("Wall").gameObject;
+            wall.SetActive(true);
+
+            trainingAudio.Play();
+
+            ambientSound.Stop();
+
+            user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
+
+            Animator machineAnimator = GetComponentInChildren<Animator>();
+            machineAnimator.SetBool("backMachine1IsMoving", true);
+
+            PlayerController.instance.isTraining = true;
+
+            StopTrainingButtonOn();
         }
     }
 
     protected override IEnumerator TrainingCorout(GameObject user)
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
-        Animator animator = GetComponentInChildren<Animator>();
-        animator.SetBool("backMachine1IsMoving", true);
+        Animator machineAnimator = GetComponentInChildren<Animator>();
+        machineAnimator.SetBool("backMachine1IsMoving", true);
         yield return new WaitForSeconds(trainingDuration);
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
-        animator.SetBool("backMachine1IsMoving", false);
+        machineAnimator.SetBool("backMachine1IsMoving", false);
         yield return new WaitForSeconds(0.1f);
 
         NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
@@ -158,6 +225,12 @@ public class BackMachine1 : TrainingMachineBase, IInteractable
 
         trainingPerson.transform.position = stopTrainingPosition.position;
         trainingPerson.transform.rotation = stopTrainingPosition.rotation;
+
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(true);
+        }
 
         AgentController controller = trainingPerson.GetComponent<AgentController>();
         controller.isBusy = false;
@@ -170,6 +243,29 @@ public class BackMachine1 : TrainingMachineBase, IInteractable
         obstacle.enabled = false;
 
         trainingPerson = null;
+    }
+
+    protected override void PlayerLeavePlace()
+    {
+        NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
+        obstacle.enabled = false;
+        GameObject wall = transform.Find("Wall").gameObject;
+        wall.SetActive(false);
+
+        PlayerController.instance.isTraining = false;
+
+        GameObject player = GameObject.Find("Player");
+
+        player.GetComponentInChildren<Animator>().SetBool(animationBool, false);
+
+        Animator machineAnimator = GetComponentInChildren<Animator>();
+        machineAnimator.SetBool("backMachine1IsMoving", false);
+
+        player.transform.position = stopTrainingPosition.position;
+        player.transform.rotation = stopTrainingPosition.rotation;
+
+        trainingAudio.Stop();
+        ambientSound.Play();
     }
 
     void Back1TrainingProgress()

@@ -36,6 +36,12 @@ public class BarbellStand : TrainingMachineBase, IInteractable
             controller.StartMoveToTarget();
         }
 
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(false);
+        }
+
         trainingPerson = user;
 
         controller.isBusy = true;
@@ -70,6 +76,12 @@ public class BarbellStand : TrainingMachineBase, IInteractable
 
         trainingPerson.transform.position = stopTrainingPosition.position;
         trainingPerson.transform.rotation = stopTrainingPosition.rotation;
+
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(true);
+        }
 
         controller.StartMoveToTarget();
 

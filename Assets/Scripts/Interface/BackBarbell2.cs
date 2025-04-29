@@ -66,6 +66,12 @@ public class BackBarbell2 : MonoBehaviour
             return;
         }
 
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(false);
+        }
+
         trainingPerson = user;
 
         controller.isBusy = true;
@@ -94,6 +100,12 @@ public class BackBarbell2 : MonoBehaviour
 
         trainingCoroutine = null;
         callBack();
+
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(true);
+        }
 
         NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
         agent.enabled = true;

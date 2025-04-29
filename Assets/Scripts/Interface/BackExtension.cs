@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class BackExtension : TrainingMachineBase, IInteractable
 {
@@ -117,6 +118,13 @@ public class BackExtension : TrainingMachineBase, IInteractable
                 {
                     IHM.instance.DisplayWaterWarning();
                 }
+
+                Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+                cameraTarget.localPosition = new Vector3(0f, 0.5f, 0f);
+
+                CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+                CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+                playerTransposer.m_FollowOffset = new Vector3(-1.5f, 1.2f, 0.7f);
             }
 
             base.OnTriggerEnter(other);
@@ -135,6 +143,13 @@ public class BackExtension : TrainingMachineBase, IInteractable
             if (other.CompareTag("Player"))
             {
                 thisBackExtension = false;
+
+                Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+                cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
+
+                CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+                CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+                playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
             }
 
             base.OnTriggerExit(other);

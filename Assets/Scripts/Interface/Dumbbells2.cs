@@ -74,6 +74,12 @@ public class Dumbbells2 : MonoBehaviour
 
         TakePlace(user);
 
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(false);
+        }
+
         obstacle.enabled = true;
         wall.SetActive(true);
 
@@ -94,6 +100,12 @@ public class Dumbbells2 : MonoBehaviour
 
         trainingCoroutine = null;
         callBack();
+
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(true);
+        }
 
         NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
         agent.enabled = true;

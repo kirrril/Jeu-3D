@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class BackBarbell1 : TrainingMachineBase, IInteractable
 {
@@ -120,6 +121,13 @@ public class BackBarbell1 : TrainingMachineBase, IInteractable
             {
                 IHM.instance.DisplayWaterWarning();
             }
+
+            Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+            cameraTarget.localPosition = new Vector3(0f, 0.5f, 0f);
+
+            CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+            CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+            playerTransposer.m_FollowOffset = new Vector3(-1.5f, 1.2f, 0.7f);
         }
         else
         {
@@ -145,6 +153,13 @@ public class BackBarbell1 : TrainingMachineBase, IInteractable
 
             Animator animator = GetComponentInChildren<Animator>();
             animator.SetBool("BackBarbell1IsPulled", false);
+
+            Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+            cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
+
+            CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+            CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+            playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
         }
         else
         {

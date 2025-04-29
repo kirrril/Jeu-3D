@@ -163,6 +163,9 @@ public class ChestMachine2 : TrainingMachineBase, IInteractable
                 controller.StartMoveToTarget();
             }
 
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(false);
+
             trainingPerson = user;
 
             controller.isBusy = true;
@@ -222,6 +225,12 @@ public class ChestMachine2 : TrainingMachineBase, IInteractable
 
         trainingPerson.transform.position = stopTrainingPosition.position;
         trainingPerson.transform.rotation = stopTrainingPosition.rotation;
+
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(true);
+        }
 
         AgentController controller = trainingPerson.GetComponent<AgentController>();
         controller.isBusy = false;

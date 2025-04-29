@@ -108,15 +108,11 @@ public class Dips : TrainingMachineBase, IInteractable
             thisDipStation = true;
 
             Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-            cameraTarget.localPosition = new Vector3(0f, 0.6f, -0.5f);
+            cameraTarget.localPosition = new Vector3(0f, 1.2f, 0.5f);
 
             CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-            playerTransposer.m_FollowOffset = new Vector3(0f, 1.5f, 0.8f);
-
-            CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
+            playerTransposer.m_FollowOffset = new Vector3(-1.5f, 2f, 1f);
 
             if (GameManager.instance.dipsTraining <= 0.25f)
             {
@@ -148,10 +144,6 @@ public class Dips : TrainingMachineBase, IInteractable
             CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
             playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
-
-            CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            observerTransposer.m_FollowOffset = new Vector3(4f, 4.5f, -2f);
         }
     }
 

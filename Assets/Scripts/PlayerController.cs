@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,6 +12,14 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField]
 	CameraSwitch cameraSwitch;
+
+	[SerializeField]
+	Transform cameraTarget;
+
+	float cameraSensitivity = 2f;
+	float minYPosition = -2f;
+	float maxYPosition = 10f;
+	float smoothFactor = 100f;
 
 	[SerializeField]
 	Transform startPosition;
@@ -33,6 +42,8 @@ public class PlayerController : MonoBehaviour
 	private Vector3 inputMove = Vector3.zero;
 
 	private float inputRotate = 0;
+
+	private float inputCameraAngle = 0;
 
 	private Coroutine fightCoroutine;
 
@@ -167,7 +178,14 @@ public class PlayerController : MonoBehaviour
 	void Update()
 	{
 		GetInput();
+
+		if (isTraining == false && isGaming == false && isClimbing == false && playerWasAttacked == false)
+		{
+			LiftCamera();
+		}
+
 		CheckIfMoving();
+
 		if (isInJumpZone)
 		{
 			Jump();
@@ -200,6 +218,7 @@ public class PlayerController : MonoBehaviour
 		inputMove.x = Input.GetAxis("Horizontal");
 		inputMove.y = Input.GetAxis("Vertical");
 		inputRotate = Input.GetAxis("Mouse X");
+		inputCameraAngle = Input.GetAxis("Mouse Y");
 	}
 
 	void RotatePlayer()
@@ -214,10 +233,25 @@ public class PlayerController : MonoBehaviour
 	}
 
 
+	void LiftCamera()
+	{
+		Vector3 localPosition = cameraTarget.localPosition;
+		float targetY = localPosition.y + inputCameraAngle * cameraSensitivity * Time.deltaTime;
+
+		targetY = Mathf.Clamp(targetY, minYPosition, maxYPosition);
+
+		localPosition.y = Mathf.Lerp(localPosition.y, targetY, smoothFactor * Time.deltaTime);
+
+		cameraTarget.localPosition = localPosition;
+	}
+
+
 	void MovePlayer()
 	{
-		if (/*!isTraining && !isReadyToJump && !isClimbing && !isInClimbingZone && !isInJumpZone || */canWalk)
+		if (canWalk)
 		{
+
+
 			Vector3 forwardMove = transform.forward * inputMove.y * forwardSpeed;
 			Vector3 sideMove = transform.right * inputMove.x * sideSpeed;
 
@@ -232,19 +266,6 @@ public class PlayerController : MonoBehaviour
 
 	void CheckIfMoving()
 	{
-		// if (isTraining == false && isReadyToJump == false)
-		// {
-		// 	if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
-		// 	{
-		// 		isMoving = true;
-		// 	}
-		// 	else
-		// 	{
-		// 		isMoving = false;
-		// 	}
-		// }
-
-
 		if (/*!isTraining && !isReadyToJump && !isClimbing && !isInClimbingZone && !isInJumpZone || */canWalk)
 		{
 			if (Mathf.Abs(inputMove.x) > 0.1f || Mathf.Abs(inputMove.y) > 0.1f)
@@ -262,31 +283,20 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-
-	// void CheckIfMovingInJumpingZone()
-	// {
-	// 	if (isInJumpZone == true)
-	// 	{
-	// 		if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
-	// 		{
-	// 			isReadyToJump = false;
-	// 			isMoving = true;
-	// 		}
-	// 		else
-	// 		{
-	// 			isReadyToJump = true;
-	// 			isMoving = false;
-	// 		}
-	// 	}
-	// }
-
-
 	public void StartPosition()
 	{
 		isSubmissed = false;
-		// isReadyToJump = false;
+		isTraining = false;
+		isReadyToJump = false;
 		transform.position = startPosition.position;
 		transform.rotation = startPosition.rotation;
+
+		Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+		cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
+
+		CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+		CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+		playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
 	}
 
 

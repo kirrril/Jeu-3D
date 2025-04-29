@@ -72,6 +72,12 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
                 controller.StartMoveToTarget();
             }
 
+            if (user.CompareTag("Man"))
+            {
+                GameObject communicator = user.transform.Find("Communicator").gameObject;
+                communicator.SetActive(false);
+            }
+
             trainingPerson = user;
 
             controller.isBusy = true;
@@ -127,6 +133,12 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
         user.transform.position = stopTrainingPosition.position;
         user.transform.rotation = stopTrainingPosition.rotation;
+
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(true);
+        }
 
         AgentController controller = user.GetComponent<AgentController>();
         controller.isBusy = false;
@@ -186,7 +198,7 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         trainingPerson.transform.rotation = trainingPosition.rotation;
     }
 
-    protected void PlayerLeavePlace()
+    protected virtual void PlayerLeavePlace()
     {
         NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
         obstacle.enabled = false;

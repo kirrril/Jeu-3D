@@ -52,6 +52,8 @@ public class PullUpBar : MonoBehaviour
 
     Coroutine trainingCoroutine;
 
+    protected Coroutine thirstyCoroutine = null;
+
 
     public bool isInteractable { get { return trainingPerson == null; } set { } }
 
@@ -128,7 +130,10 @@ public class PullUpBar : MonoBehaviour
 
             IHM.instance.stopTrainingButton.gameObject.SetActive(false);
 
-            StartCoroutine(ThirstyCorout());
+            if (thirstyCoroutine == null)
+            {
+                thirstyCoroutine = StartCoroutine(ThirstyCorout());
+            }
 
             // ambientSound.Play();
 
@@ -168,7 +173,7 @@ public class PullUpBar : MonoBehaviour
 
     void PullUpsTrainingProgress()
     {
-        GameManager.instance.pullUpsTraining += Time.deltaTime / 100;
+        GameManager.instance.pullUpsTraining += Time.deltaTime / 300;
 
         GameManager.instance.pullUpsTraining = Mathf.Clamp(GameManager.instance.pullUpsTraining, 0, 0.167f);
     }
@@ -197,17 +202,6 @@ public class PullUpBar : MonoBehaviour
                 IHM.instance.DisplayWaterWarning();
             }
 
-            Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-            cameraTarget.localPosition = new Vector3(0f, 0.6f, -0.5f);
-
-            CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
-            CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-            playerTransposer.m_FollowOffset = new Vector3(0f, 1.8f, 1.8f);
-
-            CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
-
             if (GameManager.instance.pullUpsTraining < 0.056f)
             {
                 animationBool = "isMakingAustralianPullUps";
@@ -226,6 +220,13 @@ public class PullUpBar : MonoBehaviour
                 PlayerController.instance.isTraining = true;
 
                 StopTrainingButtonOn(user, stopTrainingPosition1);
+
+                Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+                cameraTarget.localPosition = new Vector3(0f, 0.6f, -0.5f);
+
+                CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+                CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+                playerTransposer.m_FollowOffset = new Vector3(0f, 1.8f, 1.8f);
             }
             else if (GameManager.instance.pullUpsTraining > 0.056f && GameManager.instance.pullUpsTraining < 0.11)
             {
@@ -247,6 +248,13 @@ public class PullUpBar : MonoBehaviour
                 PlayerController.instance.isTraining = true;
 
                 StopTrainingButtonOn(user, stopTrainingPosition2);
+
+                Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+                cameraTarget.localPosition = new Vector3(0f, 2f, -0.5f);
+
+                CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+                CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+                playerTransposer.m_FollowOffset = new Vector3(0f, 2.2f, 2.2f);
             }
             else
             {
@@ -266,6 +274,13 @@ public class PullUpBar : MonoBehaviour
                 PlayerController.instance.isTraining = true;
 
                 StopTrainingButtonOn(user, stopTrainingPosition4);
+
+                Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+                cameraTarget.localPosition = new Vector3(0f, 2.5f, -0.5f);
+
+                CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+                CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+                playerTransposer.m_FollowOffset = new Vector3(0f, 2.2f, 2.2f);
             }
         }
         else if (user.CompareTag("Man"))
@@ -277,6 +292,12 @@ public class PullUpBar : MonoBehaviour
             agent.enabled = false;
 
             TakePlace(user, trainingPosition3);
+
+            if (user.CompareTag("Man"))
+            {
+                GameObject communicator = user.transform.Find("Communicator").gameObject;
+                communicator.SetActive(false);
+            }
 
             obstacle.enabled = true;
             wall.SetActive(true);
@@ -312,6 +333,12 @@ public class PullUpBar : MonoBehaviour
         trainingCoroutine = null;
 
         LeavePlace(user, stopTrainingPosition);
+
+        if (user.CompareTag("Man"))
+        {
+            GameObject communicator = user.transform.Find("Communicator").gameObject;
+            communicator.SetActive(true);
+        }
 
         NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
         agent.enabled = true;
@@ -402,10 +429,6 @@ public class PullUpBar : MonoBehaviour
         CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
         CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
         playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
-
-        CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-        CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-        observerTransposer.m_FollowOffset = new Vector3(4f, 4.5f, -2f);
     }
 
     void OnButtonClick(GameObject user, Transform stopTrainingPosition)
