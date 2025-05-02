@@ -20,6 +20,30 @@ public class IHM : MonoBehaviour
     public TMP_Text alphaCoeff;
 
     [SerializeField]
+    public TMP_Text leg;
+
+    [SerializeField]
+    public TMP_Text chest;
+
+    [SerializeField]
+    public TMP_Text back;
+
+    [SerializeField]
+    public TMP_Text youWin;
+
+    [SerializeField]
+    public TMP_Text zone1;
+
+    [SerializeField]
+    public TMP_Text zone2;
+
+    [SerializeField]
+    public TMP_Text zone3;
+
+    [SerializeField]
+    public TMP_Text zone4;
+
+    [SerializeField]
     public Button stopTrainingButton;
 
     [SerializeField]
@@ -87,15 +111,51 @@ public class IHM : MonoBehaviour
     }
 
 
-    void LateUpdate()
+    void Update()
     {
         DisplayData();
+        ManageRoomCanvases();
     }
 
 
-    public void FlipLegCanvas()
+    public void ManageRoomCanvases()
     {
-        legCanvas.transform.Rotate(0, 180, 0);
+        if (GameManager.instance.currentPlayer.level == 1)
+        {
+            leg.color = Color.white;
+            leg.color = Color.white;
+            chest.color = new Color(0.8f, 0.8f, 0.8f);
+            zone2.color = new Color(0.8f, 0.8f, 0.8f);
+            back.color = new Color(0.8f, 0.8f, 0.8f);
+            zone3.color = new Color(0.8f, 0.8f, 0.8f);
+            youWin.color = new Color(0.8f, 0.8f, 0.8f);
+            zone4.color = new Color(0.8f, 0.8f, 0.8f);
+            legCanvas.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        }
+        else if (GameManager.instance.currentPlayer.level == 2)
+        {
+            leg.color = new Color(0.8f, 0.8f, 0.8f);
+            zone1.color = new Color(0.8f, 0.8f, 0.8f);
+            chest.color = Color.white;
+            zone2.color = Color.white;
+            back.color = new Color(0.8f, 0.8f, 0.8f);
+            zone3.color = new Color(0.8f, 0.8f, 0.8f);
+            youWin.color = new Color(0.8f, 0.8f, 0.8f);
+            zone4.color = new Color(0.8f, 0.8f, 0.8f);
+            legCanvas.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+        }
+        else if (GameManager.instance.currentPlayer.level == 3)
+        {
+            leg.color = new Color(0.8f, 0.8f, 0.8f);
+            zone1.color = new Color(0.8f, 0.8f, 0.8f);
+            chest.color = new Color(0.8f, 0.8f, 0.8f);
+            zone2.color = new Color(0.8f, 0.8f, 0.8f);
+            back.color = Color.white;
+            zone3.color = Color.white;
+            youWin.color = new Color(0.8f, 0.8f, 0.8f);
+            zone4.color = new Color(0.8f, 0.8f, 0.8f);
+            legCanvas.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+        }
     }
 
     public void DisplayData()

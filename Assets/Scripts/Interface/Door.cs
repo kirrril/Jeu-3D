@@ -75,11 +75,15 @@ public class Door : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        PlayerController.instance.isPushingTheDoor = true;
+
         Interact(other.gameObject);
     }
 
     void OnTriggerExit(Collider other)
     {
+        PlayerController.instance.isPushingTheDoor = false;
+
         doorAnimator.SetBool("isOpenning", false);
 
         Animator playerAnimator = other.GetComponentInChildren<Animator>();

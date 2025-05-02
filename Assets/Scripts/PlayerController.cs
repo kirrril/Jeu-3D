@@ -11,10 +11,17 @@ public class PlayerController : MonoBehaviour
 	public static PlayerController instance;
 
 	[SerializeField]
-	CameraSwitch cameraSwitch;
+	CinemachineVirtualCamera playerCam;
 
 	[SerializeField]
 	Transform cameraTarget;
+
+	[SerializeField]
+	Transform cameraPlace;
+
+
+	[SerializeField]
+	CameraSwitch cameraSwitch;
 
 	float cameraSensitivity = 2f;
 	float minYPosition = -2f;
@@ -68,6 +75,8 @@ public class PlayerController : MonoBehaviour
 
 	public bool isInClimbingZone;
 
+	public bool isPushingTheDoor;
+
 	[SerializeField]
 	GameObject climbingPosition;
 
@@ -83,7 +92,7 @@ public class PlayerController : MonoBehaviour
 
 	bool isOnTheFloor = false;
 
-	bool canWalk = true;
+	public bool canWalk = true;
 
 
 	public bool isReadyToJump;
@@ -117,6 +126,8 @@ public class PlayerController : MonoBehaviour
 	public bool lostLife;
 
 	public bool isSubmissed;
+
+	// public bool isHitByWeightPlate;
 
 	Coroutine fallCoroutine;
 
@@ -154,6 +165,13 @@ public class PlayerController : MonoBehaviour
 
 	private bool isLandingCoroutineRunning;
 
+	[SerializeField]
+	SpawnerPlates spawnerPlates;
+
+	Coroutine hitByWeightPlateCorout;
+
+	[SerializeField]
+	GameObject head;
 
 
 
@@ -173,6 +191,8 @@ public class PlayerController : MonoBehaviour
 		spotLight.enabled = false;
 
 		NoLandEnabled(false);
+
+		head.SetActive(false);
 	}
 
 	void Update()
@@ -197,19 +217,22 @@ public class PlayerController : MonoBehaviour
 		}
 
 		GroundControl();
+
+		RotatePlayer();
+		MovePlayer();
 	}
 
 	void FixedUpdate()
 	{
 		// CheckIfMovingInJumpingZone();
 
-		RotatePlayer();
-		MovePlayer();
+		// RotatePlayer();
+		// MovePlayer();
 
 
 		if (!isClimbing)
 		{
-			rb.angularVelocity = Vector3.zero;
+		rb.angularVelocity = Vector3.zero;
 		}
 	}
 
@@ -225,7 +248,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (isTraining == false && isGaming == false && isClimbing == false && playerWasAttacked == false)
 		{
-			float playerRotation = inputRotate * rotationCoeff * rotationSpeed * Time.fixedDeltaTime;
+			float playerRotation = inputRotate * rotationCoeff * rotationSpeed * Time.deltaTime;
 
 			Quaternion deltaRotation = Quaternion.Euler(0, playerRotation, 0);
 			rb.MoveRotation(rb.rotation * deltaRotation);
@@ -235,14 +258,17 @@ public class PlayerController : MonoBehaviour
 
 	void LiftCamera()
 	{
-		Vector3 localPosition = cameraTarget.localPosition;
-		float targetY = localPosition.y + inputCameraAngle * cameraSensitivity * Time.deltaTime;
+		if (!isJumping && !isMoving)
+		{
+			Vector3 localPosition = cameraTarget.localPosition;
+			float targetY = localPosition.y + inputCameraAngle * cameraSensitivity * Time.deltaTime;
 
-		targetY = Mathf.Clamp(targetY, minYPosition, maxYPosition);
+			targetY = Mathf.Clamp(targetY, minYPosition, maxYPosition);
 
-		localPosition.y = Mathf.Lerp(localPosition.y, targetY, smoothFactor * Time.deltaTime);
+			localPosition.y = Mathf.Lerp(localPosition.y, targetY, smoothFactor * Time.deltaTime);
 
-		cameraTarget.localPosition = localPosition;
+			cameraTarget.localPosition = localPosition;
+		}
 	}
 
 
@@ -250,14 +276,12 @@ public class PlayerController : MonoBehaviour
 	{
 		if (canWalk)
 		{
-
-
 			Vector3 forwardMove = transform.forward * inputMove.y * forwardSpeed;
 			Vector3 sideMove = transform.right * inputMove.x * sideSpeed;
 
 			Vector3 resultMove = forwardMove + sideMove;
 
-			rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime);
+			rb.MovePosition(transform.position + resultMove * Time.deltaTime * 6);
 
 			playerSpeed = rb.velocity.magnitude * 1000;
 		}
@@ -291,10 +315,10 @@ public class PlayerController : MonoBehaviour
 		transform.position = startPosition.position;
 		transform.rotation = startPosition.rotation;
 
-		Transform cameraTarget = GameObject.Find("CameraTarget").transform;
 		cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
 
-		CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+		playerCam.Follow = transform;
+
 		CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
 		playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
 	}
@@ -609,15 +633,15 @@ public class PlayerController : MonoBehaviour
 	{
 		yield return new WaitForSeconds(1f);
 
-		if (isTraining)
+		if (isTraining || isPushingTheDoor || playerWasAttacked)
 		{
 			yield break;
 		}
 
-		if (playerWasAttacked)
-		{
-			yield break;
-		}
+		// if (playerWasAttacked)
+		// {
+		// 	yield break;
+		// }
 
 		playerWasAttacked = true;
 
@@ -705,6 +729,22 @@ public class PlayerController : MonoBehaviour
 	}
 
 
+	public void DeadHitByWeightPlate()
+	{
+		hitByWeightPlateCorout = StartCoroutine(HitByWeightPlate());
+	}
+
+
+	IEnumerator HitByWeightPlate()
+	{
+		cameraTarget.localPosition = Vector3.zero;
+
+		playerCam.Follow = cameraPlace.transform;
+
+		yield return null;
+	}
+
+
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.CompareTag("Training"))
@@ -787,12 +827,16 @@ public class PlayerController : MonoBehaviour
 		{
 			GameManager.instance.currentPlayer.level = 2;
 
-			IHM.instance.FlipLegCanvas();
+			// IHM.instance.FlipLegCanvas();
 		}
 
 		if (other.gameObject.name == "Level3")
 		{
 			GameManager.instance.currentPlayer.level = 3;
+
+			head.SetActive(true);
+
+			spawnerPlates.SpawnWeightPlates();
 		}
 
 
@@ -878,6 +922,15 @@ public class PlayerController : MonoBehaviour
 			isInJumpZone = false;
 
 			// canWalk = false;
+		}
+
+		if (other.gameObject.name == "Level3")
+		{
+			GameManager.instance.currentPlayer.level = 0;
+
+			head.SetActive(false);
+
+			spawnerPlates.StopSpawningWeightPlates();
 		}
 	}
 

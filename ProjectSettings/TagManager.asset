@@ -28,6 +28,7 @@ TagManager:
   - StepBench
   - YogaPad
   - TrampolineLanding
+  - Head
   layers:
   - Default
   - TransparentFX
@@ -39,8 +40,8 @@ TagManager:
   - SpawnZones
   - NoLand
   - Player
-  - 
-  - 
+  - FallingPlates
+  - Agent
   - 
   - 
   - 

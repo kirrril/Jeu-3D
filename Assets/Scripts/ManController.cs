@@ -12,7 +12,6 @@ public class ManController : AgentController
         {
             if (agent == null || !agent.enabled || !agent.isOnNavMesh)
             {
-                Debug.LogWarning($"NavMeshAgent désactivé ou non valide pour {gameObject.name}");
                 yield break;
             }
             
@@ -25,7 +24,6 @@ public class ManController : AgentController
             }
             else
             {
-                Debug.LogWarning($"Chemin non atteignable pour {gameObject.name} vers le joueur");
                 yield break;
             }
 

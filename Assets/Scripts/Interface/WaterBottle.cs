@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WaterBottle : MonoBehaviour, ICollectable
 {
+    [SerializeField]
     private Spawner spawner;
 
     [SerializeField]
