@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
 	public static PlayerController instance;
 
 	[SerializeField]
+	GameObject soundCtrlPanel;
+
+	[SerializeField]
 	CinemachineVirtualCamera playerCam;
 
 	[SerializeField]
@@ -753,6 +756,8 @@ public class PlayerController : MonoBehaviour
 
 			canWalk = false;
 
+			soundCtrlPanel.SetActive(true);
+
 			// isMoving = false;
 
 			// isReadyToJump = false;
@@ -874,6 +879,8 @@ public class PlayerController : MonoBehaviour
 			isTraining = false;
 
 			canWalk = true;
+
+			soundCtrlPanel.SetActive(false);
 
 			// isMoving = true;
 

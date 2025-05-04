@@ -1,14 +1,11 @@
-Shader "Custom/MirrorShader"
+Shader "Custom/Mirror"
 {
     Properties
     {
-        _MainTex ("Render Texture", 2D) = "white" {}
+        _MainTex ("Mirror Texture", 2D) = "white" {}
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
-
         Pass
         {
             CGPROGRAM
@@ -16,7 +13,7 @@ Shader "Custom/MirrorShader"
             #pragma fragment frag
             #include "UnityCG.cginc"
 
-            struct appdata_t
+            struct appdata
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
@@ -30,21 +27,19 @@ Shader "Custom/MirrorShader"
 
             sampler2D _MainTex;
 
-            v2f vert (appdata_t v)
+            v2f vert (appdata v)
             {
                 v2f o;
-                v.vertex.z = -v.vertex.z; // Retourne l'axe Z
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = float2(v.uv.x, 1.0 - v.uv.y); // Retourner l'axe V si nécessaire
+                o.uv = v.uv;
                 return o;
             }
 
-            half4 frag (v2f i) : SV_Target
+            fixed4 frag (v2f i) : SV_Target
             {
                 return tex2D(_MainTex, i.uv);
             }
             ENDCG
         }
     }
-    FallBack "Diffuse"
 }

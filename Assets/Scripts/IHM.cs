@@ -14,7 +14,7 @@ public class IHM : MonoBehaviour
     public TMP_Text proteinAmount;
 
     [SerializeField]
-    public TMP_Text defeatesEnemies;
+    public TMP_Text defeatedEnemies;
 
     [SerializeField]
     public TMP_Text alphaCoeff;
@@ -92,6 +92,66 @@ public class IHM : MonoBehaviour
 
     public List<Sprite> remainingLives;
 
+    [SerializeField]
+    GameObject legsTraining;
+
+    [SerializeField]
+    GameObject legsTrainingCompleted;
+
+    [SerializeField]
+    Image treadmillFill;
+
+    [SerializeField]
+    Image bikeFill;
+
+    [SerializeField]
+    Image jumpboxFill;
+
+    [SerializeField]
+    GameObject chestTraining;
+
+    [SerializeField]
+    GameObject chestTrainingCompleted;
+
+    [SerializeField]
+    Image dipsFill;
+
+    [SerializeField]
+    Image pecFlyFill;
+
+    [SerializeField]
+    Image pressBenchFill;
+
+    [SerializeField]
+    Image crossoverFill;
+
+    [SerializeField]
+    GameObject backTraining;
+
+    [SerializeField]
+    GameObject backTrainingCompleted;
+
+    [SerializeField]
+    Image cableRowFill;
+
+    [SerializeField]
+    Image latPullFill;
+
+    [SerializeField]
+    Image rowerFill;
+
+    [SerializeField]
+    Image backExtensionFill;
+
+    [SerializeField]
+    Image pullUpsFill;
+
+    [SerializeField]
+    Image tBarRowFill;
+
+    private float legsMaxTrainingValue = 0.35f;
+    private float chestMaxTrainingValue = 0.25f;
+    private float backMaxTrainingValue = 0.167f;
 
     void Awake()
     {
@@ -115,8 +175,106 @@ public class IHM : MonoBehaviour
     {
         DisplayData();
         ManageRoomCanvases();
+        TrainingStatsPanels();
     }
 
+    void TreadmillTrainingStats()
+    {
+        float currentTraining = GameManager.instance.treadmillTraining;
+        float normalizedProgress = Mathf.Clamp01(currentTraining / legsMaxTrainingValue);
+        treadmillFill.transform.localScale = new Vector3(normalizedProgress, 1f, 1f);
+    }
+
+    void MachineTrainingStats(Image fill, float data, float maxValue)
+    {
+        float currentTraining = data;
+        float normalizedProgress = Mathf.Clamp01(currentTraining / maxValue);
+        fill.transform.localScale = new Vector3(normalizedProgress, 1f, 1f);
+    }
+
+    void TrainingStatsPanels()
+    {
+        if (GameManager.instance.currentPlayer.level == 1)
+        {
+            if (GameManager.instance.currentPlayer.legsTraining < 1)
+            {
+                legsTraining.SetActive(true);
+                legsTrainingCompleted.SetActive(false);
+                chestTraining.SetActive(false);
+                chestTrainingCompleted.SetActive(false);
+                backTraining.SetActive(false);
+                backTrainingCompleted.SetActive(false);
+
+                TreadmillTrainingStats();
+                // MachineTrainingStats(treadmillFill, GameManager.instance.treadmillTraining, legsMaxTrainingValue);
+                MachineTrainingStats(bikeFill, GameManager.instance.bikeTraining, legsMaxTrainingValue);
+                MachineTrainingStats(jumpboxFill, GameManager.instance.jumpboxTraining, legsMaxTrainingValue);
+            }
+            else
+            {
+                legsTraining.SetActive(false);
+                legsTrainingCompleted.SetActive(true);
+                chestTraining.SetActive(false);
+                chestTrainingCompleted.SetActive(false);
+                backTraining.SetActive(false);
+                backTrainingCompleted.SetActive(false);
+            }
+        }
+        else if (GameManager.instance.currentPlayer.level == 2)
+        {
+            if (GameManager.instance.currentPlayer.chestTraining < 1)
+            {
+                legsTraining.SetActive(false);
+                legsTrainingCompleted.SetActive(false);
+                chestTraining.SetActive(true);
+                chestTrainingCompleted.SetActive(false);
+                backTraining.SetActive(false);
+                backTrainingCompleted.SetActive(false);
+
+                MachineTrainingStats(dipsFill, GameManager.instance.dipsTraining, chestMaxTrainingValue);
+                MachineTrainingStats(pecFlyFill, GameManager.instance.chest1Training, chestMaxTrainingValue);
+                MachineTrainingStats(pressBenchFill, GameManager.instance.barbellTraining, chestMaxTrainingValue);
+                MachineTrainingStats(crossoverFill, GameManager.instance.chest2Training, chestMaxTrainingValue);
+            }
+            else
+            {
+                legsTraining.SetActive(false);
+                legsTrainingCompleted.SetActive(false);
+                chestTraining.SetActive(false);
+                chestTrainingCompleted.SetActive(true);
+                backTraining.SetActive(false);
+                backTrainingCompleted.SetActive(false);
+            }
+        }
+        else if (GameManager.instance.currentPlayer.level == 3 || GameManager.instance.currentPlayer.level == 0)
+        {
+            if (GameManager.instance.currentPlayer.backTraining < 1)
+            {
+                legsTraining.SetActive(false);
+                legsTrainingCompleted.SetActive(false);
+                chestTraining.SetActive(false);
+                chestTrainingCompleted.SetActive(false);
+                backTraining.SetActive(true);
+                backTrainingCompleted.SetActive(false);
+
+                MachineTrainingStats(cableRowFill, GameManager.instance.back2Training, backMaxTrainingValue);
+                MachineTrainingStats(latPullFill, GameManager.instance.back1Training, backMaxTrainingValue);
+                MachineTrainingStats(rowerFill, GameManager.instance.rowerTraining, backMaxTrainingValue);
+                MachineTrainingStats(backExtensionFill, GameManager.instance.extensionTraining, backMaxTrainingValue);
+                MachineTrainingStats(tBarRowFill, GameManager.instance.backBarbell1Training, backMaxTrainingValue);
+                MachineTrainingStats(pullUpsFill, GameManager.instance.pullUpsTraining, backMaxTrainingValue);
+            }
+            else
+            {
+                legsTraining.SetActive(false);
+                legsTrainingCompleted.SetActive(false);
+                chestTraining.SetActive(false);
+                chestTrainingCompleted.SetActive(false);
+                backTraining.SetActive(false);
+                backTrainingCompleted.SetActive(true);
+            }
+        }
+    }
 
     public void ManageRoomCanvases()
     {
@@ -166,7 +324,7 @@ public class IHM : MonoBehaviour
         backImage.fillAmount = GameManager.instance.currentPlayer.backTraining / 1.05f;
         lifeImage.sprite = remainingLives[GameManager.instance.currentPlayer.life];
         proteinAmount.text = Convert.ToString(GameManager.instance.currentPlayer.protein);
-        defeatesEnemies.text = Convert.ToString(GameManager.instance.currentPlayer.defeatedEnemies);
+        defeatedEnemies.text = Convert.ToString(GameManager.instance.currentPlayer.defeatedEnemies);
         alphaCoeff.text = Convert.ToString(PersistantData.instance.data.alphaCoeff);
     }
 
