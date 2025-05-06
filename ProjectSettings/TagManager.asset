@@ -42,9 +42,9 @@ TagManager:
   - Player
   - FallingPlates
   - Agent
-  - 
-  - 
-  - 
+  - IntermediateMirror
+  - Mirror
+  - Platform3
   - 
   - 
   - 
