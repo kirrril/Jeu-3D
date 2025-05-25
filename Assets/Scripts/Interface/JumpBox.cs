@@ -5,10 +5,17 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using Cinemachine;
 
 public class JumpBox : TrainingMachineBase, IInteractable
 {
     bool thisJumpbox;
+
+    [SerializeField]
+    CinemachineVirtualCamera playerCam;
+
+    [SerializeField]
+    Transform cameraTarget;
 
     protected override void Start()
     {
@@ -96,24 +103,20 @@ public class JumpBox : TrainingMachineBase, IInteractable
             {
                 thirstyCoroutine = StartCoroutine(ThirstyCorout());
             }
-
-            // ambientSound.Play();
-
-            // GameManager.instance.currentPlayer.life -= 1;
-
-            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
     protected override void OnTriggerEnter(Collider other)
     {
-        // if (trainingPerson == null)
-        // {
         base.OnTriggerEnter(other);
 
         if (other.CompareTag("Player"))
         {
             thisJumpbox = true;
+
+            cameraTarget.localPosition = new Vector3(0f, 1.5f, 1.5f);
+            CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+            playerTransposer.m_FollowOffset = new Vector3(0f, 2f, 2.5f);
         }
 
         if (thisJumpbox && GameManager.instance.bikeTraining <= 0.35f)
@@ -130,6 +133,10 @@ public class JumpBox : TrainingMachineBase, IInteractable
         if (other.CompareTag("Player"))
         {
             thisJumpbox = false;
+
+            cameraTarget.localPosition = new Vector3(0f, 1.4f, 0.64f);
+            CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+            playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
         }
     }
 }

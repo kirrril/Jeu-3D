@@ -16,6 +16,8 @@ public class Barbell : TrainingMachineBase, IInteractable
         trainingDuration = 10.0f;
 
         animationBool = "isPushingBarbell";
+
+        machineAnimationBool = "barbellisMoving";
     }
 
     protected override void Update()
@@ -87,12 +89,6 @@ public class Barbell : TrainingMachineBase, IInteractable
             {
                 thirstyCoroutine = StartCoroutine(ThirstyCorout());
             }
-
-            // ambientSound.Play();
-
-            // GameManager.instance.currentPlayer.life -= 1;
-
-            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -108,19 +104,14 @@ public class Barbell : TrainingMachineBase, IInteractable
 
             thisBarbell = true;
 
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("barbellisMoving", true);
-
             Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-            cameraTarget.localPosition = new Vector3(0f, 0.6f, -0.5f);
+            cameraTarget.localPosition = new Vector3(0f, 1.3f, 0f);
 
             CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-            playerTransposer.m_FollowOffset = new Vector3(0f, 1.5f, 0.8f);
+            playerTransposer.m_FollowOffset = new Vector3(0f, 2f, 0.5f);
 
-            CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
+
 
             if (GameManager.instance.barbellTraining <= 0.25f)
             {
@@ -129,9 +120,6 @@ public class Barbell : TrainingMachineBase, IInteractable
         }
         else if (other.CompareTag("Man"))
         {
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("barbellisMoving", true);
-
             base.OnTriggerEnter(other);
         }
     }
@@ -161,10 +149,6 @@ public class Barbell : TrainingMachineBase, IInteractable
             CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
             playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
-
-            CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            observerTransposer.m_FollowOffset = new Vector3(4f, 4.5f, -2f);
         }
     }
 

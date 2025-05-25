@@ -93,12 +93,6 @@ public class BackExtension : TrainingMachineBase, IInteractable
             {
                 thirstyCoroutine = StartCoroutine(ThirstyCorout());
             }
-
-            // ambientSound.Play();
-
-            // GameManager.instance.currentPlayer.life -= 1;
-
-            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -120,11 +114,11 @@ public class BackExtension : TrainingMachineBase, IInteractable
                 }
 
                 Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-                cameraTarget.localPosition = new Vector3(0f, 0.5f, 0f);
+                cameraTarget.localPosition = new Vector3(0f, 0.9f, 0.5f);
 
                 CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
                 CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-                playerTransposer.m_FollowOffset = new Vector3(-1.5f, 1.2f, 0.7f);
+                playerTransposer.m_FollowOffset = new Vector3(-1f, 1.4f, 1.2f);
             }
 
             base.OnTriggerEnter(other);

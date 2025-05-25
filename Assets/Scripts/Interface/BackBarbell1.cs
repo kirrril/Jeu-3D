@@ -14,6 +14,8 @@ public class BackBarbell1 : TrainingMachineBase, IInteractable
         trainingDuration = 10.0f;
 
         animationBool = "isPullingBackBarbell1";
+
+        machineAnimationBool = "backBarbell1IsPulled";
     }
 
     protected override void Update()
@@ -93,12 +95,6 @@ public class BackBarbell1 : TrainingMachineBase, IInteractable
             {
                 thirstyCoroutine = StartCoroutine(ThirstyCorout());
             }
-
-            // ambientSound.Play();
-
-            // GameManager.instance.currentPlayer.life -= 1;
-
-            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -114,8 +110,8 @@ public class BackBarbell1 : TrainingMachineBase, IInteractable
 
             base.OnTriggerEnter(other);
 
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("BackBarbell1IsPulled", true);
+            // Animator animator = GetComponentInChildren<Animator>();
+            // animator.SetBool(machineAnimationBool, true);
 
             if (GameManager.instance.backBarbell1Training <= 0.167f)
             {
@@ -133,8 +129,8 @@ public class BackBarbell1 : TrainingMachineBase, IInteractable
         {
             base.OnTriggerEnter(other);
 
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("BackBarbell1IsPulled", true);
+            // Animator animator = GetComponentInChildren<Animator>();
+            // animator.SetBool("BackBarbell1IsPulled", true);
         }
 
     }
@@ -151,8 +147,8 @@ public class BackBarbell1 : TrainingMachineBase, IInteractable
 
             base.OnTriggerExit(other);
 
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("BackBarbell1IsPulled", false);
+            // Animator animator = GetComponentInChildren<Animator>();
+            // animator.SetBool("BackBarbell1IsPulled", false);
 
             Transform cameraTarget = GameObject.Find("CameraTarget").transform;
             cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
@@ -161,12 +157,12 @@ public class BackBarbell1 : TrainingMachineBase, IInteractable
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
             playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
         }
-        else
-        {
-            base.OnTriggerExit(other);
+        // else
+        // {
+        //     base.OnTriggerExit(other);
 
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("BackBarbell1IsPulled", false);
-        }
+        //     Animator animator = GetComponentInChildren<Animator>();
+        //     animator.SetBool("BackBarbell1IsPulled", false);
+        // }
     }
 }

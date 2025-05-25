@@ -22,10 +22,6 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	Transform cameraPlace;
 
-
-	[SerializeField]
-	CameraSwitch cameraSwitch;
-
 	float cameraSensitivity = 2f;
 	float minYPosition = -2f;
 	float maxYPosition = 10f;
@@ -62,7 +58,7 @@ public class PlayerController : MonoBehaviour
 	private float attackAngle = 20f;
 
 	[SerializeField]
-	private float forwardSpeed = 2, sideSpeed = 2, rotationSpeed = 5, rotationCoeff = 100;
+	private float forwardSpeed = 2, forwardSpeedCoeff = 1.5f, sideSpeed = 2, rotationSpeed = 5, rotationCoeff = 100;
 
 	public bool isMoving;
 
@@ -200,14 +196,14 @@ public class PlayerController : MonoBehaviour
 
 	void Update()
 	{
-		GetInput();
+		// GetInput();
 
-		if (isTraining == false && isGaming == false && isClimbing == false && playerWasAttacked == false)
-		{
-			LiftCamera();
-		}
+		// if (isTraining == false && isGaming == false && isClimbing == false && playerWasAttacked == false)
+		// {
+		// 	LiftCamera();
+		// }
 
-		CheckIfMoving();
+		// CheckIfMoving();
 
 		if (isInJumpZone)
 		{
@@ -221,21 +217,26 @@ public class PlayerController : MonoBehaviour
 
 		GroundControl();
 
-		RotatePlayer();
-		MovePlayer();
+		// RotatePlayer();
+		// MovePlayer();
 	}
 
 	void FixedUpdate()
 	{
-		// CheckIfMovingInJumpingZone();
+		GetInput();
+		CheckIfMoving();
+		RotatePlayer();
+		MovePlayer();
 
-		// RotatePlayer();
-		// MovePlayer();
+		if (!isTraining && !isClimbing && !playerWasAttacked)
+		{
+			LiftCamera();
+		}
 
 
 		if (!isClimbing)
 		{
-		rb.angularVelocity = Vector3.zero;
+			rb.angularVelocity = Vector3.zero;
 		}
 	}
 
@@ -251,7 +252,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (isTraining == false && isGaming == false && isClimbing == false && playerWasAttacked == false)
 		{
-			float playerRotation = inputRotate * rotationCoeff * rotationSpeed * Time.deltaTime;
+			float playerRotation = inputRotate * rotationCoeff * rotationSpeed * Time.fixedDeltaTime;
 
 			Quaternion deltaRotation = Quaternion.Euler(0, playerRotation, 0);
 			rb.MoveRotation(rb.rotation * deltaRotation);
@@ -261,17 +262,17 @@ public class PlayerController : MonoBehaviour
 
 	void LiftCamera()
 	{
-		if (!isJumping && !isMoving)
-		{
-			Vector3 localPosition = cameraTarget.localPosition;
-			float targetY = localPosition.y + inputCameraAngle * cameraSensitivity * Time.deltaTime;
+		// if (!isJumping && !isMoving)
+		// {
+		Vector3 localPosition = cameraTarget.localPosition;
+		float targetY = localPosition.y + inputCameraAngle * cameraSensitivity * Time.fixedDeltaTime;
 
-			targetY = Mathf.Clamp(targetY, minYPosition, maxYPosition);
+		targetY = Mathf.Clamp(targetY, minYPosition, maxYPosition);
 
-			localPosition.y = Mathf.Lerp(localPosition.y, targetY, smoothFactor * Time.deltaTime);
+		localPosition.y = Mathf.Lerp(localPosition.y, targetY, smoothFactor * Time.fixedDeltaTime);
 
-			cameraTarget.localPosition = localPosition;
-		}
+		cameraTarget.localPosition = localPosition;
+		// }
 	}
 
 
@@ -284,9 +285,11 @@ public class PlayerController : MonoBehaviour
 
 			Vector3 resultMove = forwardMove + sideMove;
 
-			rb.MovePosition(transform.position + resultMove * Time.deltaTime * 6);
+			// rb.MovePosition(transform.position + resultMove * Time.deltaTime * 15);
 
-			playerSpeed = rb.velocity.magnitude * 1000;
+			rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime * forwardSpeedCoeff);
+
+			// playerSpeed = rb.velocity.magnitude * 500;
 		}
 	}
 
@@ -426,7 +429,7 @@ public class PlayerController : MonoBehaviour
 			isOnTheFloor = false;
 			canWalk = false;
 
-			climbSpeed = 2f;
+			climbSpeed = 1.5f;
 
 			if (!isInitializedAtClimbingPosition)
 			{
@@ -489,6 +492,8 @@ public class PlayerController : MonoBehaviour
 
 	void GetReadyToClimb()
 	{
+		isInClimbingZone = true;
+
 		isClimbing = false;
 		isClimbingUp = false;
 		// isSlidingDown = false;
@@ -505,7 +510,9 @@ public class PlayerController : MonoBehaviour
 
 		isInitializedAtClimbingPosition = false;
 
-		canWalk = true;
+		canWalk = false;
+
+		StartCoroutine(CanWalkCorout());
 	}
 
 
@@ -791,16 +798,28 @@ public class PlayerController : MonoBehaviour
 			canWalk = true;
 		}
 
-		if (other.CompareTag("Rope"))
+		if (other.CompareTag("Pole"))
 		{
 			spotLight.enabled = true;
 
-			cameraSwitch.playerCam.Priority = 0;
-			cameraSwitch.observerCam.Priority = 10;
+			Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+			cameraTarget.localPosition = new Vector3(0f, 1.6f, 0f);
 
-			isInClimbingZone = true;
+			CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+			playerCam.Follow = null;
+			playerCam.transform.position = new Vector3(19f, -6f, 76f);
 
-			canWalk = true;
+			// CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+			// CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+			// playerTransposer.m_FollowOffset = new Vector3(2f, 2.5f, -2f);
+
+			// isInClimbingZone = true;
+
+			// transform.position
+
+			// canWalk = true;
+
+			GetReadyToClimb();
 		}
 
 		if (other.gameObject.name == "Communicator")
@@ -901,14 +920,19 @@ public class PlayerController : MonoBehaviour
 		}
 
 
-		if (other.CompareTag("Rope"))
+		if (other.CompareTag("Pole"))
 		{
 			isInClimbingZone = false;
 
 			spotLight.enabled = false;
 
-			cameraSwitch.playerCam.Priority = 10;
-			cameraSwitch.observerCam.Priority = 0;
+			Transform cameraTarget = GameObject.Find("CameraTarget").transform;
+			cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
+
+			CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
+			playerCam.Follow = transform;
+			CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+			playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
 
 			// canWalk = false;
 		}

@@ -8,7 +8,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BackMachine2Pulled
-  m_Speed: 1
+  m_Speed: 0.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -7130172330320898740}
@@ -21,7 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -7953088380152947313, guid: 547fde55e8f140044981878f25d7abee, type: 3}
+  m_Motion: {fileID: 5666013409958633763, guid: 547fde55e8f140044981878f25d7abee, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -151,7 +151,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7796828590584587084, guid: 547fde55e8f140044981878f25d7abee, type: 3}
+  m_Motion: {fileID: -8241721690925501524, guid: 547fde55e8f140044981878f25d7abee, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

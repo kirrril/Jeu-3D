@@ -63,7 +63,6 @@ public class PullUpBar : MonoBehaviour
     float trainingDuration;
 
     string animationBool;
-    string machineAnimationBool;
 
 
     void Start()
@@ -134,12 +133,6 @@ public class PullUpBar : MonoBehaviour
             {
                 thirstyCoroutine = StartCoroutine(ThirstyCorout());
             }
-
-            // ambientSound.Play();
-
-            // GameManager.instance.currentPlayer.life -= 1;
-
-            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -197,6 +190,8 @@ public class PullUpBar : MonoBehaviour
 
             thisPullUpBar = true;
 
+            PlayerController.instance.isTraining = true;
+
             if (GameManager.instance.pullUpsTraining <= 0.167f)
             {
                 IHM.instance.DisplayWaterWarning();
@@ -217,22 +212,20 @@ public class PullUpBar : MonoBehaviour
 
                 user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
 
-                PlayerController.instance.isTraining = true;
+                // PlayerController.instance.isTraining = true;
 
                 StopTrainingButtonOn(user, stopTrainingPosition1);
 
                 Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-                cameraTarget.localPosition = new Vector3(0f, 0.6f, -0.5f);
+                cameraTarget.localPosition = new Vector3(0f, 0.4f, 0f);
 
                 CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
                 CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-                playerTransposer.m_FollowOffset = new Vector3(0f, 1.8f, 1.8f);
+                playerTransposer.m_FollowOffset = new Vector3(0f, 1.2f, 2.3f);
             }
             else if (GameManager.instance.pullUpsTraining > 0.056f && GameManager.instance.pullUpsTraining < 0.11)
             {
                 animationBool = "isMakingPullUps";
-
-                machineAnimator.SetBool("RubberIsPulled", true);
 
                 TakePlace(user, trainingPosition2);
 
@@ -243,14 +236,19 @@ public class PullUpBar : MonoBehaviour
 
                 ambientSound.Stop();
 
+
+                machineAnimator.SetBool("RubberIsPulled", true);
+
                 user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
 
-                PlayerController.instance.isTraining = true;
+                
+
+                // PlayerController.instance.isTraining = true;
 
                 StopTrainingButtonOn(user, stopTrainingPosition2);
 
                 Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-                cameraTarget.localPosition = new Vector3(0f, 2f, -0.5f);
+                cameraTarget.localPosition = new Vector3(0f, 1.2f, -0.5f);
 
                 CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
                 CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
@@ -258,7 +256,7 @@ public class PullUpBar : MonoBehaviour
             }
             else
             {
-                animationBool = "isMakingPullUps";
+                animationBool = "isMakingPullUps2";
 
                 TakePlace(user, trainingPosition4);
 
@@ -271,16 +269,16 @@ public class PullUpBar : MonoBehaviour
 
                 user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
 
-                PlayerController.instance.isTraining = true;
+                // PlayerController.instance.isTraining = true;
 
                 StopTrainingButtonOn(user, stopTrainingPosition4);
 
                 Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-                cameraTarget.localPosition = new Vector3(0f, 2.5f, -0.5f);
+                cameraTarget.localPosition = new Vector3(0f, 1.6f, -0.5f);
 
                 CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
                 CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-                playerTransposer.m_FollowOffset = new Vector3(0f, 2.2f, 2.2f);
+                playerTransposer.m_FollowOffset = new Vector3(0f, 1f, 2.2f);
             }
         }
         else if (user.CompareTag("Man"))
@@ -328,7 +326,7 @@ public class PullUpBar : MonoBehaviour
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
         yield return new WaitForSeconds(trainingDuration);
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
-        machineAnimator.SetBool(machineAnimationBool, false);
+        // machineAnimator.SetBool(machineAnimationBool, false);
 
         trainingCoroutine = null;
 

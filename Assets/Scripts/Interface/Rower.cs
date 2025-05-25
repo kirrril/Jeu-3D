@@ -14,6 +14,8 @@ public class Rower : TrainingMachineBase, IInteractable
         trainingDuration = 10.0f;
 
         animationBool = "isPullingRower";
+
+        machineAnimationBool = "RowerIsMoving";
     }
 
     protected override void Update()
@@ -92,12 +94,6 @@ public class Rower : TrainingMachineBase, IInteractable
             {
                 thirstyCoroutine = StartCoroutine(ThirstyCorout());
             }
-
-            // ambientSound.Play();
-
-            // GameManager.instance.currentPlayer.life -= 1;
-
-            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -111,9 +107,6 @@ public class Rower : TrainingMachineBase, IInteractable
         {
             base.OnTriggerEnter(other);
 
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("RowerIsMoving", true);
-
             if (other.CompareTag("Player"))
             {
                 thisRower = true;
@@ -124,11 +117,11 @@ public class Rower : TrainingMachineBase, IInteractable
                 }
 
                 Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-                cameraTarget.localPosition = new Vector3(0f, 0.6f, -0.5f);
+                cameraTarget.localPosition = new Vector3(0f, 0.8f, 0.7f);
 
                 CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
                 CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-                playerTransposer.m_FollowOffset = new Vector3(2f, 1.3f, -0.7f);
+                playerTransposer.m_FollowOffset = new Vector3(1.5f, 1.2f, 0f);
             }
         }
     }
@@ -142,9 +135,6 @@ public class Rower : TrainingMachineBase, IInteractable
         else
         {
             base.OnTriggerExit(other);
-
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("RowerIsMoving", false);
 
             if (other.CompareTag("Player"))
             {

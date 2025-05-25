@@ -5,10 +5,17 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using Cinemachine;
 
 public class Bike : TrainingMachineBase, IInteractable
 {
     bool thisBike;
+
+    [SerializeField]
+    CinemachineVirtualCamera playerCam;
+
+    [SerializeField]
+    Transform cameraTarget;
 
     protected override void Start()
     {
@@ -96,12 +103,6 @@ public class Bike : TrainingMachineBase, IInteractable
             {
                 thirstyCoroutine = StartCoroutine(ThirstyCorout());
             }
-
-            // ambientSound.Play();
-
-            // GameManager.instance.currentPlayer.life -= 1;
-
-            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -112,6 +113,10 @@ public class Bike : TrainingMachineBase, IInteractable
         if (other.CompareTag("Player"))
         {
             thisBike = true;
+
+            cameraTarget.localPosition = new Vector3(0f, 1.15f, 0f);
+            CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+            playerTransposer.m_FollowOffset = new Vector3(-1f, 1.7f, 1.5f);
         }
 
         if (thisBike && GameManager.instance.bikeTraining <= 0.35f)
@@ -127,6 +132,10 @@ public class Bike : TrainingMachineBase, IInteractable
         if (other.CompareTag("Player"))
         {
             thisBike = false;
+
+            cameraTarget.localPosition = new Vector3(0f, 1.4f, 0.64f);
+            CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+            playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
         }
     }
 }

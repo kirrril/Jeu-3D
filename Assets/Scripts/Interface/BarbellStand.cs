@@ -9,9 +9,11 @@ public class BarbellStand : TrainingMachineBase, IInteractable
     {
         base.Start();
 
-        trainingDuration = 8.0f;
+        trainingDuration = 10.0f;
 
         animationBool = "isBarbellSquatting";
+
+        machineAnimationBool = "barbellStandIsMoving";
     }
 
     public override void Interact(GameObject user)
@@ -23,13 +25,6 @@ public class BarbellStand : TrainingMachineBase, IInteractable
 
         AgentController controller = user.GetComponent<AgentController>();
         NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
-
-        // if (controller.currentCoroutine != null)
-        // {
-        //     StopCoroutine(controller.currentCoroutine);
-        //     controller.currentCoroutine = null;
-        //     controller.currentCoroutineName = "null";
-        // }
 
         if (!isInteractable)
         {
@@ -62,10 +57,10 @@ public class BarbellStand : TrainingMachineBase, IInteractable
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
         Animator machineAnimator = GetComponentInChildren<Animator>();
-        machineAnimator.SetBool("barbellStandIsMoving", true);
+        machineAnimator.SetBool(machineAnimationBool, true);
         yield return new WaitForSeconds(trainingDuration);
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
-        machineAnimator.SetBool("barbellStandIsMoving", false);
+        machineAnimator.SetBool(machineAnimationBool, false);
         yield return new WaitForSeconds(0.1f);
 
         AgentController controller = trainingPerson.GetComponent<AgentController>();

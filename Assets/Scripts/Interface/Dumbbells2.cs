@@ -49,13 +49,6 @@ public class Dumbbells2 : MonoBehaviour
         AgentController controller = user.GetComponent<AgentController>();
         NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
 
-        // if (controller.currentCoroutine != null)
-        // {
-        //     StopCoroutine(controller.currentCoroutine);
-        //     controller.currentCoroutine = null;
-        //     controller.currentCoroutineName = "null";
-        // }
-
         if (!user.CompareTag("Man"))
         {
             return;
@@ -121,6 +114,10 @@ public class Dumbbells2 : MonoBehaviour
         if (other.CompareTag("Man"))
         {
             Interact(other.gameObject);
+        }
+        else
+        {
+            return;
         }
     }
 

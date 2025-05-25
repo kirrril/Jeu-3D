@@ -6,123 +6,182 @@ public class PlayerControllerYouLose : MonoBehaviour
 {
     public static PlayerControllerYouLose instance;
 
-	[SerializeField]
-	Transform startPosition;
+    [SerializeField]
+    Transform startPosition;
 
-	[SerializeField]
-	private Rigidbody rb;
+    [SerializeField]
+    Transform cameraPlace;
 
-	private Vector3 inputMove = Vector3.zero;
+    [SerializeField]
+    Transform cameraTarget;
+    float cameraSensitivity = 2f;
+    float minYPosition = -2f;
+    float maxYPosition = 10f;
+    float smoothFactor = 100f;
 
-	private float inputRotate = 0;
+    [SerializeField]
+    private Rigidbody rb;
 
+    [SerializeField]
+    private Animator animator;
 
-	[SerializeField]
-	private float forwardSpeed = 2, sideSpeed = 2, rotationSpeed = 5, rotationCoeff = 100;
+    private Vector3 inputMove = Vector3.zero;
 
-	public bool isMoving;
+    private float inputRotate = 0;
 
-	public bool isGaming;
+    private float forwardSpeed = 2f, forwardSpeedCoeff = 1.7f, sideSpeed = 2f, rotationSpeed = 5f, rotationCoeff = 100f;
 
-	public float playerSpeed;
+    public float playerSpeed;
 
-	Vector3 lastPosition;
+    private float inputCameraAngle = 0;
+
+    // public bool isMoving = true;
+
+    public bool isGaming;
+
+    Vector3 lastPosition;
 
 
     void Awake()
     {
-        instance = this;
+		instance = this;
 
-		// Destroy(GameManager.instance);
-		// Destroy(PersistantData.instance);
+        // Destroy(GameManager.instance);
+        // Destroy(PersistantData.instance);
     }
 
+
     void Start()
-	{
-		StartPosition();
+    {
+        StartPosition();
 
-		lastPosition = transform.position;
-	}
+        lastPosition = transform.position;
+    }
 
-	void Update()
-	{
-		GetInput();
-	}
+    // void Update()
+    // {
+    // GetInput();
 
-	void FixedUpdate()
-	{
-		CheckIfMoving();
-		RotatePlayer();
-		MovePlayer();
-	}
+    // if (!isGaming)
+    // {
+    // CheckIfMoving();
+    // RotatePlayer();
+    // MovePlayer();
+    // LiftCamera();
+    // }
+    // }
 
-	void GetInput()
-	{
-		inputMove.x = Input.GetAxis("Horizontal");
-		inputMove.y = Input.GetAxis("Vertical");
-		inputRotate = Input.GetAxis("Mouse X");
-	}
+    void FixedUpdate()
+    {
+        GetInput();
 
-	void RotatePlayer()
-	{
-		if (isGaming == false)
-		{
-			float playerRotation = inputRotate * rotationCoeff * rotationSpeed * Time.fixedDeltaTime;
+        if (!isGaming)
+        {
+            MovePlayer();
+            RotatePlayer();
+            LiftCamera();
+        }
 
-			Quaternion deltaRotation = Quaternion.Euler(0, playerRotation, 0);
-			rb.MoveRotation(rb.rotation * deltaRotation);
-		}
-	}
+        if (isGaming)
+        {
+            rb.angularVelocity = Vector3.zero;
+        }
 
+        CheckIfMoving();
+    }
 
-	void MovePlayer()
-	{
-		if (isGaming == false)
-		{
-			Vector3 forwardMove = transform.forward * inputMove.y * forwardSpeed;
-			Vector3 sideMove = transform.right * inputMove.x * sideSpeed;
+    void GetInput()
+    {
+        inputMove.x = Input.GetAxis("Horizontal");
+        inputMove.y = Input.GetAxis("Vertical");
+        inputRotate = Input.GetAxis("Mouse X");
+        inputCameraAngle = Input.GetAxis("Mouse Y");
+    }
 
-			Vector3 resultMove = forwardMove + sideMove;
+    void RotatePlayer()
+    {
+        if (!isGaming)
+        {
+            float playerRotation = inputRotate * rotationCoeff * rotationSpeed * Time.fixedDeltaTime;
 
-			rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime);
-
-			playerSpeed = rb.velocity.magnitude * 1000;
-		}
-	}
-
-
-	void CheckIfMoving()
-	{
-		if (isGaming == false)
-		{
-			if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
-			{
-				isMoving = true;
-			}
-			else
-			{
-				isMoving = false;
-			}
-		}
-
-	}
-	public void StartPosition()
-	{
-		transform.position = startPosition.position;
-		transform.rotation = startPosition.rotation;
-	}
+            Quaternion deltaRotation = Quaternion.Euler(0, playerRotation, 0);
+            rb.MoveRotation(rb.rotation * deltaRotation);
+        }
+    }
 
 
-	private void OnTriggerEnter(Collider other)
-	{
-		if (other.CompareTag("Desk"))
-		{
-			isMoving = false;
+    void MovePlayer()
+    {
+        if (!isGaming)
+        {
+            Vector3 forwardMove = transform.forward * inputMove.y * forwardSpeed;
+            Vector3 sideMove = transform.right * inputMove.x * sideSpeed;
 
-			isGaming = true;
+            Vector3 resultMove = forwardMove + sideMove;
 
-			transform.position = new Vector3(0f, 0f, 3.33f);
-			transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-		}
-	}
+            // rb.MovePosition(transform.position + resultMove * Time.deltaTime * 15);
+
+            rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime * forwardSpeedCoeff);
+
+            // playerSpeed = rb.velocity.magnitude * 500;
+        }
+    }
+
+
+    void CheckIfMoving()
+    {
+        if (!isGaming)
+        {
+            if (Mathf.Abs(inputMove.x) > 0.1f || Mathf.Abs(inputMove.y) > 0.1f)
+            {
+                // isMoving = true;
+
+                animator.SetFloat("MovementSpeed", 2.1f);
+            }
+            else
+            {
+                // isMoving = false;
+
+                animator.SetFloat("MovementSpeed", 0.2f);
+            }
+        }
+        else
+        {
+            // isMoving = false;
+
+            animator.SetFloat("MovementSpeed", 0.2f);
+        }
+    }
+
+    void LiftCamera()
+    {
+        if (!isGaming)
+        {
+            Vector3 localPosition = cameraTarget.localPosition;
+            float targetY = localPosition.y + inputCameraAngle * cameraSensitivity * Time.fixedDeltaTime;
+
+            targetY = Mathf.Clamp(targetY, minYPosition, maxYPosition);
+
+            localPosition.y = Mathf.Lerp(localPosition.y, targetY, smoothFactor * Time.fixedDeltaTime);
+
+            cameraTarget.localPosition = localPosition;
+        }
+    }
+
+    public void StartPosition()
+    {
+        transform.position = startPosition.position;
+        transform.rotation = startPosition.rotation;
+    }
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Desk"))
+        {
+            isGaming = true;
+
+            // isMoving = false;
+        }
+    }
 }

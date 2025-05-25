@@ -34,7 +34,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: BackBarbell1IsPulled
+    m_ConditionEvent: backBarbell1IsPulled
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3908257260532715332}
@@ -59,7 +59,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: BackBarbell1IsPulled
+    m_ConditionEvent: backBarbell1IsPulled
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -2009885212426871823}
@@ -111,7 +111,7 @@ AnimatorController:
   m_Name: BackBarbell1
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: BackBarbell1IsPulled
+  - m_Name: backBarbell1IsPulled
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0

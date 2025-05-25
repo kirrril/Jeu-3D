@@ -86,12 +86,6 @@ public class Dips : TrainingMachineBase, IInteractable
             {
                 thirstyCoroutine = StartCoroutine(ThirstyCorout());
             }
-
-            // ambientSound.Play();
-
-            // GameManager.instance.currentPlayer.life -= 1;
-
-            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -108,11 +102,11 @@ public class Dips : TrainingMachineBase, IInteractable
             thisDipStation = true;
 
             Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-            cameraTarget.localPosition = new Vector3(0f, 1.2f, 0.5f);
+            cameraTarget.localPosition = new Vector3(-0.5f, 1.6f, 0.5f);
 
             CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-            playerTransposer.m_FollowOffset = new Vector3(-1.5f, 2f, 1f);
+            playerTransposer.m_FollowOffset = new Vector3(-1f, 2f, 1.5f);
 
             if (GameManager.instance.dipsTraining <= 0.25f)
             {

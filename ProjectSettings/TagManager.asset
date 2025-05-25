@@ -23,12 +23,12 @@ TagManager:
   - Door
   - Test
   - JumpZone
-  - Rope
   - YouWin
   - StepBench
   - YogaPad
   - TrampolineLanding
   - Head
+  - Pole
   layers:
   - Default
   - TransparentFX

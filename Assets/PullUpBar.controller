@@ -71,7 +71,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -8969366595025662488, guid: e3dcc49df4b2e144889498aa25e4b5fd, type: 3}
+  m_Motion: {fileID: 730147708029537925, guid: e3dcc49df4b2e144889498aa25e4b5fd, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -113,7 +113,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RubberPulled
-  m_Speed: 1
+  m_Speed: 0.96
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -4727926909558282550}

@@ -10,6 +10,16 @@ public class PlayerControllerStart : MonoBehaviour
     Transform startPosition;
 
     [SerializeField]
+    Transform cameraPlace;
+
+    [SerializeField]
+    Transform cameraTarget;
+    float cameraSensitivity = 2f;
+    float minYPosition = -2f;
+    float maxYPosition = 10f;
+    float smoothFactor = 100f;
+
+    [SerializeField]
     private Rigidbody rb;
 
     [SerializeField]
@@ -19,10 +29,11 @@ public class PlayerControllerStart : MonoBehaviour
 
     private float inputRotate = 0;
 
-    [SerializeField]
-    private float forwardSpeed = 2, sideSpeed = 2, rotationSpeed = 5, rotationCoeff = 100;
+    private float forwardSpeed = 2f, forwardSpeedCoeff = 1.7f, sideSpeed = 2f, rotationSpeed = 5f, rotationCoeff = 100f;
 
     public float playerSpeed;
+
+    private float inputCameraAngle = 0;
 
     public bool isMoving = true;
 
@@ -44,21 +55,36 @@ public class PlayerControllerStart : MonoBehaviour
         lastPosition = transform.position;
     }
 
-    void Update()
-    {
-        GetInput();
-    }
+    // void Update()
+    // {
+    // GetInput();
+
+    // if (!isGaming)
+    // {
+    // CheckIfMoving();
+    // RotatePlayer();
+    // MovePlayer();
+    // LiftCamera();
+    // }
+    // }
 
     void FixedUpdate()
     {
-        CheckIfMoving();
-        RotatePlayer();
-        MovePlayer();
+        GetInput();
+
+        if (!isGaming)
+        {
+            MovePlayer();
+            RotatePlayer();
+            LiftCamera();
+        }
 
         if (isGaming)
         {
             rb.angularVelocity = Vector3.zero;
         }
+
+        CheckIfMoving();
     }
 
     void GetInput()
@@ -66,6 +92,7 @@ public class PlayerControllerStart : MonoBehaviour
         inputMove.x = Input.GetAxis("Horizontal");
         inputMove.y = Input.GetAxis("Vertical");
         inputRotate = Input.GetAxis("Mouse X");
+        inputCameraAngle = Input.GetAxis("Mouse Y");
     }
 
     void RotatePlayer()
@@ -89,9 +116,11 @@ public class PlayerControllerStart : MonoBehaviour
 
             Vector3 resultMove = forwardMove + sideMove;
 
-            rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime);
+            // rb.MovePosition(transform.position + resultMove * Time.deltaTime * 15);
 
-            playerSpeed = rb.velocity.magnitude * 1000;
+            rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime * forwardSpeedCoeff);
+
+            // playerSpeed = rb.velocity.magnitude * 500;
         }
     }
 
@@ -100,7 +129,7 @@ public class PlayerControllerStart : MonoBehaviour
     {
         if (!isGaming)
         {
-            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+            if (Mathf.Abs(inputMove.x) > 0.1f || Mathf.Abs(inputMove.y) > 0.1f)
             {
                 isMoving = true;
 
@@ -112,6 +141,27 @@ public class PlayerControllerStart : MonoBehaviour
 
                 animator.SetFloat("MovementSpeed", 0.2f);
             }
+        }
+        else
+        {
+            isMoving = false;
+
+            animator.SetFloat("MovementSpeed", 0.2f);
+        }
+    }
+
+    void LiftCamera()
+    {
+        if (!isGaming)
+        {
+            Vector3 localPosition = cameraTarget.localPosition;
+            float targetY = localPosition.y + inputCameraAngle * cameraSensitivity * Time.fixedDeltaTime;
+
+            targetY = Mathf.Clamp(targetY, minYPosition, maxYPosition);
+
+            localPosition.y = Mathf.Lerp(localPosition.y, targetY, smoothFactor * Time.fixedDeltaTime);
+
+            cameraTarget.localPosition = localPosition;
         }
     }
 

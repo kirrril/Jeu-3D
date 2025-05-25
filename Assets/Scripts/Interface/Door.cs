@@ -63,8 +63,6 @@ public class Door : MonoBehaviour
 
                     playerAnimator.SetBool(animationBool, false);
 
-                    pushingCoroutine = null;
-
                     yield break;
                 }
             }
@@ -84,13 +82,15 @@ public class Door : MonoBehaviour
     {
         PlayerController.instance.isPushingTheDoor = false;
 
-        doorAnimator.SetBool("isOpenning", false);
+        // doorAnimator.SetBool("isOpenning", false);
 
-        Animator playerAnimator = other.GetComponentInChildren<Animator>();
-        playerAnimator.SetBool(animationBool, false);
+        // Animator playerAnimator = other.GetComponentInChildren<Animator>();
+        // playerAnimator.SetBool(animationBool, false);
 
-        StopCoroutine(PushingCorout(other.gameObject));
+        StopCoroutine(pushingCoroutine);
 
-        doorCollider.enabled = true;
+        pushingCoroutine = null;
+
+        // doorCollider.enabled = true;
     }
 }

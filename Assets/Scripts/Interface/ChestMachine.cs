@@ -15,6 +15,8 @@ public class ChestMachine : TrainingMachineBase, IInteractable
         trainingDuration = 10.0f;
 
         animationBool = "isTrainingChest_1";
+
+        machineAnimationBool = "chestMachineIsMoving";
     }
 
     protected override void Update()
@@ -78,12 +80,6 @@ public class ChestMachine : TrainingMachineBase, IInteractable
             {
                 thirstyCoroutine = StartCoroutine(ThirstyCorout());
             }
-
-            // ambientSound.Play();
-
-            // GameManager.instance.currentPlayer.life -= 1;
-
-            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -95,19 +91,12 @@ public class ChestMachine : TrainingMachineBase, IInteractable
         {
             thisChestMachine = true;
 
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("chestMachineIsMoving", true);
-
             Transform cameraTarget = GameObject.Find("CameraTarget").transform;
             cameraTarget.localPosition = new Vector3(0f, 0.8f, -0.5f);
 
             CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-            playerTransposer.m_FollowOffset = new Vector3(0f, 1.8f, 1.2f);
-
-            // CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            // CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            // observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
+            playerTransposer.m_FollowOffset = new Vector3(-1.2f, 1.8f, 1f);
 
             if (GameManager.instance.chest1Training <= 0.25f)
             {
@@ -125,19 +114,12 @@ public class ChestMachine : TrainingMachineBase, IInteractable
         {
             thisChestMachine = false;
 
-            Animator animator = GetComponentInChildren<Animator>();
-            animator.SetBool("chestMachineIsMoving", false);
-
             Transform cameraTarget = GameObject.Find("CameraTarget").transform;
             cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
 
             CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
             playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
-
-            CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            observerTransposer.m_FollowOffset = new Vector3(4f, 4.5f, -2f);
         }
     }
 
@@ -145,10 +127,10 @@ public class ChestMachine : TrainingMachineBase, IInteractable
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
         Animator machineAnimator = GetComponentInChildren<Animator>();
-        machineAnimator.SetBool("chestMachineIsMoving", true);
+        machineAnimator.SetBool(machineAnimationBool, true);
         yield return new WaitForSeconds(trainingDuration);
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
-        machineAnimator.SetBool("chestMachineIsMoving", false);
+        machineAnimator.SetBool(machineAnimationBool, false);
         yield return new WaitForSeconds(0.1f);
 
         NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();

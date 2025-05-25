@@ -25,6 +25,8 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
     protected string animationBool;
 
+    protected string machineAnimationBool;
+
     protected Coroutine trainingCoroutine;
 
     protected Coroutine thirstyCoroutine = null;
@@ -59,13 +61,6 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         {
             AgentController controller = user.GetComponent<AgentController>();
             NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
-
-            // if (controller.currentCoroutine != null)
-            // {
-            //     StopCoroutine(controller.currentCoroutine);
-            //     controller.currentCoroutine = null;
-            //     controller.currentCoroutineName = "null";
-            // }
 
             if (!isInteractable)
             {
@@ -103,6 +98,16 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
             TakePlace(user);
 
+            user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
+            PlayerController.instance.isTraining = true;
+
+            Animator animator = GetComponentInChildren<Animator>();
+            if (animator != null)
+            {
+                animator.SetBool(machineAnimationBool, true);
+            }
+
+
             NavMeshObstacle obstacle = GetComponent<NavMeshObstacle>();
             obstacle.enabled = true;
             GameObject wall = transform.Find("Wall").gameObject;
@@ -112,9 +117,6 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
             ambientSound.Stop();
 
-            user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
-            PlayerController.instance.isTraining = true;
-
             StopTrainingButtonOn();
         }
     }
@@ -122,11 +124,23 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
     protected virtual IEnumerator TrainingCorout(GameObject user)
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
+
+        Animator animator = GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool(machineAnimationBool, true);
+        }
+
         yield return new WaitForSeconds(trainingDuration);
+
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
+
+        if (animator != null)
+        {
+            animator.SetBool(machineAnimationBool, false);
+        }
+
         yield return new WaitForSeconds(0.1f);
-
-
 
         NavMeshAgent agent = user.GetComponent<NavMeshAgent>();
         agent.enabled = true;
@@ -211,6 +225,12 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
 
         player.GetComponentInChildren<Animator>().SetBool(animationBool, false);
 
+        Animator animator = GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool(machineAnimationBool, false);
+        }
+
         player.transform.position = stopTrainingPosition.position;
         player.transform.rotation = stopTrainingPosition.rotation;
 
@@ -243,10 +263,6 @@ public abstract class TrainingMachineBase : MonoBehaviour, IInteractable
         obstacle.enabled = false;
         GameObject wall = transform.Find("Wall").gameObject;
         wall.SetActive(false);
-
-        // trainingPerson = null;
-
-        // yield return new WaitForSeconds(2f);
 
         ambientSound.Play();
 

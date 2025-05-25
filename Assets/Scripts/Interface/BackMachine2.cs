@@ -15,6 +15,8 @@ public class BackMachine2 : TrainingMachineBase, IInteractable
         trainingDuration = 10.0f;
 
         animationBool = "isPullingBackMachine2";
+
+        machineAnimationBool = "backMachine2IsMoving";
     }
 
     protected override void Update()
@@ -78,12 +80,6 @@ public class BackMachine2 : TrainingMachineBase, IInteractable
             {
                 thirstyCoroutine = StartCoroutine(ThirstyCorout());
             }
-
-            // ambientSound.Play();
-
-            // GameManager.instance.currentPlayer.life -= 1;
-
-            // GameManager.instance.currentPlayer.water = 0.5f;
         }
     }
 
@@ -96,15 +92,11 @@ public class BackMachine2 : TrainingMachineBase, IInteractable
             thisBackMachine2 = true;
 
             Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-            cameraTarget.localPosition = new Vector3(0f, 0.6f, -0.5f);
+            cameraTarget.localPosition = new Vector3(0f, 0.7f, 0.5f);
 
             CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-            playerTransposer.m_FollowOffset = new Vector3(2f, 1.3f, -1f);
-
-            // CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            // CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            // observerTransposer.m_FollowOffset = new Vector3(2f, 3.3f, 5f);
+            playerTransposer.m_FollowOffset = new Vector3(1.5f, 1.5f, -0.2f);
 
             if (GameManager.instance.back2Training <= 0.167f)
             {
@@ -128,10 +120,6 @@ public class BackMachine2 : TrainingMachineBase, IInteractable
             CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
             CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
             playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
-
-            // CinemachineVirtualCamera observerCam = GameObject.Find("ObserverCam").GetComponent<CinemachineVirtualCamera>();
-            // CinemachineTransposer observerTransposer = observerCam.GetCinemachineComponent<CinemachineTransposer>();
-            // observerTransposer.m_FollowOffset = new Vector3(4f, 4.5f, -2f);
         }
     }
 
@@ -190,7 +178,7 @@ public class BackMachine2 : TrainingMachineBase, IInteractable
             user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
 
             Animator machineAnimator = GetComponentInChildren<Animator>();
-            machineAnimator.SetBool("backMachine2IsMoving", true);
+            machineAnimator.SetBool(machineAnimationBool, true);
 
             PlayerController.instance.isTraining = true;
 
@@ -202,10 +190,10 @@ public class BackMachine2 : TrainingMachineBase, IInteractable
     {
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
         Animator animator = GetComponentInChildren<Animator>();
-        animator.SetBool("backMachine2IsMoving", true);
+        animator.SetBool(machineAnimationBool, true);
         yield return new WaitForSeconds(trainingDuration);
         user.GetComponentInChildren<Animator>().SetBool(animationBool, false);
-        animator.SetBool("backMachine2IsMoving", false);
+        animator.SetBool(machineAnimationBool, false);
         yield return new WaitForSeconds(0.1f);
 
         NavMeshAgent agent = trainingPerson.GetComponent<NavMeshAgent>();
@@ -247,7 +235,7 @@ public class BackMachine2 : TrainingMachineBase, IInteractable
         player.GetComponentInChildren<Animator>().SetBool(animationBool, false);
 
         Animator machineAnimator = GetComponentInChildren<Animator>();
-        machineAnimator.SetBool("backMachine2IsMoving", false);
+        machineAnimator.SetBool(machineAnimationBool, false);
 
         player.transform.position = stopTrainingPosition.position;
         player.transform.rotation = stopTrainingPosition.rotation;
