@@ -70,11 +70,9 @@ public class PlayerController : MonoBehaviour
 
 	public bool isClimbingUp;
 
-	// public bool isSlidingDown;
-
 	public bool isInClimbingZone;
 
-	public bool isPushingTheDoor;
+
 
 	[SerializeField]
 	GameObject climbingPosition;
@@ -85,11 +83,15 @@ public class PlayerController : MonoBehaviour
 	GameObject stopClimbingPosition;
 
 	private float climbSpeed = 1.5f;
-	private float climbGroundY = -4.5f;
+	private float climbGroundY = -7.5f;
 
 	bool maxwHeightReached;
 
 	bool isOnTheFloor = false;
+
+
+	public bool isPushingTheDoor;
+
 
 	public bool canWalk = true;
 
@@ -107,6 +109,7 @@ public class PlayerController : MonoBehaviour
 	public bool isInJumpZone;
 
 	public bool hasFallen;
+
 
 	public bool isReadyToAttack;
 
@@ -126,7 +129,6 @@ public class PlayerController : MonoBehaviour
 
 	public bool isSubmissed;
 
-	// public bool isHitByWeightPlate;
 
 	Coroutine fallCoroutine;
 
@@ -196,43 +198,32 @@ public class PlayerController : MonoBehaviour
 
 	void Update()
 	{
-		// GetInput();
-
-		// if (isTraining == false && isGaming == false && isClimbing == false && playerWasAttacked == false)
-		// {
-		// 	LiftCamera();
-		// }
-
-		// CheckIfMoving();
-
 		if (isInJumpZone)
 		{
 			Jump();
 		}
+
+		GroundControl();
+	}
+
+	void FixedUpdate()
+	{
+
 
 		if (isInClimbingZone)
 		{
 			Climb();
 		}
 
-		GroundControl();
-
-		// RotatePlayer();
-		// MovePlayer();
-	}
-
-	void FixedUpdate()
-	{
 		GetInput();
 		CheckIfMoving();
 		RotatePlayer();
 		MovePlayer();
 
-		if (!isTraining && !isClimbing && !playerWasAttacked)
+		if (!isTraining && !isInClimbingZone && !playerWasAttacked)
 		{
 			LiftCamera();
 		}
-
 
 		if (!isClimbing)
 		{
@@ -262,8 +253,6 @@ public class PlayerController : MonoBehaviour
 
 	void LiftCamera()
 	{
-		// if (!isJumping && !isMoving)
-		// {
 		Vector3 localPosition = cameraTarget.localPosition;
 		float targetY = localPosition.y + inputCameraAngle * cameraSensitivity * Time.fixedDeltaTime;
 
@@ -272,7 +261,6 @@ public class PlayerController : MonoBehaviour
 		localPosition.y = Mathf.Lerp(localPosition.y, targetY, smoothFactor * Time.fixedDeltaTime);
 
 		cameraTarget.localPosition = localPosition;
-		// }
 	}
 
 
@@ -285,18 +273,14 @@ public class PlayerController : MonoBehaviour
 
 			Vector3 resultMove = forwardMove + sideMove;
 
-			// rb.MovePosition(transform.position + resultMove * Time.deltaTime * 15);
-
 			rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime * forwardSpeedCoeff);
-
-			// playerSpeed = rb.velocity.magnitude * 500;
 		}
 	}
 
 
 	void CheckIfMoving()
 	{
-		if (/*!isTraining && !isReadyToJump && !isClimbing && !isInClimbingZone && !isInJumpZone || */canWalk)
+		if (canWalk)
 		{
 			if (Mathf.Abs(inputMove.x) > 0.1f || Mathf.Abs(inputMove.y) > 0.1f)
 			{
@@ -330,17 +314,8 @@ public class PlayerController : MonoBehaviour
 	}
 
 
-	// IEnumerator SetJumpZone()
-	// {
-	// 	yield return new WaitForSeconds(1f);
-
-	// 	isInJumpZone = true;
-	// }
-
 	public void Jump()
 	{
-		// if (isInJumpZone)
-		// {
 		if (isReadyToJump && Input.GetKey(KeyCode.Space))
 		{
 			voiceHa.Play();
@@ -396,7 +371,6 @@ public class PlayerController : MonoBehaviour
 				NoLandEnabled(true);
 			}
 		}
-		// }
 	}
 
 
@@ -408,12 +382,14 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+
 	IEnumerator CanWalkCorout()
 	{
 		yield return new WaitForSeconds(1f);
 
 		canWalk = true;
 	}
+
 
 	public void Climb()
 	{
@@ -422,57 +398,58 @@ public class PlayerController : MonoBehaviour
 		spotLight.transform.LookAt(transform.position);
 		spotLight.transform.position = spotLightPosition.position;
 
+		if (!isOnTheFloor)
+		{
+			rb.useGravity = false;
+
+			rb.MovePosition(climbingPosition.transform.position);
+			rb.MoveRotation(climbingPosition.transform.rotation);
+		}
+
 		if (Input.GetKey(KeyCode.Space))
 		{
-			isClimbing = true;
-			rb.isKinematic = true;
-			isOnTheFloor = false;
 			canWalk = false;
+			isOnTheFloor = false;
 
-			climbSpeed = 1.5f;
+			isClimbing = true;
+			isClimbingUp = true;
 
-			if (!isInitializedAtClimbingPosition)
+			if (transform.position.y >= maxHeight)
 			{
-				transform.position = climbingPosition.transform.position;
-				transform.rotation = climbingPosition.transform.rotation;
-
-				isInitializedAtClimbingPosition = true;
+				maxwHeightReached = true;
 			}
 
-			if (transform.position.y < maxHeight && !maxwHeightReached)
+			if (maxwHeightReached)
 			{
-				isClimbingUp = true;
-				transform.Translate(Vector3.up * climbSpeed * Time.deltaTime);
+				climbSpeed = 0.01f;
+
+				climbingPosition.transform.position -= Vector3.up * climbSpeed;
+
+				isClimbing = true;
+				isClimbingUp = false;
 			}
 			else
 			{
-				maxwHeightReached = true;
+				climbSpeed = 0.015f;
 
-				if (transform.position.y > climbGroundY)
-				{
-					isClimbingUp = false;
-					transform.Translate(Vector3.down * climbSpeed * Time.deltaTime);
-				}
-				else
-				{
-					GetReadyToClimb();
-				}
+				climbingPosition.transform.position += Vector3.up * climbSpeed;
+
+				isClimbing = true;
+				isClimbingUp = true;
 			}
 		}
 		else
 		{
+			isClimbing = true;
+			isClimbingUp = false;
+
 			maxwHeightReached = false;
 
-			if (Input.GetKeyUp(KeyCode.Space))
-			{
-				climbSpeed = 4f;
-			}
+			climbSpeed = 0.03f;
 
 			if (transform.position.y > climbGroundY)
 			{
-				isClimbing = true;
-				isClimbingUp = false;
-				transform.Translate(Vector3.down * climbSpeed * Time.deltaTime);
+				climbingPosition.transform.position -= Vector3.up * climbSpeed;
 			}
 			else
 			{
@@ -485,8 +462,8 @@ public class PlayerController : MonoBehaviour
 	{
 		float backTraining = GameManager.instance.currentPlayer.backTraining;
 		if (backTraining < 0.2f) return -2.5f;
-		if (backTraining < 0.5f) return 3f;
-		if (backTraining < 0.8f) return 4.5f;
+		if (backTraining < 0.5f) return -2.5f;
+		if (backTraining < 0.8f) return -2.5f;
 		return float.MaxValue;
 	}
 
@@ -494,25 +471,24 @@ public class PlayerController : MonoBehaviour
 	{
 		isInClimbingZone = true;
 
-		isClimbing = false;
-		isClimbingUp = false;
-		// isSlidingDown = false;
-		rb.isKinematic = false;
-
 		if (!isOnTheFloor)
 		{
-			transform.position = stopClimbingPosition.transform.position;
-			transform.rotation = stopClimbingPosition.transform.rotation;
+			rb.MovePosition(stopClimbingPosition.transform.position);
+			rb.MoveRotation(stopClimbingPosition.transform.rotation);
+
+			canWalk = false;
+			StartCoroutine(CanWalkCorout());
 			isOnTheFloor = true;
 		}
 
+		isClimbing = false;
+		isClimbingUp = false;
+
 		maxwHeightReached = false;
 
-		isInitializedAtClimbingPosition = false;
+		// canWalk = true;
 
-		canWalk = false;
-
-		StartCoroutine(CanWalkCorout());
+		rb.useGravity = true;
 	}
 
 
@@ -648,26 +624,12 @@ public class PlayerController : MonoBehaviour
 			yield break;
 		}
 
-		// if (playerWasAttacked)
-		// {
-		// 	yield break;
-		// }
-
 		playerWasAttacked = true;
 
 		Transform agentTransform = communicator.gameObject.transform.parent;
 
 		canWalk = false;
 
-		// float rotationDuration = 0.3f;
-		// float elapsedTime = 0f;
-		// while (elapsedTime < rotationDuration)
-		// {
-		// 	LookAtEnemy(transform, agentTransform, 3f);
-		// 	LookAtEnemy(agentTransform, transform, 3f);
-		// 	elapsedTime += Time.deltaTime;
-		// 	yield return null;
-		// }
 		Transform defeatPoint = communicator.gameObject.transform.parent.Find("DefeatPoint");
 
 		transform.position = defeatPoint.position;
@@ -708,10 +670,6 @@ public class PlayerController : MonoBehaviour
 		GameManager.instance.currentPlayer.life -= 1;
 
 		isTraining = false;
-
-		// isMoving = true;
-
-		// isReadyToJump = false;
 
 		lostLife = false;
 
@@ -765,10 +723,6 @@ public class PlayerController : MonoBehaviour
 
 			soundCtrlPanel.SetActive(true);
 
-			// isMoving = false;
-
-			// isReadyToJump = false;
-
 			spotLight.enabled = true;
 			spotLight.transform.position = spotLightPosition.position;
 			spotLight.transform.LookAt(other.transform.position);
@@ -777,8 +731,6 @@ public class PlayerController : MonoBehaviour
 		if (other.CompareTag("Trampoline"))
 		{
 			isReadyToJump = true;
-
-			// isTraining = false;
 
 			isInJumpZone = true;
 
@@ -791,8 +743,6 @@ public class PlayerController : MonoBehaviour
 		{
 			isReadyToJump = true;
 
-			// isTraining = false;
-
 			isInJumpZone = true;
 
 			canWalk = true;
@@ -801,23 +751,6 @@ public class PlayerController : MonoBehaviour
 		if (other.CompareTag("Pole"))
 		{
 			spotLight.enabled = true;
-
-			Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-			cameraTarget.localPosition = new Vector3(0f, 1.6f, 0f);
-
-			CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
-			playerCam.Follow = null;
-			playerCam.transform.position = new Vector3(19f, -6f, 76f);
-
-			// CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
-			// CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-			// playerTransposer.m_FollowOffset = new Vector3(2f, 2.5f, -2f);
-
-			// isInClimbingZone = true;
-
-			// transform.position
-
-			// canWalk = true;
 
 			GetReadyToClimb();
 		}
@@ -850,8 +783,6 @@ public class PlayerController : MonoBehaviour
 		if (other.gameObject.name == "Level2")
 		{
 			GameManager.instance.currentPlayer.level = 2;
-
-			// IHM.instance.FlipLegCanvas();
 		}
 
 		if (other.gameObject.name == "Level3")
@@ -876,19 +807,12 @@ public class PlayerController : MonoBehaviour
 
 		yield return null;
 
-		// Animator playerAnimator = GetComponentInChildren<Animator>();
-		// playerAnimator.SetBool("isClimbing", false);
-
-		GetComponent<Rigidbody>().isKinematic = false;
-
 		startPosition = GameObject.Find("StartPosition").transform;
 
 		transform.position = startPosition.position;
 
 		isClimbingUp = false;
 		isClimbing = false;
-
-		// isMoving = true;
 	}
 
 	private void OnTriggerExit(Collider other)
@@ -900,10 +824,6 @@ public class PlayerController : MonoBehaviour
 			canWalk = true;
 
 			soundCtrlPanel.SetActive(false);
-
-			// isMoving = true;
-
-			// isReadyToJump = false;
 
 			spotLight.enabled = false;
 		}
@@ -924,17 +844,9 @@ public class PlayerController : MonoBehaviour
 		{
 			isInClimbingZone = false;
 
+			isOnTheFloor = false;
+
 			spotLight.enabled = false;
-
-			Transform cameraTarget = GameObject.Find("CameraTarget").transform;
-			cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
-
-			CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
-			playerCam.Follow = transform;
-			CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-			playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
-
-			// canWalk = false;
 		}
 
 		if (other.CompareTag("JumpZone"))
@@ -942,8 +854,6 @@ public class PlayerController : MonoBehaviour
 			isReadyToJump = false;
 
 			isInJumpZone = false;
-
-			// canWalk = false;
 		}
 
 		if (other.CompareTag("Trampoline"))
@@ -951,15 +861,11 @@ public class PlayerController : MonoBehaviour
 			isReadyToJump = false;
 
 			isInJumpZone = false;
-
-			// canWalk = false;
 		}
 
 		if (other.gameObject.name == "Level3")
 		{
 			GameManager.instance.currentPlayer.level = 0;
-
-			head.SetActive(false);
 
 			spawnerPlates.StopSpawningWeightPlates();
 		}

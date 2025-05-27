@@ -14,15 +14,15 @@ public class PlayerAnimation : MonoBehaviour
     {
         // if (PlayerController.instance.isReadyToJump == false && PlayerController.instance.isTraining == false)
         // {
-            if (PlayerController.instance.isMoving)
-            {
-                animator.SetFloat("MovementSpeed", 2.1f);
-            }
+        if (PlayerController.instance.isMoving)
+        {
+            animator.SetFloat("MovementSpeed", 2.1f);
+        }
 
-            if (PlayerController.instance.isMoving == false)
-            {
-                animator.SetFloat("MovementSpeed", 0.2f);
-            }
+        if (PlayerController.instance.isMoving == false)
+        {
+            animator.SetFloat("MovementSpeed", 0.2f);
+        }
         // }
 
 
@@ -115,26 +115,44 @@ public class PlayerAnimation : MonoBehaviour
         }
 
 
-        if (PlayerController.instance.isInClimbingZone)
-        {
-            if (PlayerController.instance.isClimbing)
-            {
-                animator.SetBool("isClimbing", true);
+        // if (PlayerController.instance.isInClimbingZone)
+        // {
+        // if (PlayerController.instance.isClimbing)
+        // {
+        //     animator.SetBool("isClimbing", true);
 
-                if (PlayerController.instance.isClimbingUp)
-                {
-                    animator.SetBool("isClimbingUp", true);
-                }
-                else
-                {
-                    animator.SetBool("isClimbingUp", false);
-                }
-            }
-            else
-            {
-                animator.SetBool("isClimbingUp", false);
-                animator.SetBool("isClimbing", false);
-            }
+        //     if (PlayerController.instance.isClimbingUp)
+        //     {
+        //         animator.SetBool("isClimbingUp", true);
+        //     }
+        //     else
+        //     {
+        //         animator.SetBool("isClimbingUp", false);
+        //     }
+        // }
+        // else
+        // {
+        //     animator.SetBool("isClimbingUp", false);
+        //     animator.SetBool("isClimbing", false);
+        // }
+        // }
+
+        if (PlayerController.instance.isClimbing && !PlayerController.instance.isClimbingUp)
+        {
+            animator.SetBool("isClimbing", true);
+            animator.SetBool("isClimbingUp", false);
+        }
+
+        if (PlayerController.instance.isClimbing && PlayerController.instance.isClimbingUp)
+        {
+            animator.SetBool("isClimbing", true);
+            animator.SetBool("isClimbingUp", true);
+        }
+
+        if (!PlayerController.instance.isClimbing && !PlayerController.instance.isClimbingUp)
+        {
+            animator.SetBool("isClimbing", false);
+            animator.SetBool("isClimbingUp", false);
         }
     }
 }

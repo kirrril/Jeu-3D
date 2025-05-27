@@ -68,7 +68,7 @@ public class Spawner : MonoBehaviour
         {
             spawnZone = spawnZones2[Random.Range(0, spawnZones2.Count)];
         }
-        else if (GameManager.instance.currentPlayer.level == 3)
+        else if (GameManager.instance.currentPlayer.level == 3 || GameManager.instance.currentPlayer.level == 0)
         {
             spawnZone = spawnZones3[Random.Range(0, spawnZones3.Count)];
         }

@@ -48,6 +48,9 @@ public class DeskStart : MonoBehaviour
 
         TakePlace();
 
+        CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+        playerTransposer.m_FollowOffset = new Vector3(0f, 2.1f, -0.9f);
+
         keyboardAudio.Play();
 
         user.GetComponentInChildren<Animator>().SetBool(animationBool, true);
@@ -59,19 +62,6 @@ public class DeskStart : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
-        // var transposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
-        // Vector3 currentOffset = transposer.m_FollowOffset;
-        // transposer.m_FollowOffset = new Vector3(0f, 1.04f, 0.40f);
-        // playerCam.LookAt = screen;
-        // var composer = playerCam.GetCinemachineComponent<CinemachineComposer>();
-        // Vector3 toCurrentOffset = composer.m_TrackedObjectOffset;
-        // composer.m_TrackedObjectOffset = new Vector3(0f, -700f, 4f);
-
-        // cameraTarget.localPosition = new Vector3(0f, 1.05f, 0.7f);
-        // playerCam.Follow = cameraPlace;
-        // cameraPlace.localPosition = new Vector3(0f, 1f, 0.5f);
-
-        // CinemachineVirtualCamera playerCam = GameObject.Find("PlayerCam").GetComponent<CinemachineVirtualCamera>();
         CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
         playerTransposer.m_FollowOffset = new Vector3(0f, 1.04f, 0.55f);
 
@@ -90,9 +80,6 @@ public class DeskStart : MonoBehaviour
 
     void TakePlace()
     {
-        // trainingPerson.transform.position = new Vector3(0f, 0f, 4.3f);
-        // trainingPerson.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-
         trainingPerson.transform.position = gamingPosition.position;
         trainingPerson.transform.rotation = gamingPosition.rotation;
     }

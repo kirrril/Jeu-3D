@@ -1,9 +1,19 @@
 fileFormatVersion: 2
-guid: 48d5168772dfd8d439b57c5477ca781d
+guid: d1e1ad73dc320584c867e8d4ef87dac4
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BlackGlossy
+    second: {fileID: 2100000, guid: 3af3b1ab867206b41a4771cd7dfb5a93, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: 2117eb597f1a40b44839cda567bdb167, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

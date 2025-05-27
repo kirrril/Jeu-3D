@@ -40,11 +40,12 @@ public class SpawnerPlates : MonoBehaviour
     {
         while (GameManager.instance.currentPlayer.level == 3)
         {
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(2f);
 
             if (GameManager.instance.currentPlayer.level != 3)
             {
-                spawnCorout = null;
+                StopSpawningWeightPlates();
+
                 yield break;
             }
 
@@ -52,7 +53,7 @@ public class SpawnerPlates : MonoBehaviour
 
             spawnedPlate = Instantiate(WeightPlates[ChoseRandomPlateIndex()], spawnPosition, Quaternion.identity);
 
-            yield return new WaitForSeconds(10);
+            yield return new WaitForSeconds(5f);
 
             if (spawnedPlate != null)
             {

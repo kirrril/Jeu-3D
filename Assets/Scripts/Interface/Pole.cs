@@ -1,80 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Pole : MonoBehaviour
 {
-    // [SerializeField]
-    // Transform climbingPosition;
+    [SerializeField]
+    Transform player;
 
-    // [SerializeField]
-    // Transform stopClimbingPosition;
+    [SerializeField]
+    Transform cameraTarget;
 
-    // [SerializeField]
-    // GameObject player;
+    [SerializeField]
+    CinemachineVirtualCamera playerCam;
 
-    // [SerializeField]
-    // Animator playerAnimator;
-
-    // Coroutine climbingCoroutine;
+    [SerializeField]
+    Transform cameraPlace;
 
 
-    // void Interact()
-    // {
-    //     climbingCoroutine = StartCoroutine(ClimbingPositionUpdate());
-    // }
+    void OnTriggerEnter(Collider other)
+    {
+        StartCoroutine(Switch());
+    }
 
+    void OnTriggerExit(Collider other)
+    {
+        StartCoroutine(SwitchBack());
+    }
 
-    // IEnumerator ClimbingPositionUpdate()
-    // {
-    //     yield return null;
+    IEnumerator Switch()
+    {
+        yield return new WaitForSeconds(0.3f);
+        cameraTarget.localPosition = new Vector3(0f, 1.6f, 0f);
+        playerCam.Follow = cameraPlace;
+        CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+        playerTransposer.m_FollowOffset = new Vector3(2f, 0.5f, -2f);
+    }
 
-    //     while (PlayerController.instance.isInClimbingZone)
-    //     {
-    //         if (PlayerController.instance.isClimbing)
-    //         {
-    //             player.GetComponent<Rigidbody>().isKinematic = true;
-    //             player.transform.position = climbingPosition.position;
-    //             player.transform.rotation = climbingPosition.rotation;
-
-    //             if (PlayerController.instance.isClimbingUp)
-    //             {
-    //                 playerAnimator.SetBool("isClimbing", true);
-    //                 playerAnimator.SetBool("isClimbingUp", true);
-    //             }
-
-    //             if (PlayerController.instance.isSlidingDown)
-    //             {
-    //                 playerAnimator.SetBool("isClimbing", true);
-    //                 playerAnimator.SetBool("isClimbingUp", false);
-    //             }
-    //         }
-    //         else
-    //         {
-    //             player.GetComponent<Rigidbody>().isKinematic = false;
-    //             player.transform.position = stopClimbingPosition.position;
-    //             player.transform.rotation = stopClimbingPosition.rotation;
-    //             playerAnimator.SetBool("isClimbing", false);
-    //             playerAnimator.SetBool("isClimbingUp", false);
-    //         }
-
-    //         yield return null;
-    //     }
-    // }
-
-
-    // void OnTriggerEnter(Collider other)
-    // {
-    //     if (!other.CompareTag("Player"))
-    //     {
-    //         return;
-    //     }
-
-    //     Interact();
-    // }
-
-    // void OnTriggerExit(Collider other)
-    // {
-    //     climbingCoroutine = null;
-    // }
+    IEnumerator SwitchBack()
+    {
+        yield return new WaitForSeconds(0.1f);
+        cameraTarget.localPosition = new Vector3(0f, 1.385f, 0.639f);
+        playerCam.Follow = player;
+        CinemachineTransposer playerTransposer = playerCam.GetCinemachineComponent<CinemachineTransposer>();
+        playerTransposer.m_FollowOffset = new Vector3(0f, 2f, -1f);
+    }
 }

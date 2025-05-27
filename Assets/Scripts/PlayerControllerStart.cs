@@ -55,18 +55,6 @@ public class PlayerControllerStart : MonoBehaviour
         lastPosition = transform.position;
     }
 
-    // void Update()
-    // {
-    // GetInput();
-
-    // if (!isGaming)
-    // {
-    // CheckIfMoving();
-    // RotatePlayer();
-    // MovePlayer();
-    // LiftCamera();
-    // }
-    // }
 
     void FixedUpdate()
     {
@@ -116,11 +104,7 @@ public class PlayerControllerStart : MonoBehaviour
 
             Vector3 resultMove = forwardMove + sideMove;
 
-            // rb.MovePosition(transform.position + resultMove * Time.deltaTime * 15);
-
             rb.MovePosition(transform.position + resultMove * Time.fixedDeltaTime * forwardSpeedCoeff);
-
-            // playerSpeed = rb.velocity.magnitude * 500;
         }
     }
 
